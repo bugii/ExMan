@@ -67,7 +67,12 @@ function createWindow() {
     webPreferences: { preload: path.join(__dirname, "preload/whatsapp.js") },
   });
   mainWindow.addBrowserView(whatsappView);
-  whatsappView.setBounds({ x: 200, y: 0, width: 1000, height: 800 });
+  if(process.platform == 'darwin'){
+    whatsappView.setBounds({ x: 200, y: 0, width: 1000, height: 800 });
+  }
+  else{
+    whatsappView.setBounds({ x: 200, y: 0, width: 1000, height: 750 });
+  }
   whatsappView.webContents.loadURL("https://web.whatsapp.com/", {
     userAgent:
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:79.0) Gecko/20100101 Firefox/79.0",
@@ -86,7 +91,13 @@ function createWindow() {
     webPreferences: { preload: path.join(__dirname, "preload/slack.js") },
   });
   mainWindow.addBrowserView(slackView);
-  slackView.setBounds({ x: 200, y: 0, width: 1000, height: 800 });
+  if(process.platform == 'darwin'){
+    slackView.setBounds({ x: 200, y: 0, width: 1000, height: 800 });
+  }
+  else{
+    slackView.setBounds({ x: 200, y: 0, width: 1000, height: 750 });
+  }
+  //slackView.setBackgroundColor('#ffffff');
   slackView.webContents.loadURL("https://app.slack.com/client/", {
     userAgent:
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:79.0) Gecko/20100101 Firefox/79.0",
@@ -100,12 +111,19 @@ function createWindow() {
     shell.openExternal(url);
   });
 
+
+
   // Microsoft Teams
   msTeamsView = new BrowserView({
     webPreferences: { preload: path.join(__dirname, "preload/teams.js") },
   });
   mainWindow.addBrowserView(msTeamsView);
-  msTeamsView.setBounds({ x: 200, y: 0, width: 1000, height: 800 });
+  if(process.platform == 'darwin'){
+    msTeamsView.setBounds({ x: 200, y: 0, width: 1000, height: 800 });
+  }
+  else{
+    msTeamsView.setBounds({ x: 200, y: 0, width: 1000, height: 750 });
+  }
   msTeamsView.webContents.loadURL("https://teams.microsoft.com/", {
     userAgent:
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:79.0) Gecko/20100101 Firefox/79.0",
@@ -156,3 +174,13 @@ app.on("window-all-closed", function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+// send message for teams
+function teamsMessage(message){
+  var a = document.getElementById('cke_1_contents')
+  var b = a.children[0]
+  var c = b.children
+  c[0].innerText = message
+  document.getElementById("send-message-button").click()
+}
+
