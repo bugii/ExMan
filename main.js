@@ -67,10 +67,9 @@ function createWindow() {
     webPreferences: { preload: path.join(__dirname, "preload/whatsapp.js") },
   });
   mainWindow.addBrowserView(whatsappView);
-  if(process.platform == 'darwin'){
+  if (process.platform == "darwin") {
     whatsappView.setBounds({ x: 200, y: 0, width: 1000, height: 800 });
-  }
-  else{
+  } else {
     whatsappView.setBounds({ x: 200, y: 0, width: 1000, height: 750 });
   }
   whatsappView.webContents.loadURL("https://web.whatsapp.com/", {
@@ -91,10 +90,9 @@ function createWindow() {
     webPreferences: { preload: path.join(__dirname, "preload/slack.js") },
   });
   mainWindow.addBrowserView(slackView);
-  if(process.platform == 'darwin'){
+  if (process.platform == "darwin") {
     slackView.setBounds({ x: 200, y: 0, width: 1000, height: 800 });
-  }
-  else{
+  } else {
     slackView.setBounds({ x: 200, y: 0, width: 1000, height: 750 });
   }
   //slackView.setBackgroundColor('#ffffff');
@@ -111,17 +109,14 @@ function createWindow() {
     shell.openExternal(url);
   });
 
-
-
   // Microsoft Teams
   msTeamsView = new BrowserView({
     webPreferences: { preload: path.join(__dirname, "preload/teams.js") },
   });
   mainWindow.addBrowserView(msTeamsView);
-  if(process.platform == 'darwin'){
+  if (process.platform == "darwin") {
     msTeamsView.setBounds({ x: 200, y: 0, width: 1000, height: 800 });
-  }
-  else{
+  } else {
     msTeamsView.setBounds({ x: 200, y: 0, width: 1000, height: 750 });
   }
   msTeamsView.webContents.loadURL("https://teams.microsoft.com/", {
@@ -176,11 +171,10 @@ app.on("window-all-closed", function () {
 // code. You can also put them in separate files and require them here.
 
 // send message for teams
-function teamsMessage(message){
-  var a = document.getElementById('cke_1_contents')
-  var b = a.children[0]
-  var c = b.children
-  c[0].innerText = message
-  document.getElementById("send-message-button").click()
+function teamsMessage(message) {
+  var a = document.getElementById("cke_1_contents");
+  var b = a.children[0];
+  var c = b.children;
+  c[0].innerText = message;
+  document.getElementById("send-message-button").click();
 }
-
