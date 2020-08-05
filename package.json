@@ -4,9 +4,11 @@
   "description": "Expectation Management in digital Communication",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "watch": "nodemon --watch * --exec 'electron .'"
   },
   "devDependencies": {
-    "electron": "^9.1.1"
+    "electron": "^9.1.1",
+    "nodemon": "^2.0.4"
   }
 }
