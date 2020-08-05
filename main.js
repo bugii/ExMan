@@ -14,6 +14,10 @@ ipcMain.on("set-dnd", (e) => {
   slackView.webContents.executeJavaScript("window.setDoNotDisturb()");
 });
 
+ipcMain.on("teams-message", (e) => {
+  msTeamsView.webContents.executeJavaScript("window.sayHello()");
+});
+
 ipcMain.on("app-change", (e, args) => {
   const name = args;
 
@@ -132,6 +136,7 @@ function createWindow() {
     width: true,
     height: true,
   });
+  msTeamsView.webContents.openDevTools();
   msTeamsView.webContents.on("new-window", (e, url) => {
     e.preventDefault();
     shell.openExternal(url);
@@ -151,6 +156,7 @@ function createWindow() {
   });
   homeView.webContents.loadFile(path.join(__dirname + "/views/home/home.html"));
 }
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -175,12 +181,4 @@ app.on("window-all-closed", function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-// send message for teams
-function teamsMessage(message){
-  var a = document.getElementById('cke_1_contents')
-  var b = a.children[0]
-  var c = b.children
-  c[0].innerText = message
-  document.getElementById("send-message-button").click()
-}
 
