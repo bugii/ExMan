@@ -99,6 +99,16 @@ function createWindow() {
   } else {
     slackView.setBounds({ x: 200, y: 0, width: 1000, height: 750 });
   }
+
+  slackView.webContents.openDevTools();
+
+  // Slack Token 
+  slackView.webContents
+  .executeJavaScript('localStorage.getItem("thekey");', true)
+  .then(result => {
+    console.log(result);
+  });
+
   //slackView.setBackgroundColor('#ffffff');
   slackView.webContents.loadURL("https://app.slack.com/client/", {
     userAgent:
