@@ -21,6 +21,10 @@ ipcMain.on("set-dnd", (e) => {
   slackView.webContents.executeJavaScript("window.setDoNotDisturb()");
 });
 
+ipcMain.on("teams-message", (e) => {
+  msTeamsView.webContents.executeJavaScript("window.sayHello()");
+});
+
 ipcMain.on("app-change", (e, args) => {
   const name = args;
 
@@ -141,6 +145,7 @@ function createWindow() {
     width: true,
     height: true,
   });
+  msTeamsView.webContents.openDevTools();
   msTeamsView.webContents.on("new-window", (e, url) => {
     e.preventDefault();
     shell.openExternal(url);
