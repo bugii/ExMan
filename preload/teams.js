@@ -4,40 +4,13 @@ const clickStatusIcon = async () => {
 };
 
 // send message for teams
-const teamsMessage = (message) => {
-  var a = document.getElementById('cke_1_contents');
-  var b = a.children[0];
-  var c = b.children;
+const teamsMessage = async (message) => {
+  let a = document.getElementById("cke_1_contents");
+  let b = a.children[0];
+  let c = b.children;
   c[0].innerText = message;
   document.getElementById("send-message-button").click();
 };
-
-const getUnreadMessage = async () => {
-  document.getElementById("app-bar-86fcd49b-61a2-4701-b771-54728cd291fb").click();
-  setTimeout(() => {
-    document.querySelector('.cle-item').click();
-  },100);
-  setTimeout(() => {
-    teamsMessage('Testing automated responder');
-  },1000);
-  var new_channels = document.querySelectorAll('.ts-unread-channel');
-  console.log(new_channels.length);
-  if (new_channels.length > 0){
-    for (var i = 0; i < new_channels.length; i++){
-      new_channels[i].click();
-      setTimeout(() => {
-        teamsMessage('Testing automated responder');
-      },1000);
-    }
-  }
-  else{
-    console.log('no element in new_channels')
-  }
-  
-
-
-};
-
 
 window.setDoNotDisturb = () => {
   clickStatusIcon();
@@ -51,7 +24,13 @@ window.setDoNotDisturb = () => {
   }, 1000);
 };
 
-window.sayHello = () => {
-  getUnreadMessage();
-};
+class newNotification extends window.Notification {
+  constructor(title, opt) {
+    console.log("notification");
+    console.log(title, opt);
+    super(title, opt);
+  }
+  static permission = "granted";
+}
 
+window.Notification = newNotification;

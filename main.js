@@ -1,5 +1,12 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain, BrowserView, shell } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  BrowserView,
+  shell,
+  session,
+} = require("electron");
 const path = require("path");
 
 let mainWindow;
@@ -122,6 +129,13 @@ function createWindow() {
     e.preventDefault();
     shell.openExternal(url);
   });
+  slackView.webContents.openDevTools();
+
+  slackView.webContents.on("did-finish-load", () => {
+    slackView.webContents.executeJavaScript(
+      'console.log(localStorage.getItem("localConfig_v2"))'
+    );
+  });
 
   // Microsoft Teams
   msTeamsView = new BrowserView({
@@ -146,6 +160,7 @@ function createWindow() {
     e.preventDefault();
     shell.openExternal(url);
   });
+  msTeamsView.webContents.openDevTools();
 
   // Blank default view (initially on top)
   homeView = new BrowserView({
@@ -160,8 +175,17 @@ function createWindow() {
     height: true,
   });
   homeView.webContents.loadFile(path.join(__dirname + "/views/home/home.html"));
-}
 
+  // Query all cookies.
+  session.defaultSession.cookies
+    .get({})
+    .then((cookies) => {
+      console.log(cookies);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -185,4 +209,3 @@ app.on("window-all-closed", function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-

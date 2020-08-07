@@ -1,3 +1,5 @@
+console.log("in preload");
+
 const clickStatusIcon = async () => {
   const menu = document.querySelector(".p-ia__sidebar_header__button");
   menu.click();
@@ -25,4 +27,13 @@ window.setDoNotDisturb = () => {
   }, 1000);
 };
 
+class newNotification extends window.Notification {
+  constructor(title, opt) {
+    console.log("notification");
+    console.log(title, opt);
+    super(title, opt);
+  }
+  static permission = "granted";
+}
 
+window.Notification = newNotification;
