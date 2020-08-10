@@ -6,42 +6,28 @@ const remote = electron.remote;
 const ipcRenderer = electron.ipcRenderer;
 
 function Webview(props) {
-  let webview = null;
-
   let z = 1;
   if (props.isActive) {
     z = 100;
   }
 
-  // const sendMessage = () => {
-  //   const token = getToken();
-  //   ipcRenderer.send("sendSlackMessage", token);
-  // };
-
-  // const getToken = () => {
-  //   if (props.name === "Slack") {
-  //     webview.executeJavaScript(
-  //       'var security_objects = JSON.parse(localStorage.getItem("localConfig_v2"))["teams"]; var token = security_objects[Object.keys(security_objects)[0]].token; console.log(token); var conversationId = window.location.href.substring(41, 52); console.log(conversationId);'
-  //     );
-  //   }
-  // };
+  const enableDevTools = (el) => {
+    if (el) {
+      el.addEventListener("dom-ready", () => {
+        el.openDevTools();
+        // the webcontentsId might be useful for directly accessing the DOM (in order to get token from localstorage for example)
+        console.log("webcontents id", el.getWebContentsId());
+      });
+    }
+  };
 
   return (
     <div>
       <webview
         style={{ zIndex: z }}
-        ref={(el) => {
-          if (!webview) {
-            console.log(el);
-            webview = el;
-            el.addEventListener("dom-ready", () => {
-              webview.openDevTools();
-              console.log(el.getWebContentsId());
-            });
-          }
-        }}
+        ref={enableDevTools}
         src={props.url}
-        useragent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:79.0) Gecko/20100101 Firefox/79.0"
+        useragent={props.useragent}
         preload={
           process.env.NODE_ENV === "development"
             ? `file://${remote.app.dirname}/preload/${props.name}.js`

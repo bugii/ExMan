@@ -18,6 +18,7 @@
     "axios": "^0.19.2",
     "cross-env": "^7.0.2",
     "electron-is-dev": "^1.2.0",
+    "lowdb": "^1.0.0",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

@@ -1,27 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar/Navbar";
 import Webview from "./components/Main/Webview";
-import services from "./services";
-
+import Home from "./components/Main/Home";
+import Focus from "./components/Main/Focus";
+import serviceDefaults from "./serviceDefaults";
 import "./App.scss";
 
+const electron = window.require("electron");
+const remote = electron.remote;
+const ipcRenderer = electron.ipcRenderer;
+
 function App() {
+  const [services, setServices] = useState([]);
+  const [nrOfServices, setNrOfServices] = useState(0);
   const [activeService, setActiveService] = useState("whatsapp");
+  const [isFocus, setFocus] = useState(false);
+
+  useEffect(() => {
+    ipcRenderer.on("get-services", (event, args) => {
+      // setNrOfServices(args);
+      const { nrOfServices, services } = args;
+      setNrOfServices(nrOfServices);
+      setServices(services);
+    });
+
+    ipcRenderer.send("get-services");
+  }, []);
+
+  // Get the current services from the database
 
   return (
     <div className="app">
       <div className="navigation">
-        <Navbar setActiveService={setActiveService} />
+        <Navbar
+          setActiveService={setActiveService}
+          services={services}
+          serviceDefaults={serviceDefaults}
+        />
       </div>
 
       <div className="main-content">
+        {isFocus ? <Focus setFocus={setFocus} /> : null}
+
+        <Home
+          isActive={activeService === "home"}
+          setFocus={setFocus}
+          nrOfServices={nrOfServices}
+        />
+
         {services.map((service) => (
           <Webview
             isActive={activeService === service.name}
             key={service.name}
             name={service.name}
-            url={service.url}
-            icon={service.icon}
+            url={serviceDefaults[service.name].url}
+            icon={serviceDefaults[service.name].icon}
           />
         ))}
       </div>

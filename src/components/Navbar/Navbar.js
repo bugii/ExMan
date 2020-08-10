@@ -1,6 +1,7 @@
 import React from "react";
 import "./Navbar.scss";
-import Services from "./Services";
+import Home from "./Home";
+import Service from "./Service";
 
 // to get access to the electron package you could alternatively edit the webpack config
 // like mentioned here: https://stackoverflow.com/questions/44008674/how-to-import-the-electron-ipcrenderer-in-a-react-webpack-2-setup
@@ -10,7 +11,17 @@ import Services from "./Services";
 function Navbar(props) {
   return (
     <div className="navbar">
-      <Services setActiveService={props.setActiveService} />
+      <Home setActiveService={props.setActiveService} />
+      <div className="services">
+        {props.services.map((service) => (
+          <Service
+            key={service.name}
+            setActiveService={props.setActiveService}
+            name={service.name}
+            icon={props.serviceDefaults[service.name].icon}
+          />
+        ))}
+      </div>
     </div>
   );
 }

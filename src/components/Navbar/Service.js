@@ -1,5 +1,4 @@
 import React from "react";
-import "./Service.scss";
 
 function Service(props) {
   return (
