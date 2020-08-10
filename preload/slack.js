@@ -1,8 +1,20 @@
-console.log("in preload");
+const axios = require('axios');
 
-const clickStatusIcon = async () => {
-  const menu = document.querySelector(".p-ia__sidebar_header__button");
-  menu.click();
+const testfunction  = () => {
+  var security_objects = JSON.parse(localStorage.getItem('localConfig_v2'))['teams']
+  // Read a token from the environment variables
+  var token = security_objects[Object.keys(security_objects)[0]].token;
+  console.log(token);
+  // get channel ID
+  var conversationId = window.location.href.substring(41,52);
+  console.log(conversationId);
+
+  fetch(`http://localhost:3333/postmessagetoslack?token=${token}&channel=${conversationId}&cookie=${encodeURIComponent(document.cookie)}`, {})
+  .then(response => {
+    console.log(response.json());
+  }).catch(err => {
+    console.log(err);
+  });
 };
 
 window.setDoNotDisturb = () => {
@@ -25,6 +37,10 @@ window.setDoNotDisturb = () => {
       snooze60.click();
     }, 1000);
   }, 1000);
+};
+
+window.test = () => {
+  testfunction();
 };
 
 class newNotification extends window.Notification {

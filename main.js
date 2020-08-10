@@ -8,6 +8,9 @@ const {
   session,
 } = require("electron");
 const path = require("path");
+const express = require('express');
+const fetch = require('node-fetch');
+const cors = require('cors');
 
 let mainWindow;
 
@@ -24,6 +27,12 @@ ipcMain.on("set-dnd", (e) => {
 ipcMain.on("teams-message", (e) => {
   msTeamsView.webContents.executeJavaScript("window.sayHello()");
 });
+
+ipcMain.on("test", (e) => {
+  slackView.webContents.executeJavaScript("window.test()");
+});
+
+
 
 ipcMain.on("app-change", (e, args) => {
   const name = args;
@@ -111,7 +120,7 @@ function createWindow() {
 
   // Slack Token 
   slackView.webContents
-  .executeJavaScript('localStorage.getItem("thekey");', true)
+  .executeJavaScript("JSON.parse(localStorage.getItem('localConfig_v2'))['teams'][0]['token'];", true)
   .then(result => {
     console.log(result);
   });
@@ -133,9 +142,9 @@ function createWindow() {
 
   slackView.webContents.on("did-finish-load", () => {
     slackView.webContents.executeJavaScript(
-      'console.log(localStorage.getItem("localConfig_v2"))'
+      "console.log(JSON.parse(localStorage.getItem('localConfig_v2'))['teams']['T015HNKCS3Z']['token'])"
     );
-  });
+});
 
   // Microsoft Teams
   msTeamsView = new BrowserView({
@@ -191,6 +200,40 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  const app = express();
+  const port = 3333;
+
+  app.use(cors());
+
+  app.get('/postmessagetoslack', (req, res) => {
+    const token = req.query.token;
+    const channel = req.query.channel;
+
+    fetch(`https://slack.com/api/chat.postMessage?token=${token}&channel=${channel}&text=Hello%20World`, {
+      method: 'get',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cookie': 'd: SIOKAuLPYxknVM167uClQC5CeaSRbElXteNlzE4irK6Ec6rIClZhQXQ6SNuqPNTKbB3WlOlJY9ZdvoHMgpjWjN5T5agNJL8kGUy1T9twYp7tBYLiWN8e4%2BWTFVqldvrYgPDz45dWC0uJEAO4dw5yeKwxfmzh9w%2Bs6gQLeiM0%2BXAVg%2Bi6xFH%2BsjKfSQ%3D%3D',
+        'Set-Cookie': 'd: SIOKAuLPYxknVM167uClQC5CeaSRbElXteNlzE4irK6Ec6rIClZhQXQ6SNuqPNTKbB3WlOlJY9ZdvoHMgpjWjN5T5agNJL8kGUy1T9twYp7tBYLiWN8e4%2BWTFVqldvrYgPDz45dWC0uJEAO4dw5yeKwxfmzh9w%2Bs6gQLeiM0%2BXAVg%2Bi6xFH%2BsjKfSQ%3D%3D',
+        'Origin': 'https://app.slack.com'
+      },
+
+    }).then(async response => {
+      const data = await response.json();
+      console.log(data);
+      res.json(data);
+      // res.json(response.json())
+    }).catch(error => {
+      console.log(error);
+      res.json({ error })
+    });
+  })
+
+  app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+  })
+
   createWindow();
 
   app.on("activate", function () {
