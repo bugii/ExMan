@@ -1,0 +1,20 @@
+.app {
+  display: flex;
+}
+
+.navigation {
+  flex-basis: 200px;
+}
+
+.main-content {
+  flex-grow: 1;
+  height: 100vh;
+  position: relative;
+
+  webview {
+    position: absolute;
+    display: flex;
+    height: 100%;
+    width: 100%;
+  }
+}
