@@ -16,7 +16,6 @@ function Webview(props) {
       el.addEventListener("dom-ready", () => {
         el.openDevTools();
         // the webcontentsId is stored in the database for easy reference from the main process)
-        console.log("webcontents id", el.getWebContentsId());
         ipcRenderer.send("webview-rendered", {
           name: props.name,
           webContentsId: el.getWebContentsId(),

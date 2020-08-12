@@ -13,6 +13,7 @@ function init() {
   db.set("services", [
     { name: "slack", webContentsId: null },
     { name: "teams", webContentsId: null },
+    { name: "whatsapp", webContentsId: null },
   ]).write();
 
   if (!db.has("focusSessions").value()) {

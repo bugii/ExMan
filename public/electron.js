@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain, webContents } = require("electron");
+const { app, BrowserWindow, ipcMain, session } = require("electron");
 const { setDnd: setDndSlack } = require("./services/slack");
 const { setDnd: setDndTeams } = require("./services/teams");
 
@@ -42,7 +42,10 @@ ipcMain.on("focus-end", (args) => {
   console.log("focus end");
 });
 
-function createWindow() {
+async function createWindow() {
+  // If you want to clear cache (helpful for testing new users)
+  // await session.defaultSession.clearStorageData();
+
   // Main Browser Window
   mainWindow = new BrowserWindow({
     width: 1200,
