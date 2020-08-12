@@ -13,7 +13,7 @@ const ipcRenderer = electron.ipcRenderer;
 function App() {
   const [services, setServices] = useState([]);
   const [nrOfServices, setNrOfServices] = useState(0);
-  const [activeService, setActiveService] = useState("whatsapp");
+  const [activeService, setActiveService] = useState("home");
   const [isFocus, setFocus] = useState(false);
 
   useEffect(() => {
@@ -53,6 +53,7 @@ function App() {
             isActive={activeService === service.name}
             key={service.name}
             name={service.name}
+            useragent={serviceDefaults[service.name].useragent}
             url={serviceDefaults[service.name].url}
             icon={serviceDefaults[service.name].icon}
           />

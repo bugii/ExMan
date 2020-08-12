@@ -15,8 +15,12 @@ function Webview(props) {
     if (el) {
       el.addEventListener("dom-ready", () => {
         el.openDevTools();
-        // the webcontentsId might be useful for directly accessing the DOM (in order to get token from localstorage for example)
+        // the webcontentsId is stored in the database for easy reference from the main process)
         console.log("webcontents id", el.getWebContentsId());
+        ipcRenderer.send("webview-rendered", {
+          name: props.name,
+          webContentsId: el.getWebContentsId(),
+        });
       });
     }
   };

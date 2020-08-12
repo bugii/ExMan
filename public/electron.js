@@ -1,30 +1,29 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, webContents } = require("electron");
+const { setDnd: setDndSlack } = require("./services/slack");
+const { setDnd: setDndTeams } = require("./services/teams");
+
 const axios = require("axios");
 const path = require("path");
 const isDev = require("electron-is-dev");
-const low = require("lowdb");
-const FileSync = require("lowdb/adapters/FileSync");
+const { init } = require("./db/db");
 
-const adapter = new FileSync(path.join(app.getPath("userData"), "db.json"));
-const db = low(adapter);
 // Initialize the db to have 1 service: slack
 // Is currently required until we have a function that allows us to add services dynamically
-if (!db.has("services").value()) {
-  console.log("db is empty, initialize");
-  db.set("services", [{ name: "slack" }]).write();
-}
+const db = init();
 
 let mainWindow;
 
 ipcMain.on("get-services", (event, args) => {
-  console.log("getting services from db on app startup");
   const nrOfServices = db.get("services").size().value();
-  console.log("main", nrOfServices);
   const services = db.get("services").value();
   console.log("services", services);
-
   event.reply("get-services", { nrOfServices, services });
+});
+
+ipcMain.on("webview-rendered", (event, { name, webContentsId }) => {
+  // add reference to db
+  db.get("services").find({ name }).assign({ webContentsId }).write();
 });
 
 ipcMain.on("focus-start", (args) => {
@@ -32,7 +31,8 @@ ipcMain.on("focus-start", (args) => {
   // 1. Create a focus object in DB to reference and update with data later on
 
   // 2. Set status of apps to DND if possible
-
+  setDndSlack();
+  setDndTeams();
   // 3. Start loop to get messages
 
   // 4. Send autoresponse if nesessary
