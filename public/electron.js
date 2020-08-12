@@ -1,5 +1,12 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain, session } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  session,
+  webContents,
+  shell,
+} = require("electron");
 const { setDnd: setDndSlack } = require("./services/slack");
 const { setDnd: setDndTeams } = require("./services/teams");
 
@@ -24,6 +31,14 @@ ipcMain.on("get-services", (event, args) => {
 ipcMain.on("webview-rendered", (event, { name, webContentsId }) => {
   // add reference to db
   db.get("services").find({ name }).assign({ webContentsId }).write();
+  const webContent = webContents.fromId(webContentsId);
+  webContent.openDevTools();
+  webContent.on("new-window", (e, url) => {
+    e.preventDefault();
+    shell.openExternal(url);
+  });
+  // you can disable audio on the webview
+  //el.setAudioMuted(true);
 });
 
 ipcMain.on("focus-start", (args) => {

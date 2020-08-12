@@ -16,3 +16,14 @@ function getToken() {
 }
 
 window.getToken = getToken;
+
+class newNotification extends window.Notification {
+  constructor(title, opt) {
+    console.log("notification");
+    console.log(title, opt);
+    super(title, opt);
+  }
+  static permission = "granted";
+}
+
+window.Notification = newNotification;

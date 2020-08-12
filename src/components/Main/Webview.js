@@ -14,7 +14,6 @@ function Webview(props) {
   const enableDevTools = (el) => {
     if (el) {
       el.addEventListener("dom-ready", () => {
-        el.openDevTools();
         // the webcontentsId is stored in the database for easy reference from the main process)
         ipcRenderer.send("webview-rendered", {
           name: props.name,
@@ -31,6 +30,7 @@ function Webview(props) {
         ref={enableDevTools}
         src={props.url}
         useragent={props.useragent}
+        allowpopups="true"
         preload={
           process.env.NODE_ENV === "development"
             ? `file://${remote.app.dirname}/preload/${props.name}.js`

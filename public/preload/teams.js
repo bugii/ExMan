@@ -21,3 +21,26 @@ window.electronSafeIpc = {
   on: () => null,
 };
 window.desktop = undefined;
+
+class newNotification extends window.Notification {
+  constructor(title, opt) {
+    console.log("notification");
+    console.log(title, opt);
+    super(title, opt);
+  }
+  static permission = "granted";
+}
+
+window.Notification = newNotification;
+
+navigator.getUserMedia(
+  { video: true, audio: true },
+  (localMediaStream) => {
+    var video = document.querySelector("video");
+    video.src = window.URL.createObjectURL(localMediaStream);
+    video.onloadedmetadata = (e) => {
+      // Ready to go. Do some stuff.
+    };
+  },
+  errorCallback
+);
