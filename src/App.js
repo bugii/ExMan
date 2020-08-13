@@ -15,6 +15,7 @@ function App() {
   const [nrOfServices, setNrOfServices] = useState(0);
   const [activeService, setActiveService] = useState("home");
   const [isFocus, setFocus] = useState(false);
+  const [focusLength, setFocusLength] = useState(0);
 
   useEffect(() => {
     ipcRenderer.on("get-services", (event, args) => {
@@ -40,11 +41,12 @@ function App() {
       </div>
 
       <div className="main-content">
-        {isFocus ? <Focus setFocus={setFocus} /> : null}
+        {isFocus ? <Focus setFocus={setFocus} focusLength={focusLength} /> : null}
 
         <Home
           isActive={activeService === "home"}
           setFocus={setFocus}
+          setFocusLength={setFocusLength}
           nrOfServices={nrOfServices}
         />
 

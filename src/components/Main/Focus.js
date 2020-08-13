@@ -54,7 +54,7 @@ function Focus(props) {
   return (
     <FocusDiv>
         <h1 style={{color: Colors.navy, fontSize: 80, textAlign: 'center'}}>STAY FOCUSED!</h1>
-        <Countdown/>
+        <Countdown focusLength={props.focusLength}/>
         <FocusText>We are taking care of your messages for you.</FocusText>
         <FocusMenuButtons>
             <Tooltip title="End focus session" arrow placement="top">

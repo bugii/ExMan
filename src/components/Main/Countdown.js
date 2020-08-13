@@ -53,7 +53,7 @@ function Countdown(props) {
         <CountdownContainer>
             <OutterCircle>
                 <InnerCircle>
-                    <TimeNumber> 25 </TimeNumber>
+                    <TimeNumber> {props.focusLength} </TimeNumber>
                     <TimeText> minutes left </TimeText>
                 </InnerCircle>
             </OutterCircle>

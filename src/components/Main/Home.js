@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from 'styled-components';
 import Colors from '../Colors';
 import MenuBoxes from "./MenuBoxes";
+import NewFocusSession from "./NewFocusSession";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -27,11 +28,22 @@ function Home(props) {
     z = 100;
   }
 
-  const focusOnClick = () => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const focusOnClick = (focusSessionLength) => {
     // send ipc message to main process to start session there too (db etc)
-    ipcRenderer.send("focus-start", { minutes: 60 });
+    ipcRenderer.send("focus-start", { minutes: focusSessionLength });
     // adjust UI too
     props.setFocus(true);
+    props.setFocusLength(focusSessionLength);
+  };
+
+  const openDialog = () => {
+      setDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+      setDialogOpen(false);
   };
 
   return (
@@ -42,7 +54,8 @@ function Home(props) {
             away.</ParagraphText>
         <ParagraphText>To begin, add your apps and click
             focus now or schedule your next focus session.</ParagraphText>
-        <MenuBoxes handleFocus={focusOnClick}/>
+        <MenuBoxes handleFocus={openDialog}/>
+        <NewFocusSession open={dialogOpen} focusNow={focusOnClick} closeDialog={closeDialog}/>
       <p> Currently added {props.nrOfServices} service/s </p>
     </HomeDiv>
   );
