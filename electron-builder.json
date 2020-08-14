@@ -1,0 +1,19 @@
+{
+  "appId": "ch.uzh.exman",
+  "publish": {
+    "provider": "github"
+  },
+  "directories": {
+    "buildResources": "rescources"
+  },
+  "files": ["rescources/icon.png"],
+  "mac": {
+    "entitlements": "resources/entitlements.mac.plist",
+    "extendInfo": {
+      "NSCameraUsageDescription": "This app requires camera access for video chats",
+      "NSMicrophoneUsageDescription": "This app requires microphone access for voice chats"
+    }
+  },
+  "win": {},
+  "linux": {}
+}

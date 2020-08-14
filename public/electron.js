@@ -59,9 +59,7 @@ Menu.setApplicationMenu(mainMenu);
 
 ipcMain.on("add-service", (event, name) => {
   console.log("add service", name);
-  // add service to db
   const services = addService(name);
-  // update react app
   mainWindow.webContents.send("update-services", services);
 });
 

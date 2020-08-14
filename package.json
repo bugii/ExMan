@@ -46,18 +46,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "build": {
-    "appId": "ch.uzh.exman",
-    "publish": {
-      "provider": "github"
-    },
-    "mac": {
-      "entitlements": "resources/entitlements.mac.plist",
-      "extendInfo": {
-        "NSCameraUsageDescription": "This app requires camera access for video chats",
-        "NSMicrophoneUsageDescription": "This app requires microphone access for voice chats"
-      }
-    }
   }
 }
