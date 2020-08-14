@@ -6,10 +6,15 @@ const {
   session,
   webContents,
   shell,
+  systemPreferences,
 } = require("electron");
 const { setDnd: setDndSlack } = require("./services/slack");
 const { setDnd: setDndTeams } = require("./services/teams");
-
+const {
+  hasScreenCapturePermission,
+  hasPromptedForPermission,
+  openSystemPreferences,
+} = require("mac-screen-capture-permissions");
 const axios = require("axios");
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -85,8 +90,17 @@ async function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   createWindow();
+
+  // ask for permissions (mic, camera and screen capturing) on a mac
+  if (process.platform === "darwin") {
+    await systemPreferences.askForMediaAccess("microphone");
+    await systemPreferences.askForMediaAccess("camera");
+    if (!hasPromptedForPermission()) {
+      hasScreenCapturePermission();
+    }
+  }
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

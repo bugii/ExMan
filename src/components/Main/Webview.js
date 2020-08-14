@@ -31,6 +31,7 @@ function Webview(props) {
         src={props.url}
         useragent={props.useragent}
         allowpopups="true"
+        disablewebsecurity="true"
         preload={
           process.env.NODE_ENV === "development"
             ? `file://${remote.app.dirname}/preload/${props.name}.js`
