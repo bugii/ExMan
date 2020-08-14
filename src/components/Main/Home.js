@@ -1,6 +1,6 @@
-import React, {useState} from "react";
-import styled from 'styled-components';
-import Colors from '../Colors';
+import React, { useState } from "react";
+import styled from "styled-components";
+import Colors from "../Colors";
 import MenuBoxes from "./MenuBoxes";
 import NewFocusSession from "./NewFocusSession";
 const electron = window.require("electron");
@@ -18,7 +18,7 @@ export const HomeDiv = styled.div`
 `;
 
 export const ParagraphText = styled.p`
-    color: ${Colors.navy}
+  color: ${Colors.navy};
 `;
 
 function Home(props) {
@@ -39,23 +39,30 @@ function Home(props) {
   };
 
   const openDialog = () => {
-      setDialogOpen(true);
+    setDialogOpen(true);
   };
 
   const closeDialog = () => {
-      setDialogOpen(false);
+    setDialogOpen(false);
   };
 
   return (
-    <HomeDiv style={{zIndex: z}}>
-      <h1 style={{color: Colors.turquoise}}> EXPECTATION MANAGEMENT</h1>
-        <ParagraphText>Welcome to your expectation management
-            app. When you need to focus, we will take care of the incoming communications while you are
-            away.</ParagraphText>
-        <ParagraphText>To begin, add your apps and click
-            focus now or schedule your next focus session.</ParagraphText>
-        <MenuBoxes handleFocus={openDialog}/>
-        <NewFocusSession open={dialogOpen} focusNow={focusOnClick} closeDialog={closeDialog}/>
+    <HomeDiv style={{ zIndex: z }}>
+      <h1 style={{ color: Colors.turquoise }}> EXPECTATION MANAGEMENT</h1>
+      <ParagraphText>
+        Welcome to your expectation management app. When you need to focus, we
+        will take care of the incoming communications while you are away.
+      </ParagraphText>
+      <ParagraphText>
+        To begin, add your apps and click focus now or schedule your next focus
+        session.
+      </ParagraphText>
+      <MenuBoxes handleFocus={openDialog} openAddingApp={props.openAddingApp} />
+      <NewFocusSession
+        open={dialogOpen}
+        focusNow={focusOnClick}
+        closeDialog={closeDialog}
+      />
       <p> Currently added {props.nrOfServices} service/s </p>
     </HomeDiv>
   );

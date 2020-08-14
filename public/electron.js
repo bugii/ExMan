@@ -7,30 +7,74 @@ const {
   webContents,
   shell,
   systemPreferences,
+  Menu,
 } = require("electron");
 const { setDnd: setDndSlack } = require("./services/slack");
 const { setDnd: setDndTeams } = require("./services/teams");
 const {
   hasScreenCapturePermission,
   hasPromptedForPermission,
-  openSystemPreferences,
 } = require("mac-screen-capture-permissions");
 const axios = require("axios");
 const path = require("path");
 const isDev = require("electron-is-dev");
-const { init } = require("./db/db");
+const { init, addService, getServices, deleteService } = require("./db/db");
 
-// Initialize the db to have 1 service: slack
-// Is currently required until we have a function that allows us to add services dynamically
+const isMac = process.platform === "darwin";
+
+// Initialize db or if there are services stored in the db, use them
 const db = init();
 
 let mainWindow;
+let mainMenu;
+
+mainMenu = Menu.buildFromTemplate([
+  isMac
+    ? {
+        label: "ExMan",
+        submenu: [
+          { role: "about" },
+          { type: "separator" },
+          { role: "services" },
+          { type: "separator" },
+          { role: "hide" },
+          { role: "hideothers" },
+          { role: "unhide" },
+          { type: "separator" },
+          { role: "quit" },
+        ],
+      }
+    : {},
+  {
+    label: "View",
+    submenu: [
+      { role: "reload" },
+      { role: "forcereload" },
+      { role: "toggledevtools" },
+    ],
+  },
+]);
+
+Menu.setApplicationMenu(mainMenu);
+
+ipcMain.on("add-service", (event, name) => {
+  console.log("add service", name);
+  // add service to db
+  const services = addService(name);
+  // update react app
+  mainWindow.webContents.send("update-services", services);
+});
+
+ipcMain.on("delete-service", (event, id) => {
+  console.log("delete service", id);
+  const services = deleteService(id);
+  mainWindow.webContents.send("update-services", services);
+});
 
 ipcMain.on("get-services", (event, args) => {
-  const nrOfServices = db.get("services").size().value();
-  const services = db.get("services").value();
+  const services = getServices();
   console.log("services", services);
-  event.reply("get-services", { nrOfServices, services });
+  event.reply("get-services", services);
 });
 
 ipcMain.on("webview-rendered", (event, { name, webContentsId }) => {
@@ -175,7 +219,7 @@ app.whenReady().then(async () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on("window-all-closed", function () {
-  if (process.platform !== "darwin") app.quit();
+  app.quit();
 });
 
 // In this file you can include the rest of your app's specific main process

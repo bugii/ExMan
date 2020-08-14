@@ -5,6 +5,13 @@ console.log(remote.session.defaultSession);
 window.defaultSession = remote.session.defaultSession;
 console.log(localStorage);
 
+var ses = remote.session.defaultSession; //Gets the default session
+// ses.flushStorageData(); //Writes any unwritten DOMStorage data to disk
+ses.clearStorageData({
+  //Clears the specified storages in the session
+  storages: ["appcache", "serviceworkers", "cachestorage", "websql", "indexdb"],
+});
+
 function getTokens() {
   const presenceToken = localStorage.getItem(
     "adal.access.token.keyhttps://presence.teams.microsoft.com/"
@@ -16,11 +23,11 @@ window.getTokens = getTokens;
 
 // currently required for teams, unsure why
 // taken from https://github.com/meetfranz/Microsoft-Teams/blob/master/webview.js
-window.electronSafeIpc = {
-  send: () => null,
-  on: () => null,
-};
-window.desktop = undefined;
+// window.electronSafeIpc = {
+//   send: () => null,
+//   on: () => null,
+// };
+// window.desktop = undefined;
 
 class newNotification extends window.Notification {
   constructor(title, opt) {

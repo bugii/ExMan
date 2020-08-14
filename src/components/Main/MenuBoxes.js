@@ -1,8 +1,8 @@
 import React from "react";
-import styled from 'styled-components';
-import TodayIcon from '@material-ui/icons/Today';
-import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import styled from "styled-components";
+import TodayIcon from "@material-ui/icons/Today";
+import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Colors from "../Colors";
 
 const electron = window.require("electron");
@@ -33,32 +33,29 @@ const MenuIcon = styled.div`
   color: ${Colors.navy};
 `;
 
-
-
 function MenuBoxes(props) {
-
-    return(
-        <MenuBoxContainer>
-            <MenuBoxDiv onClick={props.handleFocus}>
-                <MenuIcon>
-                    <FilterCenterFocusIcon style={{fontSize:150}}/>
-                </MenuIcon>
-                focus now
-            </MenuBoxDiv>
-            <MenuBoxDiv>
-                <MenuIcon>
-                    <TodayIcon style={{fontSize:150}}/>
-                </MenuIcon>
-                schedule focus
-            </MenuBoxDiv>
-            <MenuBoxDiv>
-                <MenuIcon>
-                  <AddCircleOutlineIcon style={{fontSize:150}}/>
-                </MenuIcon>
-                add app
-            </MenuBoxDiv>
-        </MenuBoxContainer>
-    )
+  return (
+    <MenuBoxContainer>
+      <MenuBoxDiv onClick={props.handleFocus}>
+        <MenuIcon>
+          <FilterCenterFocusIcon style={{ fontSize: 150 }} />
+        </MenuIcon>
+        focus now
+      </MenuBoxDiv>
+      <MenuBoxDiv>
+        <MenuIcon>
+          <TodayIcon style={{ fontSize: 150 }} />
+        </MenuIcon>
+        schedule focus
+      </MenuBoxDiv>
+      <MenuBoxDiv onClick={props.openAddingApp}>
+        <MenuIcon>
+          <AddCircleOutlineIcon style={{ fontSize: 150 }} />
+        </MenuIcon>
+        add app
+      </MenuBoxDiv>
+    </MenuBoxContainer>
+  );
 }
 
 export default MenuBoxes;
