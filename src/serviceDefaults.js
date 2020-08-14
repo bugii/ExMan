@@ -3,6 +3,7 @@
 import teamsIcon from "./images/icons/teams.svg";
 import slackIcon from "./images/icons/slack.svg";
 import whatsappIcon from "./images/icons/whatsapp.svg";
+import skypeIcon from "./images/icons/skype.svg";
 
 export default {
   teams: {
@@ -20,6 +21,12 @@ export default {
   whatsapp: {
     url: "https://web.whatsapp.com/",
     icon: whatsappIcon,
+    useragent:
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
+  },
+  skype: {
+    url: "https://web.skype.com/",
+    icon: skypeIcon,
     useragent:
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
   },

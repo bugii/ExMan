@@ -14,6 +14,7 @@ function init() {
     { name: "slack", webContentsId: null },
     { name: "teams", webContentsId: null },
     { name: "whatsapp", webContentsId: null },
+    { name: "skype", webContentsId: null },
   ]).write();
 
   if (!db.has("focusSessions").value()) {
