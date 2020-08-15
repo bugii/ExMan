@@ -1,13 +1,7 @@
 const { webContents } = require("electron");
 const axios = require("axios");
-const { getDb } = require("../db/db");
 
-const setDnd = async () => {
-  // get webContentsId for teams
-  const db = getDb();
-  const webContentsId = db.get("services").find({ name: "teams" }).value()
-    .webContentsId;
-  console.log("teams webcontents", webContentsId);
+const setDnd = async (webContentsId) => {
   // execute getToken funtion in the slack renderer to get token from localStorage
   const tokens = await webContents
     .fromId(webContentsId)
@@ -31,12 +25,15 @@ const setDnd = async () => {
   }
 };
 
-const getMessages = () => {};
+const setOnline = (webContentsId) => {};
 
-const sendMessage = () => {};
+const getMessages = (webContentsId, timestamp) => {};
+
+const sendMessage = (webContentsId, channel, message) => {};
 
 module.exports = {
   setDnd,
+  setOnline,
   getMessages,
   sendMessage,
 };

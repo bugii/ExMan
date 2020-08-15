@@ -30,12 +30,14 @@ function Home(props) {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const focusOnClick = (focusSessionLength) => {
+  const focusOnClick = ({ startTime, endTime }) => {
+    const diffMs = endTime - startTime;
+    var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
     // send ipc message to main process to start session there too (db etc)
-    ipcRenderer.send("focus-start", { minutes: focusSessionLength });
+    ipcRenderer.send("focus-start", { startTime, endTime, diffMins });
     // adjust UI too
     props.setFocus(true);
-    props.setFocusLength(focusSessionLength);
+    props.setFocusLength(diffMins);
   };
 
   const openDialog = () => {

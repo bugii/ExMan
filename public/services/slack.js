@@ -1,13 +1,7 @@
 const { session, webContents } = require("electron");
 const axios = require("axios");
-const { getDb } = require("../db/db");
 
-const setDnd = async () => {
-  // get webContentsId for slack
-  const db = getDb();
-  const webContentsId = db.get("services").find({ name: "slack" }).value()
-    .webContentsId;
-  console.log("slack webcontents", webContentsId);
+const setDnd = async (webContentsId, diffMins) => {
   // execute getToken funtion in the slack renderer to get token from localStorage
   const token = await webContents
     .fromId(webContentsId)
@@ -30,7 +24,7 @@ const setDnd = async () => {
   await axios.get("https://slack.com/api/dnd.setSnooze", {
     params: {
       token,
-      num_minutes: 5,
+      num_minutes: diffMins,
     },
     headers: {
       Cookie: stringCookie,
@@ -38,9 +32,16 @@ const setDnd = async () => {
   });
 };
 
-const getMessages = () => {};
+const setOnline = (webContentsId) => {};
 
-const sendMessage = (token) => {
+const getMessages = (webContentsId, timestamp) => {};
+
+const sendMessage = async (webContentsId, channel, message) => {
+  // execute getToken funtion in the slack renderer to get token from localStorage
+  const token = await webContents
+    .fromId(webContentsId)
+    .executeJavaScript("window.getToken()");
+
   session.defaultSession.cookies
     .get({ url: "https://slack.com" })
     .then(async (cookies) => {
@@ -55,8 +56,8 @@ const sendMessage = (token) => {
       console.log(stringCookie);
 
       var data = JSON.stringify({
-        text: "POST from Electron Main process",
-        channel: "D015HNN3JF9",
+        text: message,
+        channel: channel,
       });
 
       var config = {
@@ -82,6 +83,7 @@ const sendMessage = (token) => {
 
 module.exports = {
   setDnd,
+  setOnline,
   getMessages,
   sendMessage,
 };

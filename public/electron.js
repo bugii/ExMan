@@ -18,7 +18,15 @@ const {
 const axios = require("axios");
 const path = require("path");
 const isDev = require("electron-is-dev");
-const { init, addService, getServices, deleteService } = require("./db/db");
+const {
+  init,
+  addService,
+  getServices,
+  deleteService,
+  createFocusSession,
+  endCurrentFocusSession,
+  getCurrentFocusSession,
+} = require("./db/db");
 
 const isMac = process.platform === "darwin";
 
@@ -147,23 +155,53 @@ ipcMain.on("webview-rendered", (event, { name, webContentsId }) => {
     shell.openExternal(url);
   });
   // you can disable audio on the webview
-  //el.setAudioMuted(true);
+  // el.setAudioMuted(true);
 });
 
-ipcMain.on("focus-start", (args) => {
-  console.log("focus start");
+ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
+  console.log("focus start from", startTime, "to", endTime);
   // 1. Create a focus object in DB to reference and update with data later on
+  createFocusSession(startTime, endTime);
 
   // 2. Set status of apps to DND if possible
-  setDndSlack();
-  setDndTeams();
+  // Get all registered services
+  const currentFocusSession = getCurrentFocusSession();
+  currentFocusSession.services.forEach((service) => {
+    switch (service.name) {
+      case "slack":
+        setDndSlack(service.webContentsId, diffMins);
+        break;
+
+      case "teams":
+        setDndTeams(service.webContentsId);
+        break;
+
+      case "skype":
+        break;
+
+      case "whatsapp":
+        break;
+
+      default:
+        break;
+    }
+  });
   // 3. Start loop to get messages
+  // TODO: Write function to get all direct message channels
+  // TODO: Write function to get messages every minute (using the 'lastUpdated' timestamp in the db for each service)
+  // TODO: If message found: Add message/s to the db for the given service
+  // TODO: After storing to db: set 'lastUpdated' to the previous + 1 minute
 
   // 4. Send autoresponse if nesessary
+  // TODO: Write function to send automatic response message
+  // TODO: If automatic response sent: set 'autoReplied' to true for the current focusSession and id
 });
 
 ipcMain.on("focus-end", (args) => {
   console.log("focus end");
+  // remove current focus session from db
+  endCurrentFocusSession();
+  // TODO: set status to active again for all services -> use 'setOnline' function
 });
 
 async function createWindow() {
@@ -198,7 +236,7 @@ app.whenReady().then(async () => {
   createWindow();
 
   // ask for permissions (mic, camera and screen capturing) on a mac
-  if (process.platform === "darwin") {
+  if (isMac) {
     await systemPreferences.askForMediaAccess("microphone");
     await systemPreferences.askForMediaAccess("camera");
     if (!hasPromptedForPermission()) {
@@ -213,12 +251,6 @@ app.whenReady().then(async () => {
   });
 });
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on("window-all-closed", function () {
   app.quit();
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
