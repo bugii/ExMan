@@ -13,6 +13,22 @@ export const AddServiceDiv = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  div{
+    border:1px solid black;
+    width:60%;
+    text-align:center;
+    padding:20px;
+    margin: 0.5px auto;
+  }
+  div:hover{
+    cursor:pointer;
+    background-color:${Colors.turquoise};
+    color:black;
+  }
+  .close{
+    background-color:${Colors.navy};
+    color:white;
+  }
 `;
 
 export default function AddService(props) {
@@ -20,7 +36,7 @@ export default function AddService(props) {
 
   return (
     <AddServiceDiv>
-      <div onClick={props.closeAddingApp}>close</div>
+      <div onClick={props.closeAddingApp} className="close">close</div>
       {services.map((service) => (
         <div key={service} onClick={() => props.addApp(service)}>
           {service}

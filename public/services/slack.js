@@ -60,7 +60,34 @@ const setOnline = async (webContentsId) => {
   });
 };
 
-const getMessages = (webContentsId, timestamp) => {};
+const getMessages = async (webContentsId, timestamp) => {
+  const token = await webContents
+    .fromId(webContentsId)
+    .executeJavaScript("window.getToken()");
+
+  // Get cookie
+  const cookies = await session.defaultSession.cookies.get({
+    url: "https://slack.com",
+  });
+  let stringCookie = "";
+
+  cookies.forEach((cookie) => {
+    if (cookie.name == "d") {
+      stringCookie = `${cookie.name}=${cookie.value};`;
+    }
+  });
+
+  await axios.get("https://slack.com/api/conversations.list", {
+    params: {
+      token,
+    },
+    headers: {
+      Cookie: stringCookie,
+    },
+  });
+
+
+};
 
 const sendMessage = async (webContentsId, channel, message) => {
   // execute getToken funtion in the slack renderer to get token from localStorage
