@@ -32,7 +32,33 @@ const setDnd = async (webContentsId, diffMins) => {
   });
 };
 
-const setOnline = (webContentsId) => {};
+const setOnline = async (webContentsId) => {
+  const token = await webContents
+    .fromId(webContentsId)
+    .executeJavaScript("window.getToken()");
+
+  // Get cookie
+  const cookies = await session.defaultSession.cookies.get({
+    url: "https://slack.com",
+  });
+  let stringCookie = "";
+
+  cookies.forEach((cookie) => {
+    if (cookie.name == "d") {
+      stringCookie = `${cookie.name}=${cookie.value};`;
+    }
+  });
+
+  // End Do not Disturb session on slack API with token and cookie
+  await axios.get("https://slack.com/api/dnd.endSnooze", {
+    params: {
+      token,
+    },
+    headers: {
+      Cookie: stringCookie,
+    },
+  });
+};
 
 const getMessages = (webContentsId, timestamp) => {};
 

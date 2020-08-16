@@ -9,7 +9,7 @@ const {
   systemPreferences,
   Menu,
 } = require("electron");
-const { setDnd: setDndSlack } = require("./services/slack");
+const { setDnd: setDndSlack,  setOnline: setOnlineSlack} = require("./services/slack");
 const { setDnd: setDndTeams } = require("./services/teams");
 const {
   hasScreenCapturePermission,
@@ -37,8 +37,7 @@ let mainWindow;
 let mainMenu;
 
 mainMenu = Menu.buildFromTemplate([
-  isMac
-    ? {
+    {
         label: "ExMan",
         submenu: [
           { role: "about" },
@@ -51,8 +50,7 @@ mainMenu = Menu.buildFromTemplate([
           { type: "separator" },
           { role: "quit" },
         ],
-      }
-    : {},
+    },
   {
     label: "View",
     submenu: [
@@ -199,9 +197,31 @@ ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
 
 ipcMain.on("focus-end", (args) => {
   console.log("focus end");
+  //get ongoing focus sessions
+  const currentFocusSession = getCurrentFocusSession();
+  // TODO: set status to active again for all services -> use 'setOnline' function
+  currentFocusSession.services.forEach((service) => {
+    switch (service.name) {
+      case "slack":
+        setOnlineSlack(service.webContentsId);
+        break;
+
+      case "teams":
+        //setOnlineTeams(service.webContentsId);
+        break;
+
+      case "skype":
+        break;
+
+      case "whatsapp":
+        break;
+
+      default:
+        break;
+    }
   // remove current focus session from db
   endCurrentFocusSession();
-  // TODO: set status to active again for all services -> use 'setOnline' function
+  });
 });
 
 async function createWindow() {
