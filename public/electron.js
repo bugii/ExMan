@@ -10,7 +10,7 @@ const {
   Menu,
 } = require("electron");
 const { setDnd: setDndSlack,  setOnline: setOnlineSlack} = require("./services/slack");
-const { setDnd: setDndTeams } = require("./services/teams");
+const { setDnd: setDndTeams, setOnline: setOnlineTeams } = require("./services/teams");
 const {
   hasScreenCapturePermission,
   hasPromptedForPermission,
@@ -207,7 +207,7 @@ ipcMain.on("focus-end", (args) => {
         break;
 
       case "teams":
-        //setOnlineTeams(service.webContentsId);
+        setOnlineTeams(service.webContentsId);
         break;
 
       case "skype":

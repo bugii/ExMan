@@ -25,7 +25,29 @@ const setDnd = async (webContentsId) => {
   }
 };
 
-const setOnline = (webContentsId) => {};
+const setOnline = async (webContentsId) => {
+  // execute getToken funtion in the slack renderer to get token from localStorage
+  const tokens = await webContents
+    .fromId(webContentsId)
+    .executeJavaScript("window.getTokens()");
+
+  try {
+    await axios.put(
+      "https://presence.teams.microsoft.com/v1/me/forceavailability/",
+      {
+        availability: "Available",
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${tokens[0]}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const getMessages = (webContentsId, timestamp) => {};
 
