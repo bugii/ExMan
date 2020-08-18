@@ -60,10 +60,15 @@ const setOnline = async (webContentsId) => {
   });
 };
 
-const getMessages = async (webContentsId, timestamp) => {
+const getMessages = async (webContentsId, startTime, messages) => {
   const token = await webContents
     .fromId(webContentsId)
     .executeJavaScript("window.getToken()");
+
+    // get userID from localStorage
+    const userID = await webContents
+    .fromId(webContentsId)
+    .executeJavaScript("window.getUserID()");
 
   // Get cookie
   const cookies = await session.defaultSession.cookies.get({
@@ -77,16 +82,44 @@ const getMessages = async (webContentsId, timestamp) => {
     }
   });
 
+  // get all direct message channels as save it in an array
+  const channels = [];
+
   await axios.get("https://slack.com/api/conversations.list", {
     params: {
       token,
+      types:'im',
     },
     headers: {
       Cookie: stringCookie,
     },
-  });
+  }).then((response) =>{
+    response.data.channels.forEach(element => channels.push(element.id));
+    });
 
 
+  //var seconds = (new Date().getTime() / 1000) - 10000;
+
+  //retrieve the messages from the channels
+  channels.forEach ( async (channel) => {
+    await axios.get("https://slack.com/api/conversations.history", {
+      params: {
+        token,
+        channel,
+        oldest: startTime,
+      },
+      headers: {
+        Cookie: stringCookie,
+      },
+    }).then(response =>{
+      response.data.messages.forEach(m => {
+        if (m.user !== userID){
+          sendMessage(webContentsId, channel, messages)
+        }
+      })
+
+    });
+  })
 };
 
 const sendMessage = async (webContentsId, channel, message) => {

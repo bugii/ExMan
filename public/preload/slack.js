@@ -17,6 +17,18 @@ function getToken() {
 
 window.getToken = getToken;
 
+function getUserID() {
+  var security_objects = JSON.parse(localStorage.getItem("localConfig_v2"))[
+    "teams"
+  ];
+  // As of now we just support 1 workspace for slack, so just taking the first item is fine
+  var userID = security_objects[Object.keys(security_objects)[0]].user_id;
+  console.log(userID);
+  return userID;
+}
+
+window.getUserID = getUserID;
+
 class newNotification extends window.Notification {
   constructor(title, opt) {
     console.log("notification");

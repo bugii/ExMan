@@ -9,7 +9,11 @@ const {
   systemPreferences,
   Menu,
 } = require("electron");
-const { setDnd: setDndSlack,  setOnline: setOnlineSlack} = require("./services/slack");
+const { 
+  setDnd: setDndSlack,  
+  setOnline: setOnlineSlack,
+  getMessages: getMessagesSlack
+} = require("./services/slack");
 const { setDnd: setDndTeams, setOnline: setOnlineTeams } = require("./services/teams");
 const {
   hasScreenCapturePermission,
@@ -156,6 +160,10 @@ ipcMain.on("webview-rendered", (event, { name, webContentsId }) => {
   // el.setAudioMuted(true);
 });
 
+let currentFocusSessionInterval;
+
+
+
 ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
   console.log("focus start from", startTime, "to", endTime);
   // 1. Create a focus object in DB to reference and update with data later on
@@ -168,6 +176,12 @@ ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
     switch (service.name) {
       case "slack":
         setDndSlack(service.webContentsId, diffMins);
+        
+        currentFocusSessionInterval = setInterval(function(){ 
+          //code goes here that will be run every 5 seconds.
+          var startTime = (new Date().getTime() / 1000) - 60;    
+          getMessagesSlack(service.webContentsId, startTime, "Hello from ExMan");
+        }, 60000);
         break;
 
       case "teams":
@@ -203,6 +217,7 @@ ipcMain.on("focus-end", (args) => {
   currentFocusSession.services.forEach((service) => {
     switch (service.name) {
       case "slack":
+        clearInterval(currentFocusSessionInterval);
         setOnlineSlack(service.webContentsId);
         break;
 
