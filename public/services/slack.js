@@ -1,5 +1,14 @@
 const { session, webContents } = require("electron");
 const axios = require("axios");
+const {
+  init,
+  addService,
+  getServices,
+  deleteService,
+  createFocusSession,
+  endCurrentFocusSession,
+  getCurrentFocusSession,
+} = require("../db/db");
 
 const setDnd = async (webContentsId, diffMins) => {
   // execute getToken funtion in the slack renderer to get token from localStorage
@@ -97,9 +106,6 @@ const getMessages = async (webContentsId, startTime, messages) => {
     response.data.channels.forEach(element => channels.push(element.id));
     });
 
-
-  //var seconds = (new Date().getTime() / 1000) - 10000;
-
   //retrieve the messages from the channels
   channels.forEach ( async (channel) => {
     await axios.get("https://slack.com/api/conversations.history", {
@@ -114,6 +120,7 @@ const getMessages = async (webContentsId, startTime, messages) => {
     }).then(response =>{
       response.data.messages.forEach(m => {
         if (m.user !== userID){
+          // do an auto-reply by using the sendMessage function
           sendMessage(webContentsId, channel, messages)
         }
       })

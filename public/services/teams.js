@@ -1,5 +1,6 @@
 const { webContents } = require("electron");
 const axios = require("axios");
+const { getDb } = require("../db/db");
 
 const setDnd = async (webContentsId) => {
   // execute getToken funtion in the slack renderer to get token from localStorage
@@ -49,7 +50,59 @@ const setOnline = async (webContentsId) => {
   }
 };
 
-const getMessages = (webContentsId, timestamp) => {};
+const getMessages = async (webContentsId, timestamp, syncTokenParam) => {
+  const tokens = await webContents
+    .fromId(webContentsId)
+    .executeJavaScript("window.getTokens()");
+
+  // No synctoken provided => first request of focus session
+  if (!syncTokenParam) {
+    try {
+      const res = await axios.get(
+        "https://emea.ng.msg.teams.microsoft.com/v1/users/ME/conversations/",
+        {
+          headers: {
+            Authentication: `skypetoken=${tokens[1]}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const syncToken = res.data["_metadata"]["syncState"];
+      // save syncToken to db for next request
+      getDb()
+        .get("currentFocusSession")
+        .get("services")
+        .find({ webContentsId })
+        .assign({ syncToken })
+        .write();
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    try {
+      // Synctoken provided => not first request of focus session: use token to get delta of conversations
+      const new_res = await axios.get(syncTokenParam, {
+        headers: {
+          Authentication: `skypetoken=${tokens[1]}`,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("new conversations", new_res.data);
+      // get new syncToken
+      const syncToken = new_res.data["_metadata"]["syncState"];
+      // update syncToken to db for next request
+      getDb()
+        .get("currentFocusSession")
+        .get("services")
+        .find({ webContentsId })
+        .assign({ syncToken })
+        .write();
+    } catch (e) {
+      console.log(e);
+    }
+  }
+};
 
 const sendMessage = (webContentsId, channel, message) => {};
 

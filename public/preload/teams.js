@@ -16,7 +16,12 @@ function getTokens() {
   const presenceToken = localStorage.getItem(
     "adal.access.token.keyhttps://presence.teams.microsoft.com/"
   );
-  return [presenceToken];
+  const id = localStorage.getItem(
+    "ts.latestOid"
+  );
+
+  const skypeToken = JSON.parse(localStorage.getItem(`ts.${id}.auth.skype.token`))['skypeToken']
+  return [presenceToken, skypeToken];
 }
 
 window.getTokens = getTokens;

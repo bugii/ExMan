@@ -9,12 +9,19 @@ const {
   systemPreferences,
   Menu,
 } = require("electron");
-const { 
-  setDnd: setDndSlack,  
+
+const {
+  setDnd: setDndSlack,
   setOnline: setOnlineSlack,
-  getMessages: getMessagesSlack
+  getMessages: getMessagesSlack,
 } = require("./services/slack");
-const { setDnd: setDndTeams, setOnline: setOnlineTeams } = require("./services/teams");
+const {
+  setDnd: setDndTeams,
+  setOnline: setOnlineTeams,
+  getMessages: getMessagesTeams,
+} = require("./services/teams");
+const { setDnd: setDndWhatsapp } = require("./services/whatsapp");
+
 const {
   hasScreenCapturePermission,
   hasPromptedForPermission,
@@ -24,6 +31,7 @@ const path = require("path");
 const isDev = require("electron-is-dev");
 const {
   init,
+  getDb,
   addService,
   getServices,
   deleteService,
@@ -41,20 +49,20 @@ let mainWindow;
 let mainMenu;
 
 mainMenu = Menu.buildFromTemplate([
-    {
-        label: "ExMan",
-        submenu: [
-          { role: "about" },
-          { type: "separator" },
-          { role: "services" },
-          { type: "separator" },
-          { role: "hide" },
-          { role: "hideothers" },
-          { role: "unhide" },
-          { type: "separator" },
-          { role: "quit" },
-        ],
-    },
+  {
+    label: "ExMan",
+    submenu: [
+      { role: "about" },
+      { type: "separator" },
+      { role: "services" },
+      { type: "separator" },
+      { role: "hide" },
+      { role: "hideothers" },
+      { role: "unhide" },
+      { type: "separator" },
+      { role: "quit" },
+    ],
+  },
   {
     label: "View",
     submenu: [
@@ -160,9 +168,8 @@ ipcMain.on("webview-rendered", (event, { name, webContentsId }) => {
   // el.setAudioMuted(true);
 });
 
+// variable used for Slack auto-reply loop
 let currentFocusSessionInterval;
-
-
 
 ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
   console.log("focus start from", startTime, "to", endTime);
@@ -176,22 +183,41 @@ ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
     switch (service.name) {
       case "slack":
         setDndSlack(service.webContentsId, diffMins);
-        
-        currentFocusSessionInterval = setInterval(function(){ 
-          //code goes here that will be run every 5 seconds.
-          var startTime = (new Date().getTime() / 1000) - 60;    
-          getMessagesSlack(service.webContentsId, startTime, "Hello from ExMan");
-        }, 60000);
+        // 3. Start loop to get messages and do autoresponse if nesessary
+        currentFocusSessionInterval = setInterval(function () {
+          var startTime = new Date().getTime() / 1000 - 20;
+          getMessagesSlack(
+            service.webContentsId,
+            startTime,
+            "Hello from ExMan"
+          );
+        }, 20000);
         break;
 
       case "teams":
         setDndTeams(service.webContentsId);
+        //var startTime = (new Date().getTime() / 1000) - 60
+        setInterval(function () {
+          const currentTeamsSession = getDb()
+            .get("currentFocusSession")
+            .get("services")
+            .find({ webContentsId: service.webContentsId })
+            .value();
+
+          console.log("current syncState", currentTeamsSession);
+          getMessagesTeams(
+            service.webContentsId,
+            startTime,
+            currentTeamsSession ? currentTeamsSession["syncToken"] : null
+          );
+        }, 20000);
         break;
 
       case "skype":
         break;
 
       case "whatsapp":
+        setDndWhatsapp(service.webContentsId);
         break;
 
       default:
@@ -217,7 +243,9 @@ ipcMain.on("focus-end", (args) => {
   currentFocusSession.services.forEach((service) => {
     switch (service.name) {
       case "slack":
+        // stop slack auto-reply loop
         clearInterval(currentFocusSessionInterval);
+        // stop dnd mode on slack
         setOnlineSlack(service.webContentsId);
         break;
 
@@ -234,8 +262,8 @@ ipcMain.on("focus-end", (args) => {
       default:
         break;
     }
-  // remove current focus session from db
-  endCurrentFocusSession();
+    // remove current focus session from db
+    endCurrentFocusSession();
   });
 });
 
