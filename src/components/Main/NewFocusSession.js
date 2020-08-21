@@ -4,6 +4,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 export const FormContainer = styled.form`
   display: flex;
@@ -13,7 +15,11 @@ export const FormContainer = styled.form`
 `;
 
 function NewFocusSession(props) {
-  let duration = 40;
+  let [duration, setDuration] = useState(40);
+
+  const handleChange = (e) => {
+    setDuration(Number(e.target.value));
+  };
 
   const handleSubmit = () => {
     const start = new Date();
@@ -22,7 +28,8 @@ function NewFocusSession(props) {
     );
     console.log(start.getTime(), end.getTime());
 
-    props.focusNow({ startTime: start, endTime: end });
+    ipcRenderer.send("focus-start-request", { startTime: start, endTime: end });
+
     props.closeDialog();
   };
 
@@ -38,6 +45,7 @@ function NewFocusSession(props) {
           id="minutes"
           label="Session Length (min)"
           type="number"
+          onChange={handleChange}
           defaultValue={duration}
           style={{ margin: "1rem" }}
         />

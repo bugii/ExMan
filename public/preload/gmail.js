@@ -1,11 +1,11 @@
 const { ipcRenderer, remote } = require("electron");
 
+console.log("in preload");
+
 ipcRenderer.on("id", (e, id) => {
   console.log("id", id);
   window.serviceId = id;
 });
-
-console.log("in preload");
 
 console.log(remote.session.defaultSession);
 window.defaultSession = remote.session.defaultSession;
