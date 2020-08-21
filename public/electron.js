@@ -3,7 +3,7 @@ const {
   app,
   BrowserWindow,
   ipcMain,
-  session,
+  Notification,
   webContents,
   shell,
   systemPreferences,
@@ -71,6 +71,10 @@ mainMenu = Menu.buildFromTemplate([
       { role: "toggledevtools" },
     ],
   },
+  {
+    label: "Edit",
+    role: "editMenu",
+  },
 ]);
 
 Menu.setApplicationMenu(mainMenu);
@@ -93,10 +97,13 @@ ipcMain.on("get-services", (event, args) => {
   event.reply("get-services", services);
 });
 
-ipcMain.on("webview-rendered", (event, { name, webContentsId }) => {
+ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
   // add reference to db
-  db.get("services").find({ name }).assign({ webContentsId }).write();
+  db.get("services").find({ id }).assign({ webContentsId }).write();
   const webContent = webContents.fromId(webContentsId);
+  // Bring the id into the webview webcontents (to associate the notifications with the right service)
+  webContent.send("id", id);
+
   webContent.insertCSS(`
   .desktop-capturer-selection {
     position: fixed;
@@ -164,12 +171,14 @@ ipcMain.on("webview-rendered", (event, { name, webContentsId }) => {
     e.preventDefault();
     shell.openExternal(url);
   });
+
   // you can disable audio on the webview
   // el.setAudioMuted(true);
 });
 
 // variable used for Slack auto-reply loop
-let currentFocusSessionInterval;
+let currentFocusSessionIntervalSlack;
+let currentFocusSessionIntervalTeams;
 
 ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
   console.log("focus start from", startTime, "to", endTime);
@@ -183,8 +192,7 @@ ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
     switch (service.name) {
       case "slack":
         setDndSlack(service.webContentsId, diffMins);
-        // 3. Start loop to get messages and do autoresponse if nesessary
-        currentFocusSessionInterval = setInterval(function () {
+        currentFocusSessionIntervalSlack = setInterval(function () {
           var startTime = new Date().getTime() / 1000 - 20;
           getMessagesSlack(
             service.webContentsId,
@@ -196,15 +204,14 @@ ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
 
       case "teams":
         setDndTeams(service.webContentsId);
-        //var startTime = (new Date().getTime() / 1000) - 60
-        setInterval(function () {
+        var startTime = new Date().getTime() / 1000 - 60;
+        currentFocusSessionIntervalTeams = setInterval(function () {
           const currentTeamsSession = getDb()
             .get("currentFocusSession")
             .get("services")
             .find({ webContentsId: service.webContentsId })
             .value();
 
-          console.log("current syncState", currentTeamsSession);
           getMessagesTeams(
             service.webContentsId,
             startTime,
@@ -217,22 +224,12 @@ ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
         break;
 
       case "whatsapp":
-        setDndWhatsapp(service.webContentsId);
         break;
 
       default:
         break;
     }
   });
-  // 3. Start loop to get messages
-  // TODO: Write function to get all direct message channels
-  // TODO: Write function to get messages every minute (using the 'lastUpdated' timestamp in the db for each service)
-  // TODO: If message found: Add message/s to the db for the given service
-  // TODO: After storing to db: set 'lastUpdated' to the previous + 1 minute
-
-  // 4. Send autoresponse if nesessary
-  // TODO: Write function to send automatic response message
-  // TODO: If automatic response sent: set 'autoReplied' to true for the current focusSession and id
 });
 
 ipcMain.on("focus-end", (args) => {
@@ -244,12 +241,15 @@ ipcMain.on("focus-end", (args) => {
     switch (service.name) {
       case "slack":
         // stop slack auto-reply loop
-        clearInterval(currentFocusSessionInterval);
+        clearInterval(currentFocusSessionIntervalSlack);
         // stop dnd mode on slack
         setOnlineSlack(service.webContentsId);
         break;
 
       case "teams":
+        // stop teams auto-reply loop
+        clearInterval(currentFocusSessionIntervalTeams);
+        // stop dnd mode on teams
         setOnlineTeams(service.webContentsId);
         break;
 
@@ -262,9 +262,28 @@ ipcMain.on("focus-end", (args) => {
       default:
         break;
     }
-    // remove current focus session from db
-    endCurrentFocusSession();
   });
+  // remove current focus session from db
+  endCurrentFocusSession();
+});
+
+ipcMain.on("notification", (event, { id, title, body }) => {
+  const currentFocus = getCurrentFocusSession();
+  if (!currentFocus) {
+    console.log("forward notification", id);
+    // forward notification
+    new Notification({ title, body }).show();
+  } else {
+    console.log("block notification", id);
+    // if there is a focus session ongoing, store the notification
+    getDb()
+      .get("currentFocusSession")
+      .get("services")
+      .find({ id })
+      .get("messages")
+      .push({ title, body })
+      .write();
+  }
 });
 
 async function createWindow() {

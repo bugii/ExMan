@@ -16,7 +16,7 @@ function Webview(props) {
       el.addEventListener("dom-ready", () => {
         // the webcontentsId is stored in the database for easy reference from the main process)
         ipcRenderer.send("webview-rendered", {
-          name: props.name,
+          id: props.id,
           webContentsId: el.getWebContentsId(),
         });
       });
@@ -26,7 +26,7 @@ function Webview(props) {
   return (
     <div>
       <webview
-        style={{ zIndex: z, backgroundColor: '#FCF7F8'}}
+        style={{ zIndex: z, backgroundColor: "#FCF7F8" }}
         ref={enableDevTools}
         src={props.url}
         useragent={props.useragent}
