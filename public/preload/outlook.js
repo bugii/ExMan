@@ -19,30 +19,10 @@ class newNotification extends window.Notification {
     ipcRenderer.send("notification", {
       id: window.serviceId,
       title,
-      body: opt.body,
+      body: "",
     });
   }
   static permission = "granted";
 }
 
 window.Notification = newNotification;
-
-var ses = remote.session.defaultSession; //Gets the default session
-// ses.flushStorageData(); //Writes any unwritten DOMStorage data to disk
-ses.clearStorageData({
-  //Clears the specified storages in the session
-  storages: ["appcache", "serviceworkers", "cachestorage", "websql", "indexdb"],
-});
-// window.navigator.serviceWorker.getRegistrations().then((registrations) => {
-//   for (let registration of registrations) {
-//     registration.unregister(); //Unregisters all the service workers
-//   }
-// });
-
-const interval = setInterval(() => {
-  const titleEl = document.querySelector(".window-title");
-  if (titleEl && titleEl.innerHTML.includes("Google Chrome 49+")) {
-    // reloading
-    window.location.reload();
-  } else clearInterval(interval);
-}, 1000);
