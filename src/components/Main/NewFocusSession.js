@@ -13,29 +13,16 @@ export const FormContainer = styled.form`
 `;
 
 function NewFocusSession(props) {
-  const start = new Date();
-  const minutes = 40;
-  const [endTime, setEndTime] = useState(
-    new Date(start).setMinutes(start.getMinutes() + minutes)
-  );
-
-  const handleChange = (event) => {
-    if (event.target.id === "minutes") {
-      let newEndTime = new Date(start);
-      newEndTime.setMinutes(
-        newEndTime.getMinutes() + Number(event.target.value)
-      );
-      setEndTime(newEndTime);
-      console.log("start", start);
-      console.log("End Time: ", newEndTime);
-    } else {
-      setEndTime(event.target.value);
-      console.log("End Time: ", new Date(event.target.value));
-    }
-  };
+  let duration = 40;
 
   const handleSubmit = () => {
-    props.focusNow({ startTime: start, endTime: endTime });
+    const start = new Date();
+    const end = new Date(
+      new Date(start).setMinutes(start.getMinutes() + duration)
+    );
+    console.log(start.getTime(), end.getTime());
+
+    props.focusNow({ startTime: start, endTime: end });
     props.closeDialog();
   };
 
@@ -51,8 +38,7 @@ function NewFocusSession(props) {
           id="minutes"
           label="Session Length (min)"
           type="number"
-          defaultValue={minutes}
-          onChange={handleChange}
+          defaultValue={duration}
           style={{ margin: "1rem" }}
         />
         {/*<TextField
