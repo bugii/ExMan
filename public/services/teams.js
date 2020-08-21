@@ -104,7 +104,25 @@ const getMessages = async (webContentsId, timestamp, syncTokenParam) => {
   }
 };
 
-const sendMessage = (webContentsId, channel, message) => {};
+const sendMessage = (channel, message,skypetoken) => {
+  try {
+    await axios.post(
+      `https://emea.ng.msg.teams.microsoft.com/v1/users/ME/conversations/${channel}/messages`,
+      {
+        "content": message,
+        "messagetype": "Text" ,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${skypetoken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
   setDnd,
