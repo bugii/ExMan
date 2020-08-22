@@ -179,11 +179,13 @@ app.whenReady().then(async () => {
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {
-    await systemPreferences.askForMediaAccess("microphone");
-    await systemPreferences.askForMediaAccess("camera");
-    if (!hasPromptedForPermission()) {
-      hasScreenCapturePermission();
-    }
+    setTimeout(async () => {
+      await systemPreferences.askForMediaAccess("microphone");
+      await systemPreferences.askForMediaAccess("camera");
+      if (!hasPromptedForPermission()) {
+        hasScreenCapturePermission();
+      }
+    }, 5000);
   }
 
   app.on("activate", function () {

@@ -19,6 +19,9 @@ function focusStart(startTime, endTime) {
   // 1. Create a focus object in DB to reference and update with data later on
   createFocusSession(startTime, endTime);
 
+  const diffMins = (endTime - startTime) / 1000 / 60;
+  console.log("diff mins", diffMins);
+
   let currentFocusSessionIntervalSlack;
   let currentFocusSessionIntervalTeams;
 

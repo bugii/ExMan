@@ -104,13 +104,13 @@ const getMessages = async (webContentsId, timestamp, syncTokenParam) => {
   }
 };
 
-const sendMessage = (channel, message,skypetoken) => {
+const sendMessage = async (channel, message, skypetoken) => {
   try {
     await axios.post(
       `https://emea.ng.msg.teams.microsoft.com/v1/users/ME/conversations/${channel}/messages`,
       {
-        "content": message,
-        "messagetype": "Text" ,
+        content: message,
+        messagetype: "Text",
       },
       {
         headers: {

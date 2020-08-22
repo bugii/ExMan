@@ -28,7 +28,10 @@ function NewFocusSession(props) {
     );
     console.log(start.getTime(), end.getTime());
 
-    ipcRenderer.send("focus-start-request", { startTime: start, endTime: end });
+    ipcRenderer.send("focus-start-request", {
+      startTime: start.getTime(),
+      endTime: end.getTime(),
+    });
 
     props.closeDialog();
   };
