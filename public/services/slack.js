@@ -182,9 +182,12 @@ const sendMessage = async (webContentsId, channel, message) => {
     });
 };
 
+const getUnreadChats = () => {};
+
 module.exports = {
   setDnd,
   setOnline,
   getMessages,
   sendMessage,
+  getUnreadChats,
 };

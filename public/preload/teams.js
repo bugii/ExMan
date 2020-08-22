@@ -40,7 +40,7 @@ class newNotification extends window.Notification {
     ipcRenderer.send("notification", {
       id: window.serviceId,
       title,
-      body: "",
+      body: opt.body,
     });
   }
   static permission = "granted";
@@ -113,4 +113,19 @@ window.navigator.mediaDevices.getDisplayMedia = () => {
       reject(err);
     }
   });
+};
+
+window.getUnreadChats = () => {
+  let messages = 0;
+  const badge = document.querySelector(
+    ".activity-badge.dot-activity-badge .activity-badge"
+  );
+  if (badge) {
+    const value = parseInt(badge.innerHTML, 10);
+
+    if (!isNaN(value)) {
+      messages = value;
+    }
+  }
+  return messages;
 };

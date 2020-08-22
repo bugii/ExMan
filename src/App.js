@@ -66,8 +66,6 @@ function App() {
     });
   }, []);
 
-  // Get the current services from the database
-
   return (
     <div className="app">
       <div className="navigation">

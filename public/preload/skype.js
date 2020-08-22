@@ -19,7 +19,7 @@ class newNotification extends window.Notification {
     ipcRenderer.send("notification", {
       id: window.serviceId,
       title,
-      body: "",
+      body: opt.body,
     });
   }
   static permission = "granted";
@@ -92,4 +92,25 @@ window.navigator.mediaDevices.getDisplayMedia = () => {
       reject(err);
     }
   });
+};
+
+window.getUnreadChats = () => {
+  let count = 0;
+  const container = document.querySelector(
+    '[role="tablist"] > [title="Chats"] > div'
+  );
+  if (container) {
+    const children = container.children;
+
+    if (children.length === 3) {
+      const elementContainer = children[children.length - 1];
+      if (elementContainer) {
+        const element = elementContainer.querySelector(
+          "[data-text-as-pseudo-element]"
+        );
+        count = parseInt(element.dataset.textAsPseudoElement, 10);
+      }
+    }
+  }
+  return count;
 };

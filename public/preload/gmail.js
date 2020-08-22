@@ -26,3 +26,7 @@ class newNotification extends window.Notification {
 }
 
 window.Notification = newNotification;
+
+window.getUnreadChats = () => {
+  console.log("checking for unread emails");
+};

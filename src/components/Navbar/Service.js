@@ -34,6 +34,7 @@ function Service(props) {
       <Tooltip title={props.name} arrow placement="right">
         <ServiceIcon src={props.icon} />
       </Tooltip>
+      {props.unreadCount}
     </div>
   );
 }

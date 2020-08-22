@@ -124,9 +124,12 @@ const sendMessage = async (channel, message, skypetoken) => {
   }
 };
 
+const getUnreadChats = () => {};
+
 module.exports = {
   setDnd,
   setOnline,
   getMessages,
   sendMessage,
+  getUnreadChats,
 };
