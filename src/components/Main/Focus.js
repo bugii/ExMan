@@ -1,10 +1,10 @@
 import React from "react";
-import styled from 'styled-components';
-import Colors from '../Colors';
+import styled from "styled-components";
+import Colors from "../Colors";
 import Countdown from "./Countdown";
-import HighlightOffIcon from '@material-ui/icons/HighlightOff';
-import Tooltip from '@material-ui/core/Tooltip';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import Tooltip from "@material-ui/core/Tooltip";
+import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 
 const electron = window.require("electron");
 const remote = electron.remote;
@@ -27,43 +27,49 @@ export const FocusDiv = styled.div`
 `;
 
 const FocusText = styled.p`
-    color: ${Colors.navy};
-    font-size: 30px;
-    text-align: center;
+  color: ${Colors.navy};
+  font-size: 30px;
+  text-align: center;
 `;
 
 const FocusMenuButtons = styled.div`
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 `;
 
 function Focus(props) {
   const escapeFocus = () => {
     // send ipc message to main process to start session there too (db etc)
-    ipcRenderer.send("focus-end");
-    // adjust UI too
-    props.setFocus(false);
+    ipcRenderer.send("focus-end-request");
   };
 
   const minimizeFocus = () => {
-      //navigate back home without ending focus session
-      props.setFocus(false);
+    //navigate back home without ending focus session
+    props.setFocus(false);
   };
 
   return (
     <FocusDiv>
-        <h1 style={{color: Colors.navy, fontSize: 80, textAlign: 'center'}}>STAY FOCUSED!</h1>
-        <Countdown focusLength={props.focusLength}/>
-        <FocusText>We are taking care of your messages for you.</FocusText>
-        <FocusMenuButtons>
-            <Tooltip title="End focus session" arrow placement="top">
-                <HighlightOffIcon onClick={escapeFocus} style={{color: Colors.snow, fontSize: 80, margin: '2rem'}}/>
-            </Tooltip>
-            <Tooltip title="Break focus to see chat" arrow placement="top">
-                <QuestionAnswerIcon onClick={minimizeFocus} style={{color: Colors.snow, fontSize: 80, margin: '2rem'}}/>
-            </Tooltip>
-        </FocusMenuButtons>
+      <h1 style={{ color: Colors.navy, fontSize: 80, textAlign: "center" }}>
+        STAY FOCUSED!
+      </h1>
+      <Countdown focusLength={props.focusLength} />
+      <FocusText>We are taking care of your messages for you.</FocusText>
+      <FocusMenuButtons>
+        <Tooltip title="End focus session" arrow placement="top">
+          <HighlightOffIcon
+            onClick={escapeFocus}
+            style={{ color: Colors.snow, fontSize: 80, margin: "2rem" }}
+          />
+        </Tooltip>
+        <Tooltip title="Break focus to see chat" arrow placement="top">
+          <QuestionAnswerIcon
+            onClick={minimizeFocus}
+            style={{ color: Colors.snow, fontSize: 80, margin: "2rem" }}
+          />
+        </Tooltip>
+      </FocusMenuButtons>
     </FocusDiv>
   );
 }

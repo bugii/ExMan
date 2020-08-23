@@ -3,34 +3,33 @@ const {
   app,
   BrowserWindow,
   ipcMain,
-  session,
+  Notification,
   webContents,
   shell,
   systemPreferences,
   Menu,
 } = require("electron");
-const { 
-  setDnd: setDndSlack,  
-  setOnline: setOnlineSlack,
-  getMessages: getMessagesSlack
-} = require("./services/slack");
-const { setDnd: setDndTeams, setOnline: setOnlineTeams } = require("./services/teams");
+
 const {
   hasScreenCapturePermission,
   hasPromptedForPermission,
 } = require("mac-screen-capture-permissions");
+
 const axios = require("axios");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const {
   init,
+  getDb,
   addService,
   getServices,
   deleteService,
-  createFocusSession,
-  endCurrentFocusSession,
   getCurrentFocusSession,
 } = require("./db/db");
+
+const focusStart = require("./utils/focusStart");
+const focusEnd = require("./utils/focusEnd");
+const insertWebviewCss = require("./utils/insertWebviewCss");
 
 const isMac = process.platform === "darwin";
 
@@ -41,20 +40,20 @@ let mainWindow;
 let mainMenu;
 
 mainMenu = Menu.buildFromTemplate([
-    {
-        label: "ExMan",
-        submenu: [
-          { role: "about" },
-          { type: "separator" },
-          { role: "services" },
-          { type: "separator" },
-          { role: "hide" },
-          { role: "hideothers" },
-          { role: "unhide" },
-          { type: "separator" },
-          { role: "quit" },
-        ],
-    },
+  {
+    label: "ExMan",
+    submenu: [
+      { role: "about" },
+      { type: "separator" },
+      { role: "services" },
+      { type: "separator" },
+      { role: "hide" },
+      { role: "hideothers" },
+      { role: "unhide" },
+      { type: "separator" },
+      { role: "quit" },
+    ],
+  },
   {
     label: "View",
     submenu: [
@@ -62,6 +61,10 @@ mainMenu = Menu.buildFromTemplate([
       { role: "forcereload" },
       { role: "toggledevtools" },
     ],
+  },
+  {
+    label: "Edit",
+    role: "editMenu",
   },
 ]);
 
@@ -81,162 +84,66 @@ ipcMain.on("delete-service", (event, id) => {
 
 ipcMain.on("get-services", (event, args) => {
   const services = getServices();
-  console.log("services", services);
+  console.log("getting services", services);
   event.reply("get-services", services);
 });
 
-ipcMain.on("webview-rendered", (event, { name, webContentsId }) => {
+ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
+  console.log("webview rendered", id, webContentsId);
   // add reference to db
-  db.get("services").find({ name }).assign({ webContentsId }).write();
+  db.get("services").find({ id }).assign({ webContentsId }).write();
   const webContent = webContents.fromId(webContentsId);
-  webContent.insertCSS(`
-  .desktop-capturer-selection {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: rgba(30, 30, 30, 0.75);
-    color: #fff;
-    z-index: 10000000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .desktop-capturer-selection__scroller {
-    width: 100%;
-    max-height: 100vh;
-    overflow-y: auto;
-  }
-  .desktop-capturer-selection__list {
-    max-width: calc(100% - 100px);
-    margin: 50px;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-    overflow: hidden;
-    justify-content: center;
-  }
-  .desktop-capturer-selection__item {
-    display: flex;
-    margin: 4px;
-  }
-  .desktop-capturer-selection__btn {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 145px;
-    margin: 0;
-    border: 0;
-    border-radius: 3px;
-    padding: 4px;
-    background: #252626;
-    text-align: left;
-    transition: background-color 0.15s, box-shadow 0.15s;
-  }
-  .desktop-capturer-selection__btn:hover,
-  .desktop-capturer-selection__btn:focus {
-    background: rgba(98, 100, 167, 0.8);
-  }
-  .desktop-capturer-selection__thumbnail {
-    width: 100%;
-    height: 81px;
-    object-fit: cover;
-  }
-  .desktop-capturer-selection__name {
-    margin: 6px 0 6px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-  `);
+  // Bring the id into the webview webcontents (to associate the notifications with the right service)
+  webContent.send("id", id);
+  // Insert Css to make screensharing polyfill work
+  insertWebviewCss(webContent, webContentsId);
   webContent.openDevTools();
+  // If a user clicks on a link, picture, etc.. open it with the default application, not inside our applicatoin
   webContent.on("new-window", (e, url) => {
     e.preventDefault();
     shell.openExternal(url);
   });
-  // you can disable audio on the webview
-  // el.setAudioMuted(true);
 });
 
-let currentFocusSessionInterval;
+let intervallRefs = [];
 
-
-
-ipcMain.on("focus-start", (event, { startTime, endTime, diffMins }) => {
-  console.log("focus start from", startTime, "to", endTime);
-  // 1. Create a focus object in DB to reference and update with data later on
-  createFocusSession(startTime, endTime);
-
-  // 2. Set status of apps to DND if possible
-  // Get all registered services
-  const currentFocusSession = getCurrentFocusSession();
-  currentFocusSession.services.forEach((service) => {
-    switch (service.name) {
-      case "slack":
-        setDndSlack(service.webContentsId, diffMins);
-        
-        currentFocusSessionInterval = setInterval(function(){ 
-          //code goes here that will be run every 5 seconds.
-          var startTime = (new Date().getTime() / 1000) - 60;    
-          getMessagesSlack(service.webContentsId, startTime, "Hello from ExMan");
-        }, 60000);
-        break;
-
-      case "teams":
-        setDndTeams(service.webContentsId);
-        break;
-
-      case "skype":
-        break;
-
-      case "whatsapp":
-        break;
-
-      default:
-        break;
-    }
-  });
-  // 3. Start loop to get messages
-  // TODO: Write function to get all direct message channels
-  // TODO: Write function to get messages every minute (using the 'lastUpdated' timestamp in the db for each service)
-  // TODO: If message found: Add message/s to the db for the given service
-  // TODO: After storing to db: set 'lastUpdated' to the previous + 1 minute
-
-  // 4. Send autoresponse if nesessary
-  // TODO: Write function to send automatic response message
-  // TODO: If automatic response sent: set 'autoReplied' to true for the current focusSession and id
+ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
+  console.log("focus requested from react", startTime, endTime);
+  intervallRefs = focusStart(startTime, endTime);
+  // if focus start successful, update the react app
+  e.reply("focus-start-successful", { startTime, endTime });
+  // schedule automatic focus end
+  setTimeout(() => {
+    focusEnd(intervallRefs);
+    // tell react that focus has ended, so it can update the state
+    e.reply("focus-end-successful");
+  }, endTime - new Date().getTime());
 });
 
-ipcMain.on("focus-end", (args) => {
-  console.log("focus end");
-  //get ongoing focus sessions
-  const currentFocusSession = getCurrentFocusSession();
-  // TODO: set status to active again for all services -> use 'setOnline' function
-  currentFocusSession.services.forEach((service) => {
-    switch (service.name) {
-      case "slack":
-        clearInterval(currentFocusSessionInterval);
-        setOnlineSlack(service.webContentsId);
-        break;
+ipcMain.on("focus-end-request", (e) => {
+  console.log("focus end request from react");
+  focusEnd(intervallRefs);
+  // if focus end successful, update the react app
+  e.reply("focus-end-successful");
+});
 
-      case "teams":
-        setOnlineTeams(service.webContentsId);
-        break;
-
-      case "skype":
-        break;
-
-      case "whatsapp":
-        break;
-
-      default:
-        break;
-    }
-  // remove current focus session from db
-  endCurrentFocusSession();
-  });
+ipcMain.on("notification", (event, { id, title, body }) => {
+  const currentFocus = getCurrentFocusSession();
+  if (!currentFocus) {
+    console.log("forward notification", id);
+    // forward notification
+    new Notification({ title, body, silent: true }).show();
+  } else {
+    console.log("block notification", id);
+    // if there is a focus session ongoing, store the notification
+    getDb()
+      .get("currentFocusSession")
+      .get("services")
+      .find({ id })
+      .get("messages")
+      .push({ title, body })
+      .write();
+  }
 });
 
 async function createWindow() {
@@ -272,11 +179,13 @@ app.whenReady().then(async () => {
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {
-    await systemPreferences.askForMediaAccess("microphone");
-    await systemPreferences.askForMediaAccess("camera");
-    if (!hasPromptedForPermission()) {
-      hasScreenCapturePermission();
-    }
+    setTimeout(async () => {
+      await systemPreferences.askForMediaAccess("microphone");
+      await systemPreferences.askForMediaAccess("camera");
+      if (!hasPromptedForPermission()) {
+        hasScreenCapturePermission();
+      }
+    }, 5000);
   }
 
   app.on("activate", function () {

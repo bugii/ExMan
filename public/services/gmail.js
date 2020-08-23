@@ -1,8 +1,7 @@
 const { session, webContents } = require("electron");
 const axios = require("axios");
 
-const setDnd = (webContentsId) => {
-};
+const setDnd = (webContentsId) => {};
 
 const setOnline = (webContentsId) => {};
 

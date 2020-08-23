@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Webview from "./components/Main/Webview";
 import Home from "./components/Main/Home";
 import Focus from "./components/Main/Focus";
-import serviceDefaults from "./serviceDefaults";
+import offeredServices from "./offeredServices";
 import AddService from "./components/Main/AddService";
 import "./App.scss";
 
@@ -16,8 +16,9 @@ function App() {
   const [nrOfServices, setNrOfServices] = useState(0);
   const [activeService, setActiveService] = useState("home");
   const [isFocus, setFocus] = useState(false);
-  const [focusLength, setFocusLength] = useState(0);
   const [isAddingApp, setAddingApp] = useState(false);
+  const [startTime, setStartTime] = useState(new Date().getTime());
+  const [endTime, setEndTime] = useState(new Date().getTime());
 
   const addApp = (name) => {
     ipcRenderer.send("add-service", name);
@@ -53,6 +54,16 @@ function App() {
     ipcRenderer.on("update-services", (event, services) => {
       updateServices(services);
     });
+
+    ipcRenderer.on("focus-start-successful", (e, { startTime, endTime }) => {
+      setStartTime(startTime);
+      setEndTime(endTime);
+      setFocus(true);
+    });
+
+    ipcRenderer.on("focus-end-successful", (e) => {
+      setFocus(false);
+    });
   }, []);
 
   // Get the current services from the database
@@ -63,7 +74,7 @@ function App() {
         <Navbar
           setActiveService={setActiveService}
           services={services}
-          serviceDefaults={serviceDefaults}
+          offeredServices={offeredServices}
           openAddingApp={openAddingApp}
           deleteApp={deleteApp}
         />
@@ -71,7 +82,10 @@ function App() {
 
       <div className="main-content">
         {isFocus ? (
-          <Focus setFocus={setFocus} focusLength={focusLength} />
+          <Focus
+            setFocus={setFocus}
+            focusLength={(endTime - startTime) / 1000}
+          />
         ) : null}
 
         {isAddingApp ? (
@@ -81,7 +95,6 @@ function App() {
         <Home
           isActive={activeService === "home"}
           setFocus={setFocus}
-          setFocusLength={setFocusLength}
           nrOfServices={nrOfServices}
           openAddingApp={openAddingApp}
         />
@@ -92,9 +105,9 @@ function App() {
             key={service.id}
             id={service.id}
             name={service.name}
-            useragent={serviceDefaults[service.name].useragent}
-            url={serviceDefaults[service.name].url}
-            icon={serviceDefaults[service.name].icon}
+            useragent={offeredServices[service.name].useragent}
+            url={offeredServices[service.name].url}
+            icon={offeredServices[service.name].icon}
           />
         ))}
       </div>

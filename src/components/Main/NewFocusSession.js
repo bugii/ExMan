@@ -4,6 +4,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 export const FormContainer = styled.form`
   display: flex;
@@ -13,29 +15,24 @@ export const FormContainer = styled.form`
 `;
 
 function NewFocusSession(props) {
-  const start = new Date();
-  const minutes = 40;
-  const [endTime, setEndTime] = useState(
-    new Date(start).setMinutes(start.getMinutes() + minutes)
-  );
+  let [duration, setDuration] = useState(40);
 
-  const handleChange = (event) => {
-    if (event.target.id === "minutes") {
-      let newEndTime = new Date(start);
-      newEndTime.setMinutes(
-        newEndTime.getMinutes() + Number(event.target.value)
-      );
-      setEndTime(newEndTime);
-      console.log("start", start);
-      console.log("End Time: ", newEndTime);
-    } else {
-      setEndTime(event.target.value);
-      console.log("End Time: ", new Date(event.target.value));
-    }
+  const handleChange = (e) => {
+    setDuration(Number(e.target.value));
   };
 
   const handleSubmit = () => {
-    props.focusNow({ startTime: start, endTime: endTime });
+    const start = new Date();
+    const end = new Date(
+      new Date(start).setMinutes(start.getMinutes() + duration)
+    );
+    console.log(start.getTime(), end.getTime());
+
+    ipcRenderer.send("focus-start-request", {
+      startTime: start.getTime(),
+      endTime: end.getTime(),
+    });
+
     props.closeDialog();
   };
 
@@ -51,8 +48,8 @@ function NewFocusSession(props) {
           id="minutes"
           label="Session Length (min)"
           type="number"
-          defaultValue={minutes}
           onChange={handleChange}
+          defaultValue={duration}
           style={{ margin: "1rem" }}
         />
         {/*<TextField

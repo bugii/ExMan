@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 import serviceDefaults from "../../serviceDefaults";
 import styled from "styled-components";
 import Colors from "../Colors";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import Button from "@material-ui/core/Button";
 
 export const AddServiceDiv = styled.div`
   position: fixed;
@@ -38,16 +34,18 @@ export const AddServiceDiv = styled.div`
 export default function AddService(props) {
   const services = Object.keys(serviceDefaults);
 
-    return (
-        <AddServiceDiv>
-            <div onClick={props.closeAddingApp} className="close">close</div>
-            {services.map((service) => (
-                <div key={service} onClick={() => props.addApp(service)}>
-                    {service}
-                </div>
-            ))}
-        </AddServiceDiv>
-    );
+  return (
+    <AddServiceDiv>
+      <div onClick={props.closeAddingApp} className="close">
+        close
+      </div>
+      {services.map((service) => (
+        <div key={service} onClick={() => props.addApp(service)}>
+          {service}
+        </div>
+      ))}
+    </AddServiceDiv>
+  );
     {/*<Dialog
             onClose={props.closeAddingApp}
             aria-labelledby="simple-dialog-title"
