@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Colors from "../Colors";
 import MenuBoxes from "./MenuBoxes";
 import NewFocusSession from "./NewFocusSession";
+import { useParams, useRouteMatch } from "react-router-dom";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -15,6 +16,7 @@ export const HomeDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 101;
 `;
 
 export const ParagraphText = styled.p`
@@ -22,12 +24,6 @@ export const ParagraphText = styled.p`
 `;
 
 function Home(props) {
-  // Even if no service is selected (they have z-index: 1) by default, make sure to be on top
-  let z = 2;
-  if (props.isActive) {
-    z = 100;
-  }
-
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const openDialog = () => {
@@ -39,7 +35,7 @@ function Home(props) {
   };
 
   return (
-    <HomeDiv style={{ zIndex: z }}>
+    <HomeDiv>
       <h1 style={{ color: Colors.turquoise }}> EXPECTATION MANAGEMENT</h1>
       <ParagraphText>
         Welcome to your expectation management app. When you need to focus, we

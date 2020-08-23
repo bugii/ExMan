@@ -43,10 +43,23 @@ class newNotification extends window.Notification {
     ipcRenderer.send("notification", {
       id: window.serviceId,
       title,
-      body: "",
+      body: opt.body,
     });
   }
   static permission = "granted";
 }
 
 window.Notification = newNotification;
+
+window.getUnreadChats = () => {
+  // taken from Franz
+  const SELECTOR_CHANNELS_UNREAD =
+    ".p-channel_sidebar__channel--unread:not(.p-channel_sidebar__channel--muted)";
+  const directMessages = document.querySelectorAll(
+    `${SELECTOR_CHANNELS_UNREAD} .p-channel_sidebar__badge, .p-channel_sidebar__link--unread`
+  ).length;
+  const allMessages =
+    document.querySelectorAll(SELECTOR_CHANNELS_UNREAD).length - directMessages;
+
+  return allMessages;
+};

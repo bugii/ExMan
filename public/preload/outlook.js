@@ -19,10 +19,19 @@ class newNotification extends window.Notification {
     ipcRenderer.send("notification", {
       id: window.serviceId,
       title,
-      body: "",
+      body: opt.body,
     });
   }
   static permission = "granted";
 }
 
 window.Notification = newNotification;
+
+// taken from Franz
+window.getUnreadChats = () => {
+  const unreadMail = parseInt(
+    document.querySelector("i[data-icon-name='Inbox'] + span + span > span")
+  );
+  if (!unreadMail) return 0;
+  else return unreadMail.textContent;
+};

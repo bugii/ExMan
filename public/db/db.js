@@ -35,6 +35,7 @@ function addService(name) {
       id,
       name,
       webContentsId: null,
+      unreadCount: 0,
     })
     .write();
 

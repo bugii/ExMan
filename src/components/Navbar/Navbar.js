@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import SettingsIcon from "@material-ui/icons/Settings";
 import Service from "./Service";
 import Colors from "../Colors";
@@ -20,8 +21,14 @@ export const NavbarDiv = styled.div`
 // const ipcRenderer = electron.ipcRenderer;
 
 function Navbar(props) {
+  let history = useHistory();
+
   const handleHomeClick = () => {
-    props.setActiveService("home");
+    history.push("/");
+  };
+
+  const openAddingApp = () => {
+    history.push("/add-service");
   };
 
   return (
@@ -39,6 +46,7 @@ function Navbar(props) {
             id={service.id}
             setActiveService={props.setActiveService}
             name={service.name}
+            unreadCount={service.unreadCount}
             icon={props.offeredServices[service.name].icon}
             deleteApp={props.deleteApp}
           />
@@ -63,7 +71,7 @@ function Navbar(props) {
           </Tooltip>
           <Tooltip title="add app" arrow placement="right">
             <AddCircleOutlineIcon
-              onClick={props.openAddingApp}
+              onClick={openAddingApp}
               style={{
                 color: Colors.snow,
                 fontSize: 50,

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import serviceDefaults from "../../serviceDefaults";
+import offeredServices from "../../offeredServices";
 import styled from "styled-components";
 import Colors from "../Colors";
+import { useHistory } from "react-router-dom";
 
 export const AddServiceDiv = styled.div`
   position: fixed;
@@ -13,30 +14,35 @@ export const AddServiceDiv = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  div{
-    border:1px solid black;
-    width:60%;
-    text-align:center;
-    padding:20px;
+  div {
+    border: 1px solid black;
+    width: 60%;
+    text-align: center;
+    padding: 20px;
     margin: 0.5px auto;
   }
-  div:hover{
-    cursor:pointer;
-    background-color:${Colors.turquoise};
-    color:black;
+  div:hover {
+    cursor: pointer;
+    background-color: ${Colors.turquoise};
+    color: black;
   }
-  .close{
-    background-color:${Colors.navy};
-    color:white;
+  .close {
+    background-color: ${Colors.navy};
+    color: white;
   }
 `;
 
 export default function AddService(props) {
-  const services = Object.keys(serviceDefaults);
+  let history = useHistory();
+  const services = Object.keys(offeredServices);
+
+  const closeAddingApp = () => {
+    history.goBack();
+  };
 
   return (
     <AddServiceDiv>
-      <div onClick={props.closeAddingApp} className="close">
+      <div onClick={closeAddingApp} className="close">
         close
       </div>
       {services.map((service) => (
@@ -46,24 +52,4 @@ export default function AddService(props) {
       ))}
     </AddServiceDiv>
   );
-    {/*<Dialog
-            onClose={props.closeAddingApp}
-            aria-labelledby="simple-dialog-title"
-            open={true}
-        >
-            <DialogTitle id="simple-dialog-title">Add an App</DialogTitle>
-            <ButtonGroup
-                orientation="vertical"
-                color="primary"
-                aria-label="vertical contained primary button group"
-                variant="contained"
-            >
-                {services.map((service) => (
-                    <Button key={service} onClick={() => props.addApp(service)}>
-                        {service}
-                    </Button>
-                ))}
-            </ButtonGroup>
-        </Dialog>
-    );*/}
 }

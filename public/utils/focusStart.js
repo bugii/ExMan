@@ -12,6 +12,7 @@ const {
 const {
   setDnd: setDndTeams,
   getMessages: getMessagesTeams,
+  syncTokenLoop: teamsLoop,
 } = require("../services/teams");
 
 function focusStart(startTime, endTime) {
@@ -24,6 +25,10 @@ function focusStart(startTime, endTime) {
 
   let currentFocusSessionIntervalSlack;
   let currentFocusSessionIntervalTeams;
+
+  let skypeToken;
+  let syncToken;
+  let teamsInfos;
 
   // 2. Set status of apps to DND if possible
   // Get all registered services
@@ -45,17 +50,18 @@ function focusStart(startTime, endTime) {
       case "teams":
         setDndTeams(service.webContentsId);
         var startTime = new Date().getTime() / 1000 - 60;
-        currentFocusSessionIntervalTeams = setInterval(function () {
-          const currentTeamsSession = getDb()
-            .get("currentFocusSession")
-            .get("services")
-            .find({ webContentsId: service.webContentsId })
-            .value();
+        const currentTeamsSession = getDb()
+          .get("currentFocusSession")
+          .get("services")
+          .find({ webContentsId: service.webContentsId })
+          .value();
 
+        currentFocusSessionIntervalTeams = setInterval(function () {
           getMessagesTeams(
             service.webContentsId,
             startTime,
-            currentTeamsSession ? currentTeamsSession["syncToken"] : null
+            currentTeamsSession ? currentTeamsSession["syncToken"] : null,
+            "Hello from electron"
           );
         }, 20000);
         break;
