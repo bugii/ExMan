@@ -52,5 +52,14 @@ class newNotification extends window.Notification {
 window.Notification = newNotification;
 
 window.getUnreadChats = () => {
-  console.log("checking for unread chats");
+  // taken from Franz
+  const SELECTOR_CHANNELS_UNREAD =
+    ".p-channel_sidebar__channel--unread:not(.p-channel_sidebar__channel--muted)";
+  const directMessages = document.querySelectorAll(
+    `${SELECTOR_CHANNELS_UNREAD} .p-channel_sidebar__badge, .p-channel_sidebar__link--unread`
+  ).length;
+  const allMessages =
+    document.querySelectorAll(SELECTOR_CHANNELS_UNREAD).length - directMessages;
+
+  return allMessages;
 };

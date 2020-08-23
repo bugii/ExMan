@@ -95,6 +95,7 @@ window.navigator.mediaDevices.getDisplayMedia = () => {
 };
 
 window.getUnreadChats = () => {
+  // Taken from Franz
   let count = 0;
   const container = document.querySelector(
     '[role="tablist"] > [title="Chats"] > div'

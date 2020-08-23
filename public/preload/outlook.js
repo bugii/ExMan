@@ -27,6 +27,11 @@ class newNotification extends window.Notification {
 
 window.Notification = newNotification;
 
+// taken from Franz
 window.getUnreadChats = () => {
-  console.log("checking for unread emails");
+  const unreadMail = parseInt(
+    document.querySelector("i[data-icon-name='Inbox'] + span + span > span")
+  );
+  if (!unreadMail) return 0;
+  else return unreadMail.textContent;
 };

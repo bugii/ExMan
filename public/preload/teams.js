@@ -116,6 +116,7 @@ window.navigator.mediaDevices.getDisplayMedia = () => {
 };
 
 window.getUnreadChats = () => {
+  // Taken from Franz
   let messages = 0;
   const badge = document.querySelector(
     ".activity-badge.dot-activity-badge .activity-badge"

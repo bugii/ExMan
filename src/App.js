@@ -38,8 +38,6 @@ function App() {
   };
 
   const updateServices = (services) => {
-    console.log("updating services");
-
     setNrOfServices(services.length);
     setServices(services);
   };
