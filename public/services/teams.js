@@ -99,7 +99,7 @@ const getMessages = async (
       //console.log("new conversations", new_res.data);
       // get new syncToken
       const syncToken = new_res.data["_metadata"]["syncState"];
-      console.log(syncToken);
+      //console.log(syncToken);
       // update syncToken to db for next request
       getDb()
         .get("currentFocusSession")
@@ -131,17 +131,19 @@ const syncTokenLoop = async (webContentsId, res, skypetoken, message) => {
     console.log(username);
     console.log(timestamp);
 
-    // store messages in local db
-    getDb()
-      .get("currentFocusSession")
-      .get("services")
-      .find({ webContentsId })
-      .get("messages")
-      .push({ id: username, message_text: content, timestamp })
-      .write();
+    if (username !== "") {
+      // store messages in local db
+      getDb()
+        .get("currentFocusSession")
+        .get("services")
+        .find({ webContentsId })
+        .get("messages")
+        .push({ id: username, message_text: content, timestamp })
+        .write();
 
-    //do an auto-reply
-    sendMessage(single_channel, message, skypetoken);
+      //do an auto-reply
+      sendMessage(single_channel, message, skypetoken);
+    }
   });
 };
 

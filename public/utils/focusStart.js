@@ -50,13 +50,14 @@ function focusStart(startTime, endTime) {
       case "teams":
         setDndTeams(service.webContentsId);
         var startTime = new Date().getTime() / 1000 - 60;
-        const currentTeamsSession = getDb()
-          .get("currentFocusSession")
-          .get("services")
-          .find({ webContentsId: service.webContentsId })
-          .value();
 
         currentFocusSessionIntervalTeams = setInterval(function () {
+          const currentTeamsSession = getDb()
+            .get("currentFocusSession")
+            .get("services")
+            .find({ webContentsId: service.webContentsId })
+            .value();
+
           getMessagesTeams(
             service.webContentsId,
             startTime,
