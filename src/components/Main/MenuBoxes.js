@@ -4,6 +4,7 @@ import TodayIcon from "@material-ui/icons/Today";
 import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Colors from "../Colors";
+import { useHistory } from "react-router-dom";
 
 const electron = window.require("electron");
 const remote = electron.remote;
@@ -34,6 +35,12 @@ const MenuIcon = styled.div`
 `;
 
 function MenuBoxes(props) {
+  let history = useHistory();
+
+  const openAddingApp = () => {
+    history.push("/add-service");
+  };
+
   return (
     <MenuBoxContainer>
       <MenuBoxDiv onClick={props.handleFocus}>
@@ -48,7 +55,7 @@ function MenuBoxes(props) {
         </MenuIcon>
         schedule focus
       </MenuBoxDiv>
-      <MenuBoxDiv onClick={props.openAddingApp}>
+      <MenuBoxDiv onClick={openAddingApp}>
         <MenuIcon>
           <AddCircleOutlineIcon style={{ fontSize: 150 }} />
         </MenuIcon>
