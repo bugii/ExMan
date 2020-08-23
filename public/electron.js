@@ -30,6 +30,7 @@ const {
 const focusStart = require("./utils/focusStart");
 const focusEnd = require("./utils/focusEnd");
 const insertWebviewCss = require("./utils/insertWebviewCss");
+const unreadLoopStart = require("./utils/unreadLoopStart");
 
 const isMac = process.platform === "darwin";
 
@@ -88,10 +89,10 @@ ipcMain.on("get-services", (event, args) => {
   event.reply("get-services", services);
 });
 
+const idsWhereWebviewWasRendered = [];
+
 ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
   console.log("webview rendered", id, webContentsId);
-  // add reference to db
-  db.get("services").find({ id }).assign({ webContentsId }).write();
   const webContent = webContents.fromId(webContentsId);
   // Bring the id into the webview webcontents (to associate the notifications with the right service)
   webContent.send("id", id);
@@ -103,6 +104,18 @@ ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
     e.preventDefault();
     shell.openExternal(url);
   });
+
+  // avoid calling the following code multiple times per webview..
+  // react calls this on the dom-ready event for the webview,
+  // which is why this could be called multiple times -> unnessecary computing
+  if (!idsWhereWebviewWasRendered.find((el) => el === id)) {
+    // add reference to db
+    db.get("services").find({ id }).assign({ webContentsId }).write();
+    // Start checking for unread messages/emails/chats
+    unreadLoopStart(webContentsId, mainWindow.webContents);
+
+    idsWhereWebviewWasRendered.push(id);
+  }
 });
 
 let intervallRefs = [];

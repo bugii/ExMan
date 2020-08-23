@@ -40,3 +40,15 @@ const interval = setInterval(() => {
     window.location.reload();
   } else clearInterval(interval);
 }, 1000);
+
+window.getUnreadChats = () => {
+  // Taken from Franz
+  let count = 0;
+  const elements = document.querySelectorAll(
+    ".CxUIE, .unread, ._0LqQ, .m61XR .ZKn2B "
+  );
+  elements.forEach(() => {
+    count += 1;
+  });
+  return count;
+};

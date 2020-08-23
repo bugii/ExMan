@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Tooltip from "@material-ui/core/Tooltip";
+import { useHistory } from "react-router-dom";
 
 const { remote } = window.require("electron");
 const { Menu, MenuItem } = remote;
@@ -11,6 +12,8 @@ export const ServiceIcon = styled.img`
 `;
 
 function Service(props) {
+  let history = useHistory();
+
   const menu = new Menu();
   menu.append(
     new MenuItem({
@@ -26,14 +29,17 @@ function Service(props) {
     menu.popup({ window: remote.getCurrentWindow() });
   };
 
+  const handleClick = () => {
+    props.setActiveService(props.id);
+    history.push("/services");
+  };
+
   return (
-    <div
-      onContextMenu={contextClick}
-      onClick={() => props.setActiveService(props.id)}
-    >
+    <div onContextMenu={contextClick} onClick={handleClick}>
       <Tooltip title={props.name} arrow placement="right">
         <ServiceIcon src={props.icon} />
       </Tooltip>
+      {props.unreadCount}
     </div>
   );
 }

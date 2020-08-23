@@ -175,9 +175,17 @@ const sendMessage = async (channel, message, skypetoken) => {
   }
 };
 
+const getUnreadChats = async (webContentsId) => {
+  const unreadChats = await webContents
+    .fromId(webContentsId)
+    .executeJavaScript("window.getUnreadChats()");
+  return unreadChats;
+};
+
 module.exports = {
   setDnd,
   setOnline,
   getMessages,
   syncTokenLoop,
+  getUnreadChats,
 };

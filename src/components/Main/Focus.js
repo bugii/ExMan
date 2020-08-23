@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Colors from "../Colors";
 import Countdown from "./Countdown";
@@ -39,6 +40,9 @@ const FocusMenuButtons = styled.div`
 `;
 
 function Focus(props) {
+  let history = useHistory();
+  console.log(props);
+
   const escapeFocus = () => {
     // send ipc message to main process to start session there too (db etc)
     ipcRenderer.send("focus-end-request");
@@ -47,6 +51,7 @@ function Focus(props) {
   const minimizeFocus = () => {
     //navigate back home without ending focus session
     props.setFocus(false);
+    history.push("/");
   };
 
   return (

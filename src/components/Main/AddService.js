@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import offeredServices from "../../offeredServices";
 import styled from "styled-components";
 import Colors from "../Colors";
+import { useHistory } from "react-router-dom";
 
 export const AddServiceDiv = styled.div`
   position: fixed;
@@ -32,11 +33,16 @@ export const AddServiceDiv = styled.div`
 `;
 
 export default function AddService(props) {
+  let history = useHistory();
   const services = Object.keys(offeredServices);
+
+  const closeAddingApp = () => {
+    history.goBack();
+  };
 
   return (
     <AddServiceDiv>
-      <div onClick={props.closeAddingApp} className="close">
+      <div onClick={closeAddingApp} className="close">
         close
       </div>
       {services.map((service) => (
