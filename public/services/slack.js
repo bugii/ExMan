@@ -186,5 +186,4 @@ module.exports = {
   setDnd,
   setOnline,
   getMessages,
-  sendMessage,
 };
