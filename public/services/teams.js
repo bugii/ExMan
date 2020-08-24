@@ -76,6 +76,7 @@ const getMessages = async (
       );
 
       const syncToken = res.data["_metadata"]["syncState"];
+      console.log(syncToken);
       // save syncToken to db for next request
       getDb()
         .get("currentFocusSession")
@@ -98,6 +99,7 @@ const getMessages = async (
       //console.log("new conversations", new_res.data);
       // get new syncToken
       const syncToken = new_res.data["_metadata"]["syncState"];
+      //console.log(syncToken);
       // update syncToken to db for next request
       getDb()
         .get("currentFocusSession")
@@ -109,26 +111,14 @@ const getMessages = async (
       //console.log(syncToken);
       //console.log(tokens[1]);
 
-      syncTokenLoop(webContentsId, syncToken, tokens[1], message);
+      syncTokenLoop(webContentsId, new_res, tokens[1], message);
     } catch (e) {
       console.log(e);
     }
   }
 };
 
-const syncTokenLoop = async (webContentsId, syncToken, skypetoken, message) => {
-  const tokenUrl = String(syncToken);
-  try {
-    res = await axios.get(tokenUrl, {
-      headers: {
-        Authentication: `skypetoken=${skypetoken}`,
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
-  console.log("new conversations", res.data);
+const syncTokenLoop = async (webContentsId, res, skypetoken, message) => {
   res.data.conversations.forEach((channel) => {
     single_channel = channel.id;
     content = channel.lastMessage.content;
@@ -141,24 +131,29 @@ const syncTokenLoop = async (webContentsId, syncToken, skypetoken, message) => {
     console.log(username);
     console.log(timestamp);
 
-    // store messages in local db
-    getDb()
-      .get("currentFocusSession")
-      .get("services")
-      .find({ webContentsId })
-      .get("messages")
-      .push({ id: username, message_text: content, timestamp })
-      .write();
+    if (username !== "") {
+      // store messages in local db
+      getDb()
+        .get("currentFocusSession")
+        .get("services")
+        .find({ webContentsId })
+        .get("messages")
+        .push({ id: username, message_text: content, timestamp })
+        .write();
 
-    //do an auto-reply
-    sendMessage(channel, message, skypetoken);
+      //do an auto-reply
+      sendMessage(single_channel, message, skypetoken);
+    }
   });
 };
 
 const sendMessage = async (channel, message, skypetoken) => {
+  console.log(channel);
+  const url = `https://emea.ng.msg.teams.microsoft.com/v1/users/ME/conversations/${channel}/messages`;
+  console.log(url);
   try {
     await axios.post(
-      `https://emea.ng.msg.teams.microsoft.com/v1/users/ME/conversations/${channel}/messages`,
+      url,
       {
         content: message,
         messagetype: "Text",
