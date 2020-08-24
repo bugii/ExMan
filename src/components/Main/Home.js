@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import Colors from "../Colors";
 import MenuBoxes from "./MenuBoxes";
 import NewFocusSession from "./NewFocusSession";
-import { useParams, useRouteMatch } from "react-router-dom";
+import {useParams, useRouteMatch} from "react-router-dom";
+import ScheduleFocusSession from "./ScheduleFocusSession";
+
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -24,32 +26,42 @@ export const ParagraphText = styled.p`
 `;
 
 function Home(props) {
-  const [dialogOpen, setDialogOpen] = useState(false);
+    const [newFocusSessionDialogOpen, setNewFocusSessionDialogOpen] = useState(false);
+    const [scheduleFocusSessionDialogOpen, setScheduleFocusSessionDialogOpen] = useState(false);
 
-  const openDialog = () => {
-    setDialogOpen(true);
-  };
+    const openNewFocusSessionDialog = () => {
+        setNewFocusSessionDialogOpen(true);
+    };
 
-  const closeDialog = () => {
-    setDialogOpen(false);
-  };
+    const closeNewFocusSessionDialog = () => {
+        setNewFocusSessionDialogOpen(false);
+    };
 
-  return (
-    <HomeDiv>
-      <h1 style={{ color: Colors.turquoise }}> EXPECTATION MANAGEMENT</h1>
-      <ParagraphText>
-        Welcome to your expectation management app. When you need to focus, we
-        will take care of the incoming communications while you are away.
-      </ParagraphText>
-      <ParagraphText>
-        To begin, add your apps and click focus now or schedule your next focus
-        session.
-      </ParagraphText>
-      <MenuBoxes handleFocus={openDialog} openAddingApp={props.openAddingApp} />
-      <NewFocusSession open={dialogOpen} closeDialog={closeDialog} />
-      <p> Currently added {props.nrOfServices} service/s </p>
-    </HomeDiv>
-  );
+    const openScheduleSessionDialog = () => {
+        setScheduleFocusSessionDialogOpen(true);
+    };
+
+    const closeScheduleSessionDialog = () => {
+        setScheduleFocusSessionDialogOpen(false);
+    };
+
+    return (
+        <HomeDiv>
+            <h1 style={{color: Colors.turquoise}}> EXPECTATION MANAGEMENT</h1>
+            <ParagraphText>
+                Welcome to your expectation management app. When you need to focus, we
+                will take care of the incoming communications while you are away.
+            </ParagraphText>
+            <ParagraphText>
+                To begin, add your apps and click focus now or schedule your next focus
+                session.
+            </ParagraphText>
+            <MenuBoxes handleFocusNow={openNewFocusSessionDialog} handleScheduleFocus={openScheduleSessionDialog} openAddingApp={props.openAddingApp}/>
+            <NewFocusSession open={newFocusSessionDialogOpen} closeDialog={closeNewFocusSessionDialog}/>
+            <ScheduleFocusSession open={scheduleFocusSessionDialogOpen} closeDialog={closeScheduleSessionDialog} />
+            <p> Currently added {props.nrOfServices} service/s </p>
+        </HomeDiv>
+    );
 }
 
 export default Home;

@@ -40,7 +40,7 @@ function NewFocusSession(props) {
 
   return (
     <Dialog
-      onClose={handleSubmit}
+      onClose={props.closeDialog}
       aria-labelledby="simple-dialog-title"
       open={props.open}
     >

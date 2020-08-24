@@ -43,13 +43,13 @@ function MenuBoxes(props) {
 
   return (
     <MenuBoxContainer>
-      <MenuBoxDiv onClick={props.handleFocus}>
+      <MenuBoxDiv onClick={props.handleFocusNow}>
         <MenuIcon>
           <FilterCenterFocusIcon style={{ fontSize: 150 }} />
         </MenuIcon>
         focus now
       </MenuBoxDiv>
-      <MenuBoxDiv>
+      <MenuBoxDiv onClick={props.handleScheduleFocus}>
         <MenuIcon>
           <TodayIcon style={{ fontSize: 150 }} />
         </MenuIcon>
