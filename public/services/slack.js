@@ -131,10 +131,19 @@ const getMessages = async (webContentsId, startTime, messages) => {
               .get("services")
               .find({ webContentsId })
               .get("messages")
-              .push({ id: username, message_text: m.text, timestamp: m.ts })
+              .push({ id: username, body: m.text, timestamp: m.ts })
               .write();
             // do an auto-reply by using the sendMessage function
             sendMessage(webContentsId, channel, messages);
+
+            // store auto-replied single_channel in db
+            getDb()
+              .get("currentFocusSession")
+              .get("services")
+              .find({ webContentsId })
+              .get("autoReplied")
+              .push({ channel })
+              .write();
           }
         });
       });

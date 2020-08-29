@@ -60,7 +60,7 @@ function createFocusSession(startTime, endTime) {
   services = services.map((service) => ({
     ...service,
     lastUpdated: startTime,
-    autoReplied: false,
+    autoReplied: [],
     messages: [],
   }));
 
