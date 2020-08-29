@@ -7,12 +7,15 @@ import styled from "styled-components";
 import HomeIcon from "@material-ui/icons/Home";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
 
 export const NavbarDiv = styled.div`
   width: 100px;
   height: 100vh;
   background-color: ${Colors.navy};
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 // to get access to the electron package you could alternatively edit the webpack config
@@ -23,65 +26,61 @@ export const NavbarDiv = styled.div`
 function Navbar(props) {
   let history = useHistory();
 
-  const handleHomeClick = () => {
-    history.push("/");
-  };
-
-  const openAddingApp = () => {
-    history.push("/add-service");
-  };
-
   return (
     <NavbarDiv>
-      <Tooltip title="home" arrow placement="right">
-        <HomeIcon
-          onClick={handleHomeClick}
-          style={{ color: Colors.snow, fontSize: 50, margin: "0.5rem 1rem" }}
-        />
-      </Tooltip>
       <div>
-        {props.services.map((service) => (
-          <Service
-            key={service.id}
-            id={service.id}
-            setActiveService={props.setActiveService}
-            name={service.name}
-            unreadCount={service.unreadCount}
-            icon={props.offeredServices[service.name].icon}
-            deleteApp={props.deleteApp}
+        <Tooltip title="home" arrow placement="right">
+          <HomeIcon
+            onClick={() => history.push("/")}
+            style={{ color: Colors.snow, fontSize: 50, margin: "0.5rem 1rem" }}
           />
-        ))}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column-reverse",
-            height: "100%",
-          }}
-        >
-          <Tooltip title="settings" arrow placement="right">
-            <SettingsIcon
-              style={{
-                color: Colors.snow,
-                fontSize: 50,
-                margin: "0.5rem 1rem",
-                position: "absolute",
-                top: "90%",
-              }}
+        </Tooltip>
+        <div>
+          {props.services.map((service) => (
+            <Service
+              key={service.id}
+              id={service.id}
+              setActiveService={props.setActiveService}
+              name={service.name}
+              unreadCount={service.unreadCount}
+              icon={props.offeredServices[service.name].icon}
+              deleteApp={props.deleteApp}
             />
-          </Tooltip>
-          <Tooltip title="add app" arrow placement="right">
-            <AddCircleOutlineIcon
-              onClick={openAddingApp}
-              style={{
-                color: Colors.snow,
-                fontSize: 50,
-                margin: "0.5rem 1rem",
-                position: "absolute",
-                top: "80%",
-              }}
-            />
-          </Tooltip>
+          ))}
         </div>
+      </div>
+
+      <div>
+        <Tooltip title="add app" arrow placement="right">
+          <AddCircleOutlineIcon
+            onClick={() => history.push("/add-service")}
+            style={{
+              color: Colors.snow,
+              fontSize: 50,
+              margin: "0.5rem 1rem",
+            }}
+          />
+        </Tooltip>
+        <Tooltip title="open dashboard">
+          <EqualizerIcon
+            onClick={() => history.push("/dashboard")}
+            style={{
+              color: Colors.snow,
+              fontSize: 50,
+              margin: "0.5rem 1rem",
+            }}
+          />
+        </Tooltip>
+        <Tooltip title="settings" arrow placement="right">
+          <SettingsIcon
+            onClick={() => history.push("/settings")}
+            style={{
+              color: Colors.snow,
+              fontSize: 50,
+              margin: "0.5rem 1rem",
+            }}
+          />
+        </Tooltip>
       </div>
     </NavbarDiv>
   );

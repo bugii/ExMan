@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import offeredServices from "../../offeredServices";
+import React from "react";
+import offeredServices from "../offeredServices";
 import styled from "styled-components";
-import Colors from "../Colors";
+import Colors from "../components/Colors";
 import { useHistory } from "react-router-dom";
 
 export const AddServiceDiv = styled.div`
-  position: fixed;
-  z-index: 150;
+  position: absolute;
+  z-index: 1;
   height: 100vh;
   width: 100%;
   background: ${Colors.snow};

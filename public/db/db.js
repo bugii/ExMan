@@ -87,6 +87,14 @@ function endCurrentFocusSession() {
   db.set("currentFocusSession", null).write();
 }
 
+function getPreviousFocusSession() {
+  return db.get("pastFocusSessions").last().value();
+}
+
+function getAllFocusSessions() {
+  return db.get("pastFocusSessions").value();
+}
+
 module.exports = {
   init,
   getDb,
@@ -96,4 +104,6 @@ module.exports = {
   createFocusSession,
   getCurrentFocusSession,
   endCurrentFocusSession,
+  getPreviousFocusSession,
+  getAllFocusSessions,
 };

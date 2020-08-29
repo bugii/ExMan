@@ -1,20 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import Colors from "../Colors";
-import Countdown from "./Countdown";
+import Colors from "../components/Colors";
+import Countdown from "../components/Main/Countdown";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Tooltip from "@material-ui/core/Tooltip";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
+import PreFocusPopup from "../Popups/PreFocusPopup";
 
 const electron = window.require("electron");
-const remote = electron.remote;
 const ipcRenderer = electron.ipcRenderer;
 
 export const FocusDiv = styled.div`
   position: fixed;
-  top: 0;
   left: 0;
+  top: 0;
+  z-index: 1;
   height: 100vh;
   width: 100vw;
   background: ${Colors.turquoise};
@@ -22,9 +23,6 @@ export const FocusDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  // Has to be on top of everything else
-  // the currently selected webview has a value of 100, make sure it is always higher than that
-  z-index: 200;
 `;
 
 const FocusText = styled.p`
@@ -41,7 +39,8 @@ const FocusMenuButtons = styled.div`
 
 function Focus(props) {
   let history = useHistory();
-  console.log(props);
+
+  const [showPreFocusPopup, setshowPreFocusPopup] = useState(true);
 
   const escapeFocus = () => {
     // send ipc message to main process to start session there too (db etc)
@@ -50,12 +49,15 @@ function Focus(props) {
 
   const minimizeFocus = () => {
     //navigate back home without ending focus session
-    props.setFocus(false);
     history.push("/");
   };
 
   return (
     <FocusDiv>
+      {showPreFocusPopup ? (
+        <PreFocusPopup closePreFocusPopup={() => setshowPreFocusPopup(false)} />
+      ) : null}
+
       <h1 style={{ color: Colors.navy, fontSize: 80, textAlign: "center" }}>
         STAY FOCUSED!
       </h1>
