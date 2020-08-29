@@ -6,9 +6,9 @@ const remote = electron.remote;
 const ipcRenderer = electron.ipcRenderer;
 
 function Webview(props) {
-  let z = 1;
+  let z = -1;
   if (props.isActive) {
-    z = 100;
+    z = 0;
   }
 
   const enableDevTools = (el) => {

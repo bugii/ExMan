@@ -25,6 +25,8 @@ const {
   getServices,
   deleteService,
   getCurrentFocusSession,
+  getPreviousFocusSession,
+  getAllFocusSessions,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
@@ -98,27 +100,29 @@ ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
   webContent.send("id", id);
   // Insert Css to make screensharing polyfill work
   insertWebviewCss(webContent, webContentsId);
-  webContent.openDevTools();
+  if (isDev) webContent.openDevTools();
   // If a user clicks on a link, picture, etc.. open it with the default application, not inside our applicatoin
   webContent.on("new-window", (e, url) => {
     e.preventDefault();
     shell.openExternal(url);
   });
+  webContent.setAudioMuted(true);
+
+  // add reference to db
+  db.get("services").find({ id }).assign({ webContentsId }).write();
 
   // avoid calling the following code multiple times per webview..
   // react calls this on the dom-ready event for the webview,
   // which is why this could be called multiple times -> unnessecary computing
   if (!idsWhereWebviewWasRendered.find((el) => el === id)) {
-    // add reference to db
-    db.get("services").find({ id }).assign({ webContentsId }).write();
     // Start checking for unread messages/emails/chats
     unreadLoopStart(webContentsId, mainWindow.webContents);
-
     idsWhereWebviewWasRendered.push(id);
   }
 });
 
 let intervallRefs = [];
+let focusEndTimeoutRef = null;
 
 ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
   console.log("focus requested from react", startTime, endTime);
@@ -126,7 +130,7 @@ ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
   // if focus start successful, update the react app
   e.reply("focus-start-successful", { startTime, endTime });
   // schedule automatic focus end
-  setTimeout(() => {
+  focusEndTimeoutRef = setTimeout(() => {
     focusEnd(intervallRefs);
     // tell react that focus has ended, so it can update the state
     e.reply("focus-end-successful");
@@ -136,6 +140,7 @@ ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
 ipcMain.on("focus-end-request", (e) => {
   console.log("focus end request from react");
   focusEnd(intervallRefs);
+  clearTimeout(focusEndTimeoutRef);
   // if focus end successful, update the react app
   e.reply("focus-end-successful");
 });
@@ -157,6 +162,14 @@ ipcMain.on("notification", (event, { id, title, body }) => {
       .push({ title, body })
       .write();
   }
+});
+
+ipcMain.on("get-previous-focus-session", (e, args) => {
+  e.reply("get-previous-focus-session", getPreviousFocusSession());
+});
+
+ipcMain.on("get-all-past-focus-sessions", (e, args) => {
+  e.reply("get-all-past-focus-sessions", getAllFocusSessions());
 });
 
 async function createWindow() {
@@ -181,7 +194,7 @@ async function createWindow() {
       ? "http://localhost:3000"
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
-  mainWindow.webContents.openDevTools({ mode: "detach" });
+  if (isDev) mainWindow.webContents.openDevTools({ mode: "detach" });
 }
 
 // This method will be called when Electron has finished

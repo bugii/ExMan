@@ -6,10 +6,6 @@ import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import Colors from "../Colors";
 import { useHistory } from "react-router-dom";
 
-const electron = window.require("electron");
-const remote = electron.remote;
-const ipcRenderer = electron.ipcRenderer;
-
 export const MenuBoxContainer = styled.div`
   display: flex;
   justify-content: space-evenly;

@@ -2,22 +2,22 @@ import React, { useState, useEffect } from "react";
 import { Route, useHistory } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Webview from "./components/Main/Webview";
-import Home from "./components/Main/Home";
-import Focus from "./components/Main/Focus";
+import Home from "./Pages/Home";
+import Focus from "./Pages/Focus";
 import offeredServices from "./offeredServices";
-import AddService from "./components/Main/AddService";
+import AddService from "./Pages/AddService";
 import "./App.scss";
+import Settings from "./Pages/Settings";
+import Dashboard from "./Pages/Dashboard";
+import Summary from "./Pages/Summary";
 
 const electron = window.require("electron");
-const remote = electron.remote;
 const ipcRenderer = electron.ipcRenderer;
 
 function App() {
   const [services, setServices] = useState([]);
   const [nrOfServices, setNrOfServices] = useState(0);
   const [activeService, setActiveService] = useState("home");
-  const [isFocus, setFocus] = useState(false);
-  const [isAddingApp, setAddingApp] = useState(false);
   const [startTime, setStartTime] = useState(new Date().getTime());
   const [endTime, setEndTime] = useState(new Date().getTime());
 
@@ -51,13 +51,11 @@ function App() {
     ipcRenderer.on("focus-start-successful", (e, { startTime, endTime }) => {
       setStartTime(startTime);
       setEndTime(endTime);
-      setFocus(true);
       history.push("/focus");
     });
 
     ipcRenderer.on("focus-end-successful", (e) => {
-      setFocus(false);
-      history.push("/");
+      history.push("/summary");
     });
   }, []);
 
@@ -74,8 +72,9 @@ function App() {
 
       <div className="main-content">
         <Route path="/" exact>
-          <Home setFocus={setFocus} nrOfServices={nrOfServices} />
+          <Home nrOfServices={nrOfServices} />
         </Route>
+
         {/* For the services we don't use the exact prop -> this way it is always rendered. If you just want to show the services and not Home for example -> use history.push("/services") or any other route that has no other matches */}
         <Route path="/">
           {services.map((service) => (
@@ -90,17 +89,26 @@ function App() {
             />
           ))}
         </Route>
+
         <Route path="/focus">
-          <Focus
-            setFocus={setFocus}
-            focusLength={(endTime - startTime) / 1000}
-          />
+          <Focus focusLength={(endTime - startTime) / 1000} />
         </Route>
+
         <Route path="/add-service">
           <AddService addApp={addApp} />
         </Route>
 
-        {/* Here all other routes can go */}
+        <Route path="/settings">
+          <Settings />
+        </Route>
+
+        <Route path="/dashboard">
+          <Dashboard />
+        </Route>
+
+        <Route path="/summary">
+          <Summary />
+        </Route>
       </div>
     </div>
   );
