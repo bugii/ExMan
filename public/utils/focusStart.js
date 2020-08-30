@@ -44,7 +44,7 @@ function focusStart(startTime, endTime) {
             startTime,
             "Hello from ExMan"
           );
-        }, 10000);
+        }, 10001);
         break;
 
       case "teams":

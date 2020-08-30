@@ -6,7 +6,7 @@ export const PostFocusDiv = styled.div`
   position: absolute;
   z-index: 2;
   height: 80vh;
-  width: 80%;
+  width: 100%;
   background: ${Colors.snow};
   display: flex;
   flex-direction: column;

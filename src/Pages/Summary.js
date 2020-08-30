@@ -18,6 +18,17 @@ export const SummaryDiv = styled.div`
   flex-direction: column;
 `;
 
+export const Services = styled.div`
+  background-color: ${Colors.turquoise};
+  margin: 10px;
+  width: 80%;
+  text-align: center;
+  border: solid black;
+  padding: 10px;
+  margin-bottom: 30px;
+  border-radius: 5px;
+`;
+
 function Summary(props) {
   const [showPostFocusPopup, setshowPostFocusPopup] = useState(true);
   const [focusSession, setFocusSession] = useState(null);
@@ -46,16 +57,58 @@ function Summary(props) {
           <p>
             from {focusSession.startTime} to {focusSession.endTime}
           </p>
-          {focusSession.services.map((service) => (
-            <div key={service.id}>
-              <h5> {service.name} </h5>
-              <p>
-                {service.messages.map((message) => (
-                  <div key={message.body}>{message.body}</div>
-                ))}
-              </p>
-            </div>
-          ))}
+          <div style={{ display: "flex" }}>
+            {focusSession.services.map((service) => (
+              <Services>
+                <div key={service.id}>
+                  <h5> {service.name} </h5>
+                  <p
+                    style={{
+                      margin: "auto",
+                      width: "80%",
+                    }}
+                  >
+                    {service.messages.map((message) => (
+                      <div>
+                        <div
+                          style={{
+                            fontSize: "12px",
+                            textAlign: "left",
+                            borderTop: "1px solid black",
+                          }}
+                          key={message.id}
+                        >
+                          from {message.id}
+                        </div>
+
+                        <div
+                          style={{
+                            borderRadius: "5px",
+                            backgroundColor: "white",
+                            textAlign: "left",
+                            padding: "5px",
+                            margin: "10px 0",
+                          }}
+                          key={message.body}
+                        >
+                          {message.body}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "12px",
+                            textAlign: "left",
+                          }}
+                          key={message.timestamp}
+                        >
+                          at {message.timestamp}
+                        </div>
+                      </div>
+                    ))}
+                  </p>
+                </div>
+              </Services>
+            ))}
+          </div>
         </div>
       ) : null}
     </SummaryDiv>

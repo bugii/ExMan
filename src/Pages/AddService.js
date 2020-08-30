@@ -19,16 +19,13 @@ export const AddServiceDiv = styled.div`
     width: 60%;
     text-align: center;
     padding: 20px;
-    margin: 0.5px auto;
+    margin: 2px auto;
+    border-radius: 5px;
   }
   div:hover {
     cursor: pointer;
     background-color: ${Colors.turquoise};
     color: black;
-  }
-  .close {
-    background-color: ${Colors.navy};
-    color: white;
   }
 `;
 
@@ -42,7 +39,11 @@ export default function AddService(props) {
 
   return (
     <AddServiceDiv>
-      <div onClick={closeAddingApp} className="close">
+      <h1> Add a prefered service to your ExMan setup</h1>
+      <div
+        style={{ backgroundColor: Colors.navy, color: "white" }}
+        onClick={closeAddingApp}
+      >
         close
       </div>
       {services.map((service) => (
