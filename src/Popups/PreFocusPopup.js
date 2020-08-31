@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Colors from "../components/Colors";
+import Button from "@material-ui/core/Button";
 
 export const PreFocusDiv = styled.div`
   position: absolute;
@@ -17,14 +18,6 @@ export const PreFocusDiv = styled.div`
     width: 300px;
     height: 25px;
   }
-`;
-
-export const Button = styled.div`
-  margin-top: 10px;
-  padding: 5px 15px;
-  background: ${Colors.turquoise};
-  cursor: pointer;
-  border-radius: 5px;
 `;
 
 function PreFocusPopup(props) {
@@ -46,15 +39,31 @@ function PreFocusPopup(props) {
       <p>{listItems}</p>
       <input id="item" type="text" />
       <div style={{ display: "flex" }}>
-        <Button style={{ marginRight: "10px" }} onClick={addTodos()}>
+        <Button
+          style={{
+            marginRight: "10px",
+            marginTop: "10px",
+            borderRadius: "5px",
+          }}
+          variant="contained"
+          color="primary"
+          onClick={addTodos()}
+        >
           Add
         </Button>
-        <Button onClick={deleteTodos()}>Delete</Button>
+        <Button
+          style={{ marginTop: "10px", borderRadius: "5px" }}
+          variant="contained"
+          color="primary"
+          onClick={deleteTodos()}
+        >
+          Delete
+        </Button>
       </div>
       <Button
         style={{
           marginTop: "25px",
-          backgroundColor: Colors.navy,
+          backgroundColor: Colors.turquoise,
           color: "white",
           width: "200px",
           textAlign: "center",
