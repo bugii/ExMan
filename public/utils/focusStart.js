@@ -38,18 +38,33 @@ function focusStart(startTime, endTime) {
       case "slack":
         setDndSlack(service.webContentsId, diffMins);
         currentFocusSessionIntervalSlack = setInterval(function () {
-          var startTime = new Date().getTime() / 1000 - 20;
+          var startTime = new Date().getTime() / 1000 - 10;
           getMessagesSlack(
             service.webContentsId,
             startTime,
             "Hello from ExMan"
           );
-        }, 10000);
+        }, 10001);
         break;
 
       case "teams":
         setDndTeams(service.webContentsId);
         var startTime = new Date().getTime() / 1000 - 60;
+
+        const currentTeamsSessionInitial = getDb()
+          .get("currentFocusSession")
+          .get("services")
+          .find({ webContentsId: service.webContentsId })
+          .value();
+
+        getMessagesTeams(
+          service.webContentsId,
+          startTime,
+          currentTeamsSessionInitial
+            ? currentTeamsSessionInitial["syncToken"]
+            : null,
+          "Hello from electron"
+        );
 
         currentFocusSessionIntervalTeams = setInterval(function () {
           const currentTeamsSession = getDb()

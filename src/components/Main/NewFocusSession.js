@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -17,7 +16,6 @@ export const FormContainer = styled.form`
 
 function NewFocusSession(props) {
   let [duration, setDuration] = useState(40);
-  let history = useHistory();
 
   const handleChange = (e) => {
     setDuration(Number(e.target.value));

@@ -3,6 +3,18 @@ const axios = require("axios");
 const { getDb } = require("../db/db");
 
 let res;
+let autoReplied;
+
+const isReplied = (Replied, channel) => {
+  Replied.forEach((reply) => {
+    if (reply.channel === channel) {
+      console.log("true");
+      return true;
+    }
+  });
+  console.log("false");
+  return false;
+};
 
 const setDnd = async (webContentsId) => {
   // execute getToken funtion in the slack renderer to get token from localStorage
@@ -131,6 +143,13 @@ const syncTokenLoop = async (webContentsId, res, skypetoken, message) => {
     console.log(username);
     console.log(timestamp);
 
+    autoReplied = getDb()
+      .get("currentFocusSession")
+      .get("services")
+      .find({ webContentsId })
+      .get("autoReplied")
+      .value();
+
     if (username !== "") {
       // store messages in local db
       getDb()
@@ -138,11 +157,25 @@ const syncTokenLoop = async (webContentsId, res, skypetoken, message) => {
         .get("services")
         .find({ webContentsId })
         .get("messages")
-        .push({ id: username, message_text: content, timestamp })
+        .push({ id: username, body: content, timestamp })
         .write();
 
-      //do an auto-reply
-      sendMessage(single_channel, message, skypetoken);
+      if (
+        single_channel.includes("@unq.gbl.spaces") &&
+        !isReplied(autoReplied, single_channel)
+      ) {
+        //do an auto-reply
+        sendMessage(single_channel, message, skypetoken);
+
+        // store auto-replied single_channel in db
+        getDb()
+          .get("currentFocusSession")
+          .get("services")
+          .find({ webContentsId })
+          .get("autoReplied")
+          .push({ channel: single_channel })
+          .write();
+      }
     }
   });
 };
