@@ -7,6 +7,7 @@ import Focus from "./components/Main/Focus";
 import offeredServices from "./offeredServices";
 import AddService from "./components/Main/AddService";
 import "./App.scss";
+import FocusBubble from "./components/Main/FocusBubble";
 
 const electron = window.require("electron");
 const remote = electron.remote;
@@ -70,6 +71,9 @@ function App() {
           offeredServices={offeredServices}
           deleteApp={deleteApp}
         />
+      </div>
+      <div>
+        <FocusBubble/>
       </div>
 
       <div className="main-content">
