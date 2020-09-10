@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Colors from "../components/Colors";
 import PostFocusPopup from "../Popups/PostFocusPopup";
+import CloseIcon from '@material-ui/icons/Close';
+import {useHistory} from "react-router-dom";
+import IconButton from "@material-ui/core/IconButton";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -33,6 +36,12 @@ function Summary(props) {
   const [showPostFocusPopup, setshowPostFocusPopup] = useState(true);
   const [focusSession, setFocusSession] = useState(null);
 
+  let history = useHistory();
+
+  const handleClose = () => {
+    history.push("/");
+  };
+
   useEffect(() => {
     ipcRenderer.on("get-previous-focus-session", (e, focusSession) => {
       setFocusSession(focusSession);
@@ -48,6 +57,12 @@ function Summary(props) {
           closePostFocusPopup={() => setshowPostFocusPopup(false)}
         />
       ) : null}
+      <div style={{position: 'absolute', top: 15, right: 15}}>
+        <IconButton onClick={handleClose}>
+          <CloseIcon fontSize="large"/>
+        </IconButton>
+      </div>
+
       <h2>Summary</h2>
       <div>Here goes the summary, charts, etc</div>
 

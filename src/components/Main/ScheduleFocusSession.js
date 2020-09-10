@@ -4,6 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
+import {FormButtons} from "./NewFocusSession";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -40,7 +41,6 @@ function ScheduleFocusSession(props) {
 
   return (
     <Dialog
-      onClose={props.closeDialog}
       aria-labelledby="simple-dialog-title"
       open={props.open}
     >
@@ -68,14 +68,24 @@ function ScheduleFocusSession(props) {
           }}
           style={{ margin: "1rem" }}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          style={{ margin: "1rem" }}
-        >
-          Submit
-        </Button>
+        <FormButtons>
+          <Button
+              variant="contained"
+              color="0"
+              onClick={props.closeDialog}
+              style={{margin: "1rem"}}
+          >
+            Cancel
+          </Button>
+          <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              style={{margin: "1rem"}}
+          >
+            Submit
+          </Button>
+        </FormButtons>
       </FormContainer>
     </Dialog>
   );
