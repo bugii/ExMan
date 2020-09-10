@@ -22,6 +22,7 @@ function App() {
   const [activeService, setActiveService] = useState("home");
   const [startTime, setStartTime] = useState(new Date().getTime());
   const [endTime, setEndTime] = useState(new Date().getTime());
+  const [inFocus, setInFocus] = useState(false);
 
   let history = useHistory();
   let location = useLocation();
@@ -44,12 +45,6 @@ function App() {
     history.push("/focus");
   };
 
-  const getFocusMode = () => {
-    //TODO: FIX GETTING FOCUS MODE
-    ipcRenderer.send("current-focus-request");
-    return true;
-  };
-
   useEffect(() => {
     ipcRenderer.on("get-services", (event, services) => {
       updateServices(services);
@@ -64,10 +59,12 @@ function App() {
     ipcRenderer.on("focus-start-successful", (e, { startTime, endTime }) => {
       setStartTime(startTime);
       setEndTime(endTime);
+      setInFocus(true);
       history.push("/focus");
     });
 
     ipcRenderer.on("focus-end-successful", (e) => {
+      setInFocus(false);
       history.push("/summary");
     });
   }, []);
@@ -82,7 +79,7 @@ function App() {
           deleteApp={deleteApp}
         />
       </div>
-      {(location.pathname == "/focus" && getFocusMode) ? false : <FocusBubble handleClick={returnToFocus} currentPath={location.pathname}/>}
+      {(location.pathname != "/focus" && inFocus) ? <FocusBubble handleClick={returnToFocus} currentPath={location.pathname}/> : false}
 
       <div className="main-content">
         <Route path="/" exact>
@@ -105,7 +102,7 @@ function App() {
         </Route>
 
         <Route path="/focus">
-          <Focus focusLength={(endTime - startTime) / 1000} />
+          <Focus focusLength={(endTime - new Date()) / 1000} />
         </Route>
 
         <Route path="/add-service">
