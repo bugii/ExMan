@@ -145,6 +145,13 @@ ipcMain.on("focus-end-request", (e) => {
   e.reply("focus-end-successful");
 });
 
+ipcMain.on("current-focus-request", (e) => {
+  console.log("current focus request from react");
+  const currentFocus = getCurrentFocusSession();
+  console.log(currentFocus);
+  e.reply(currentFocus);
+});
+
 ipcMain.on("notification", (event, { id, title, body }) => {
   const currentFocus = getCurrentFocusSession();
   if (!currentFocus) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Route, useHistory } from "react-router-dom";
+import { Route, useHistory, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Webview from "./components/Main/Webview";
 import Home from "./Pages/Home";
@@ -11,6 +11,7 @@ import FocusBubble from "./components/Main/FocusBubble";
 import Settings from "./Pages/Settings";
 import Dashboard from "./Pages/Dashboard";
 import Summary from "./Pages/Summary";
+import NewFocusSession from "./components/Main/NewFocusSession";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -23,6 +24,7 @@ function App() {
   const [endTime, setEndTime] = useState(new Date().getTime());
 
   let history = useHistory();
+  let location = useLocation();
 
   const addApp = (name) => {
     ipcRenderer.send("add-service", name);
@@ -36,6 +38,16 @@ function App() {
   const updateServices = (services) => {
     setNrOfServices(services.length);
     setServices(services);
+  };
+
+  const returnToFocus = () => {
+    history.push("/focus");
+  };
+
+  const getFocusMode = () => {
+    //TODO: FIX GETTING FOCUS MODE
+    ipcRenderer.send("current-focus-request");
+    return true;
   };
 
   useEffect(() => {
@@ -70,9 +82,7 @@ function App() {
           deleteApp={deleteApp}
         />
       </div>
-      <div>
-        <FocusBubble/>
-      </div>
+      {(location.pathname == "/focus" && getFocusMode) ? false : <FocusBubble handleClick={returnToFocus} currentPath={location.pathname}/>}
 
       <div className="main-content">
         <Route path="/" exact>
