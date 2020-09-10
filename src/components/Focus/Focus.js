@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import Colors from "../components/Colors";
-import Countdown from "../components/Main/Countdown";
+import Colors from "../Colors";
+import Countdown from "./Countdown";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Tooltip from "@material-ui/core/Tooltip";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
-import PreFocusPopup from "../Popups/PreFocusPopup";
+import PreFocusPopup from "./Popups/PreFocusPopup";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;

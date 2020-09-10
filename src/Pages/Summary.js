@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Colors from "../components/Colors";
-import PostFocusPopup from "../Popups/PostFocusPopup";
+import PostFocusPopup from "../components/Focus/Popups/PostFocusPopup";
 import CloseIcon from '@material-ui/icons/Close';
 import {useHistory} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";

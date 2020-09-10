@@ -1,7 +1,7 @@
 import React from "react";
-import offeredServices from "../offeredServices";
+import offeredServices from "../../offeredServices";
 import styled from "styled-components";
-import Colors from "../components/Colors";
+import Colors from "../Colors";
 import { useHistory } from "react-router-dom";
 
 export const AddServiceDiv = styled.div`

@@ -1,6 +1,6 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
-import Colors from "../components/Colors";
+import Colors from "../../Colors";
 import Button from "@material-ui/core/Button";
 
 export const PreFocusDiv = styled.div`
@@ -20,25 +20,39 @@ export const PreFocusDiv = styled.div`
   }
 `;
 
-function PreFocusPopup(props) {
-  const todoArray = [];
-  const listItems = todoArray.map((number) => <li>{number}</li>);
+export const ToDoListDiv = styled.div`
+    text-align: left;
+`;
 
-  const addTodos = async (item) => {
+function PreFocusPopup(props) {
+
+    let [todo, setTodo] = useState("");
+    let [todoList, setTodoList] = useState([]);
+
+    const listItems = todoList.map((number) => <li>{number}</li>);
+
+    const handleChange = (e) => {
+        setTodo(e.target.value);
+    };
+
+  const addTodos = () => {
     //var item = document.getElementById("item").value;
-    todoArray.push(item);
+    setTodoList(todoList.concat(todo));
+    console.log("Add Todo: ", todo);
+    setTodo("");
   };
 
-  const deleteTodos = async () => {
-    todoArray.pop();
+  const deleteTodos = () => {
+      todoList.splice(0, 1);
   };
 
   return (
     <PreFocusDiv>
       <h2>What do you want to focus on during this focus session?</h2>
-      <p>{listItems}</p>
-      <input id="item" type="text" />
-      <div style={{ display: "flex" }}>
+        <ToDoListDiv>{listItems}
+      <input id="item" type="text" value={todo} onChange={handleChange} style={{margin: "15px 5px 5px 5px"}}/>
+        </ToDoListDiv>
+        <div style={{ display: "flex" }}>
         <Button
           style={{
             marginRight: "10px",
@@ -47,7 +61,7 @@ function PreFocusPopup(props) {
           }}
           variant="contained"
           color="primary"
-          onClick={addTodos()}
+          onClick={addTodos}
         >
           Add
         </Button>
@@ -55,7 +69,7 @@ function PreFocusPopup(props) {
           style={{ marginTop: "10px", borderRadius: "5px" }}
           variant="contained"
           color="primary"
-          onClick={deleteTodos()}
+          onClick={deleteTodos}
         >
           Delete
         </Button>
