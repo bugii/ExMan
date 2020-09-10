@@ -33,7 +33,9 @@ function NewFocusSession(props) {
     const end = new Date(
       new Date(start).setMinutes(start.getMinutes() + duration)
     );
-    console.log(start.getTime(), end.getTime());
+    console.log(start.toTimeString(), end.toTimeString());
+    console.log(start.getTime().toString(), end.getTime().toString());
+
 
     ipcRenderer.send("focus-start-request", {
       startTime: start.getTime(),

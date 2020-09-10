@@ -10,7 +10,7 @@ import "./App.scss";
 import FocusBubble from "./components/Focus/FocusBubble";
 import Settings from "./Pages/Settings";
 import Dashboard from "./Pages/Dashboard";
-import Summary from "./Pages/Summary";
+import Summary from "./components/Summary/Summary";
 import NewFocusSession from "./components/Focus/NewFocusSession";
 
 const electron = window.require("electron");
@@ -118,7 +118,7 @@ function App() {
         </Route>
 
         <Route path="/summary">
-          <Summary />
+          <Summary offeredServices={offeredServices} setActiveService={setActiveService}/>
         </Route>
       </div>
     </div>
