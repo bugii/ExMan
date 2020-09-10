@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Tooltip from "@material-ui/core/Tooltip";
 import { useHistory } from "react-router-dom";
+import Colors from "../Colors";
 
 const { remote } = window.require("electron");
 const { Menu, MenuItem } = remote;
@@ -9,6 +10,19 @@ const { Menu, MenuItem } = remote;
 export const ServiceIcon = styled.img`
   width: 50px;
   margin: 0.5rem 1rem;
+`;
+
+export const MessageCountBubble = styled.div`
+  height: 18px;
+  width: 18px;
+  background-color: red;
+  border-radius: 100%;
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  text-align: center;
+  font-size: small;
+  color: white;
 `;
 
 function Service(props) {
@@ -35,11 +49,11 @@ function Service(props) {
   };
 
   return (
-    <div onContextMenu={contextClick} onClick={handleClick}>
+    <div onContextMenu={contextClick} onClick={handleClick} style={{position: 'relative'}}>
       <Tooltip title={props.name} arrow placement="right">
         <ServiceIcon src={props.icon} />
       </Tooltip>
-      {props.unreadCount}
+        { props.unreadCount ? <MessageCountBubble> {props.unreadCount} </MessageCountBubble> : false}
     </div>
   );
 }
