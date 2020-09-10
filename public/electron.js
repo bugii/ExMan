@@ -127,6 +127,9 @@ let focusEndTimeoutRef = null;
 ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
   console.log("focus requested from react", startTime, endTime);
   intervallRefs = focusStart(startTime, endTime);
+
+  //TODO: add option to delay start of focus session, or add function to schedule session
+
   // if focus start successful, update the react app
   e.reply("focus-start-successful", { startTime, endTime });
   // schedule automatic focus end

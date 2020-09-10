@@ -4,6 +4,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 export const FormContainer = styled.form`
   display: flex;
@@ -17,25 +19,22 @@ function ScheduleFocusSession(props) {
   let [end, setEnd] = useState(Date());
 
   const handleStartChange = (e) => {
-    setStart(Number(e.target.value));
+    setStart(e.target.value);
   };
 
   const handleEndChange = (e) => {
-    setEnd(Number(e.target.value));
+    setEnd(e.target.value);
   };
 
   const handleSubmit = () => {
-    /*const start = new Date();
-        const end = new Date(
-            new Date(start).setMinutes(start.getMinutes() + duration)
-        );
-        console.log(start.getTime(), end.getTime());
-
-        ipcRenderer.send("focus-start-request", {
-            startTime: start.getTime(),
-            endTime: end.getTime(),
+    const startDateTime = new Date(start);
+    const endDateTime = new Date(end);
+    console.log("start: ", startDateTime);
+    console.log("end: ", endDateTime);
+    ipcRenderer.send("focus-start-request", {
+            startTime: startDateTime.getTime(),
+            endTime: endDateTime.getTime(),
         });
-        */
     props.closeDialog();
   };
 
@@ -56,7 +55,7 @@ function ScheduleFocusSession(props) {
           InputLabelProps={{
             shrink: true,
           }}
-          style={{ margin: "1rem" }}
+          style={{ margin: "1rem"}}
         />
         <TextField
           id="end"
