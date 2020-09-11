@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Route, useHistory, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Webview from "./components/Main/Webview";
-import Home from "./Pages/Home";
-import Focus from "./Pages/Focus";
+import Home from "./components/Home/Home";
+import Focus from "./components/Focus/Focus";
 import offeredServices from "./offeredServices";
-import AddService from "./Pages/AddService";
+import AddService from "./components/Navbar/AddService";
 import "./App.scss";
-import FocusBubble from "./components/Main/FocusBubble";
+import FocusBubble from "./components/Focus/FocusBubble";
 import Settings from "./Pages/Settings";
 import Dashboard from "./Pages/Dashboard";
-import Summary from "./Pages/Summary";
-import NewFocusSession from "./components/Main/NewFocusSession";
+import Summary from "./components/Summary/Summary";
+import NewFocusSession from "./components/Focus/NewFocusSession";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -22,6 +22,7 @@ function App() {
   const [activeService, setActiveService] = useState("home");
   const [startTime, setStartTime] = useState(new Date().getTime());
   const [endTime, setEndTime] = useState(new Date().getTime());
+  const [inFocus, setInFocus] = useState(false);
 
   let history = useHistory();
   let location = useLocation();
@@ -44,12 +45,6 @@ function App() {
     history.push("/focus");
   };
 
-  const getFocusMode = () => {
-    //TODO: FIX GETTING FOCUS MODE
-    ipcRenderer.send("current-focus-request");
-    return true;
-  };
-
   useEffect(() => {
     ipcRenderer.on("get-services", (event, services) => {
       updateServices(services);
@@ -64,10 +59,12 @@ function App() {
     ipcRenderer.on("focus-start-successful", (e, { startTime, endTime }) => {
       setStartTime(startTime);
       setEndTime(endTime);
+      setInFocus(true);
       history.push("/focus");
     });
 
     ipcRenderer.on("focus-end-successful", (e) => {
+      setInFocus(false);
       history.push("/summary");
     });
   }, []);
@@ -82,7 +79,7 @@ function App() {
           deleteApp={deleteApp}
         />
       </div>
-      {(location.pathname == "/focus" && getFocusMode) ? false : <FocusBubble handleClick={returnToFocus} currentPath={location.pathname}/>}
+      {(location.pathname != "/focus" && inFocus) ? <FocusBubble handleClick={returnToFocus} currentPath={location.pathname}/> : false}
 
       <div className="main-content">
         <Route path="/" exact>
@@ -105,7 +102,7 @@ function App() {
         </Route>
 
         <Route path="/focus">
-          <Focus focusLength={(endTime - startTime) / 1000} />
+          <Focus focusLength={(endTime - new Date()) / 1000} />
         </Route>
 
         <Route path="/add-service">
@@ -121,7 +118,7 @@ function App() {
         </Route>
 
         <Route path="/summary">
-          <Summary />
+          <Summary offeredServices={offeredServices} setActiveService={setActiveService}/>
         </Route>
       </div>
     </div>

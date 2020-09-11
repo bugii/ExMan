@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Colors from "../components/Colors";
-import MenuBoxes from "../components/Main/MenuBoxes";
-import NewFocusSession from "../components/Main/NewFocusSession";
-import ScheduleFocusSession from "../components/Main/ScheduleFocusSession";
+import Colors from "../Colors";
+import MenuBoxes from "./MenuBoxes";
+import NewFocusSession from "../Focus/NewFocusSession";
+import ScheduleFocusSession from "../Focus/ScheduleFocusSession";
 
 export const HomeDiv = styled.div`
   position: absolute;

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Colors from "../components/Colors";
+import Colors from "../../Colors";
 
 export const PostFocusDiv = styled.div`
   position: absolute;

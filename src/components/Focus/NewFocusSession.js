@@ -4,6 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
+import Colors from "../Colors";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -12,6 +13,12 @@ export const FormContainer = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+export const FormButtons = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 `;
 
 function NewFocusSession(props) {
@@ -26,7 +33,9 @@ function NewFocusSession(props) {
     const end = new Date(
       new Date(start).setMinutes(start.getMinutes() + duration)
     );
-    console.log(start.getTime(), end.getTime());
+    console.log(start.toTimeString(), end.toTimeString());
+    console.log(start.getTime().toString(), end.getTime().toString());
+
 
     ipcRenderer.send("focus-start-request", {
       startTime: start.getTime(),
@@ -37,22 +46,21 @@ function NewFocusSession(props) {
   };
 
   return (
-    <Dialog
-      onClose={props.closeDialog}
-      aria-labelledby="simple-dialog-title"
-      open={props.open}
-    >
-      <DialogTitle id="simple-dialog-title">Create Focus Session</DialogTitle>
-      <FormContainer noValidate>
-        <TextField
-          id="minutes"
-          label="Session Length (min)"
-          type="number"
-          onChange={handleChange}
-          defaultValue={duration}
-          style={{ margin: "1rem" }}
-        />
-        {/*<TextField
+      <Dialog
+          aria-labelledby="simple-dialog-title"
+          open={props.open}
+      >
+        <DialogTitle id="simple-dialog-title">Create Focus Session</DialogTitle>
+        <FormContainer noValidate>
+          <TextField
+              id="minutes"
+              label="Session Length (min)"
+              type="number"
+              onChange={handleChange}
+              defaultValue={duration}
+              style={{margin: "1rem"}}
+          />
+          {/*<TextField
                     id="endTime"
                     label="End Time"
                     type="time"
@@ -65,16 +73,26 @@ function NewFocusSession(props) {
                     }}
                     style={{margin: "1rem"}}
                 />*/}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSubmit}
-          style={{ margin: "1rem" }}
-        >
-          Submit
-        </Button>
-      </FormContainer>
-    </Dialog>
+          <FormButtons>
+            <Button
+                variant="contained"
+                color="0"
+                onClick={props.closeDialog}
+                style={{margin: "1rem"}}
+            >
+              Cancel
+            </Button>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+                style={{margin: "1rem"}}
+            >
+              Submit
+            </Button>
+          </FormButtons>
+        </FormContainer>
+      </Dialog>
   );
 }
 
