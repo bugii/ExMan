@@ -157,7 +157,7 @@ const syncTokenLoop = async (webContentsId, res, skypetoken, message) => {
         .get("services")
         .find({ webContentsId })
         .get("messages")
-        .push({ id: username, body: content, timestamp })
+        .push({ title: username, body: content, timestamp })
         .write();
 
       if (

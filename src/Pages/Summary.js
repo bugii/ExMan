@@ -76,9 +76,9 @@ function Summary(props) {
                             textAlign: "left",
                             borderTop: "1px solid black",
                           }}
-                          key={message.id}
+                          key={message.title}
                         >
-                          from {message.id}
+                          from {message.title}
                         </div>
 
                         <div
