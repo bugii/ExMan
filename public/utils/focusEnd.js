@@ -1,3 +1,4 @@
+const { webContents } = require("electron");
 const { getCurrentFocusSession, endCurrentFocusSession } = require("../db/db");
 const { setOnline: setOnlineSlack } = require("../services/slack");
 const { setOnline: setOnlineTeams } = require("../services/teams");
@@ -8,6 +9,9 @@ function focusEnd(intervallRefs) {
   const currentFocusSession = getCurrentFocusSession();
   // TODO: set status to active again for all services -> use 'setOnline' function
   currentFocusSession.services.forEach((service) => {
+    // unmute audio on focus-end
+    webContents.fromId(service.webContentsId).setAudioMuted(false);
+
     switch (service.name) {
       case "slack":
         // stop dnd mode on slack

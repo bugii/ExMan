@@ -106,7 +106,6 @@ ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
     e.preventDefault();
     shell.openExternal(url);
   });
-  webContent.setAudioMuted(true);
 
   // add reference to db
   db.get("services").find({ id }).assign({ webContentsId }).write();
@@ -160,7 +159,9 @@ ipcMain.on("notification", (event, { id, title, body }) => {
   if (!currentFocus) {
     console.log("forward notification", id);
     // forward notification
-    new Notification({ title, body, silent: true }).show();
+    const notification = new Notification({ title, body, silent: true });
+    notification.on("click", () => openService(id));
+    notification.show();
   } else {
     console.log("block notification", id);
     // if there is a focus session ongoing, store the notification
@@ -181,6 +182,11 @@ ipcMain.on("get-previous-focus-session", (e, args) => {
 ipcMain.on("get-all-past-focus-sessions", (e, args) => {
   e.reply("get-all-past-focus-sessions", getAllFocusSessions());
 });
+
+const openService = (id) => {
+  // If a new notification comes in, open the corresponding service in the frontend
+  mainWindow.webContents.send("open-service", id);
+};
 
 async function createWindow() {
   // If you want to clear cache (helpful for testing new users)

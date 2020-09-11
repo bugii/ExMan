@@ -1,3 +1,5 @@
+const { webContents } = require("electron");
+
 const {
   getDb,
   createFocusSession,
@@ -33,7 +35,11 @@ function focusStart(startTime, endTime) {
   // 2. Set status of apps to DND if possible
   // Get all registered services
   const currentFocusSession = getCurrentFocusSession();
+
   currentFocusSession.services.forEach((service) => {
+    // mute audio on focus-start
+    webContents.fromId(service.webContentsId).setAudioMuted(true);
+
     switch (service.name) {
       case "slack":
         setDndSlack(service.webContentsId, diffMins);
@@ -80,12 +86,6 @@ function focusStart(startTime, endTime) {
             "Hello from electron"
           );
         }, 20000);
-        break;
-
-      case "skype":
-        break;
-
-      case "whatsapp":
         break;
 
       default:

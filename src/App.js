@@ -19,7 +19,7 @@ const ipcRenderer = electron.ipcRenderer;
 function App() {
   const [services, setServices] = useState([]);
   const [nrOfServices, setNrOfServices] = useState(0);
-  const [activeService, setActiveService] = useState("home");
+  const [activeService, setActiveService] = useState(null);
   const [startTime, setStartTime] = useState(new Date().getTime());
   const [endTime, setEndTime] = useState(new Date().getTime());
   const [inFocus, setInFocus] = useState(false);
@@ -67,6 +67,10 @@ function App() {
       setInFocus(false);
       history.push("/summary");
     });
+
+    ipcRenderer.on("open-service", (e, id) => {
+      setActiveService(id);
+    });
   }, []);
 
   return (
@@ -79,7 +83,14 @@ function App() {
           deleteApp={deleteApp}
         />
       </div>
-      {(location.pathname != "/focus" && inFocus) ? <FocusBubble handleClick={returnToFocus} currentPath={location.pathname}/> : false}
+      {location.pathname != "/focus" && inFocus ? (
+        <FocusBubble
+          handleClick={returnToFocus}
+          currentPath={location.pathname}
+        />
+      ) : (
+        false
+      )}
 
       <div className="main-content">
         <Route path="/" exact>
@@ -118,7 +129,10 @@ function App() {
         </Route>
 
         <Route path="/summary">
-          <Summary offeredServices={offeredServices} setActiveService={setActiveService}/>
+          <Summary
+            offeredServices={offeredServices}
+            setActiveService={setActiveService}
+          />
         </Route>
       </div>
     </div>
