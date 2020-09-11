@@ -2,9 +2,15 @@ const { webContents } = require("electron");
 
 const {
   getDb,
-  createFocusSession,
+  createNewFocusSession,
   getCurrentFocusSession,
 } = require("../db/db");
+
+const {
+  storeIntervallRef,
+  storeTimeoutRef,
+  getMainWindow,
+} = require("../db/memoryDb");
 
 const {
   setDnd: setDndSlack,
@@ -20,20 +26,12 @@ const {
 function focusStart(startTime, endTime) {
   console.log("focus start from", startTime, "to", endTime);
   // 1. Create a focus object in DB to reference and update with data later on
-  createFocusSession(startTime, endTime);
+  createNewFocusSession(startTime, endTime);
 
   const diffMins = (endTime - startTime) / 1000 / 60;
   console.log("diff mins", diffMins);
 
-  let currentFocusSessionIntervalSlack;
-  let currentFocusSessionIntervalTeams;
-
-  let skypeToken;
-  let syncToken;
-  let teamsInfos;
-
-  // 2. Set status of apps to DND if possible
-  // Get all registered services
+  // 2. Set status of apps to DND if possible and start auto message loop
   const currentFocusSession = getCurrentFocusSession();
 
   currentFocusSession.services.forEach((service) => {
@@ -43,7 +41,7 @@ function focusStart(startTime, endTime) {
     switch (service.name) {
       case "slack":
         setDndSlack(service.webContentsId, diffMins);
-        currentFocusSessionIntervalSlack = setInterval(function () {
+        const currentFocusSessionIntervalSlack = setInterval(function () {
           var startTime = new Date().getTime() / 1000 - 10;
           getMessagesSlack(
             service.webContentsId,
@@ -51,6 +49,8 @@ function focusStart(startTime, endTime) {
             "Hello from ExMan"
           );
         }, 10001);
+        storeIntervallRef(currentFocusSessionIntervalSlack);
+
         break;
 
       case "teams":
@@ -72,7 +72,7 @@ function focusStart(startTime, endTime) {
           "Hello from electron"
         );
 
-        currentFocusSessionIntervalTeams = setInterval(function () {
+        const currentFocusSessionIntervalTeams = setInterval(function () {
           const currentTeamsSession = getDb()
             .get("currentFocusSession")
             .get("services")
@@ -86,6 +86,8 @@ function focusStart(startTime, endTime) {
             "Hello from electron"
           );
         }, 20000);
+        storeIntervallRef(currentFocusSessionIntervalTeams);
+
         break;
 
       default:
@@ -93,7 +95,17 @@ function focusStart(startTime, endTime) {
     }
   });
 
-  return [currentFocusSessionIntervalSlack, currentFocusSessionIntervalTeams];
+  // if focus start successful, update the react app
+  getMainWindow().webContents.send("focus-start-successful", {
+    startTime,
+    endTime,
+  });
+
+  // schedule automatic focus end
+  const focusEndTimeoutRef = setTimeout(() => {
+    focusEnd();
+  }, endTime - new Date().getTime());
+  storeTimeoutRef(focusEndTimeoutRef);
 }
 
 module.exports = focusStart;

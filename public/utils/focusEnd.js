@@ -1,9 +1,14 @@
 const { webContents } = require("electron");
 const { getCurrentFocusSession, endCurrentFocusSession } = require("../db/db");
+const {
+  getIntervallRefs,
+  getTimeoutRefs,
+  getMainWindow,
+} = require("../db/memoryDb");
 const { setOnline: setOnlineSlack } = require("../services/slack");
 const { setOnline: setOnlineTeams } = require("../services/teams");
 
-function focusEnd(intervallRefs) {
+function focusEnd() {
   console.log("focus end");
   //get ongoing focus sessions
   const currentFocusSession = getCurrentFocusSession();
@@ -35,11 +40,14 @@ function focusEnd(intervallRefs) {
   });
 
   // End all the intervalls
-  intervallRefs.forEach((intervallRef) => {
-    clearInterval(intervallRef);
-  });
+  getIntervallRefs().forEach((intervallRef) => clearInterval(intervallRef));
+  // End all timeouts (in case of an early termination of the focus session)
+  getTimeoutRefs().forEach((timeoutRef) => clearTimeout(timeoutRef));
+
   // remove current focus session from db
   endCurrentFocusSession();
+  // tell react that focus has ended, so it can update the state
+  getMainWindow().webContents.send("focus-end-successful");
 }
 
 module.exports = focusEnd;
