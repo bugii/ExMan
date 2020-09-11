@@ -27,6 +27,7 @@ const {
   getCurrentFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
+  setEndTime,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
@@ -141,6 +142,8 @@ ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
 
 ipcMain.on("focus-end-request", (e) => {
   console.log("focus end request from react");
+  // manually set the endTime of the foucus session to the current time. This results in endTime != originalEndTime -> we can see which sessions were aborted manually
+  setEndTime(new Date().getTime());
   focusEnd(intervallRefs);
   clearTimeout(focusEndTimeoutRef);
   // if focus end successful, update the react app

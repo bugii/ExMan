@@ -95,6 +95,10 @@ function getAllFocusSessions() {
   return db.get("pastFocusSessions").value();
 }
 
+function setEndTime(timestamp) {
+  db.get("currentFocusSession").assign({ endTime: timestamp }).write();
+}
+
 module.exports = {
   init,
   getDb,
@@ -106,4 +110,5 @@ module.exports = {
   endCurrentFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
+  setEndTime,
 };

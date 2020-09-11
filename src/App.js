@@ -69,6 +69,7 @@ function App() {
     });
 
     ipcRenderer.on("open-service", (e, id) => {
+      history.push("/services");
       setActiveService(id);
     });
   }, []);
