@@ -131,7 +131,7 @@ const getMessages = async (webContentsId, startTime, messages) => {
               .get("services")
               .find({ webContentsId })
               .get("messages")
-              .push({ id: username, body: m.text, timestamp: m.ts })
+              .push({ title: username, body: m.text, timestamp: m.ts })
               .write();
             // do an auto-reply by using the sendMessage function
             sendMessage(webContentsId, channel, messages);
