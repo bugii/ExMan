@@ -100,9 +100,6 @@ async function unreadLoopStart(webContentsId) {
       default:
         break;
     }
-
-    // Update renderer
-    getMainWindow().send("update-services", getServices());
   }, 10000);
 }
 

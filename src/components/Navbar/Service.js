@@ -49,11 +49,24 @@ function Service(props) {
   };
 
   return (
-    <div onContextMenu={contextClick} onClick={handleClick} style={{position: 'relative'}}>
+    <div
+      onContextMenu={contextClick}
+      onClick={handleClick}
+      style={{ position: "relative" }}
+    >
       <Tooltip title={props.name} arrow placement="right">
         <ServiceIcon src={props.icon} />
       </Tooltip>
-        { props.unreadCount ? <MessageCountBubble> {props.unreadCount} </MessageCountBubble> : false}
+      {!props.isAuthed || !props.isReady ? (
+        <MessageCountBubble> ! </MessageCountBubble>
+      ) : (
+        false
+      )}
+      {props.unreadCount ? (
+        <MessageCountBubble> {props.unreadCount} </MessageCountBubble>
+      ) : (
+        false
+      )}
     </div>
   );
 }

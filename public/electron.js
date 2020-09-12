@@ -34,6 +34,7 @@ const focusStart = require("./utils/focusStart");
 const focusEnd = require("./utils/focusEnd");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 const unreadLoopStart = require("./utils/unreadLoopStart");
+const authLoopStart = require("./utils/authLoopStart");
 const scheduleFocus = require("./utils/scheduleFocus");
 const { storeMainWindow, getMainWindow } = require("./db/memoryDb");
 
@@ -111,6 +112,8 @@ ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
 
   // add reference to db
   db.get("services").find({ id }).assign({ webContentsId }).write();
+  // mark as ready
+  db.get("services").find({ id }).assign({ ready: true }).write();
 
   // avoid calling the following code multiple times per webview..
   // react calls this on the dom-ready event for the webview,
@@ -118,12 +121,9 @@ ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
   if (!idsWhereWebviewWasRendered.find((el) => el === id)) {
     // Start checking for unread messages/emails/chats
     unreadLoopStart(webContentsId);
+    authLoopStart(webContentsId);
     idsWhereWebviewWasRendered.push(id);
   }
-});
-
-ipcMain.on("is-ready", (e, { id }) => {
-  console.log("ready");
 });
 
 ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
@@ -218,6 +218,11 @@ async function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
   createWindow();
+
+  // Update renderer loop
+  setInterval(() => {
+    getMainWindow().send("update-services", getServices());
+  }, 3000);
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {
