@@ -22,8 +22,8 @@ function App() {
   const [activeService, setActiveService] = useState(null);
   const [startTime, setStartTime] = useState(new Date().getTime());
   const [endTime, setEndTime] = useState(new Date().getTime());
-  const [inFocus, setInFocus] = useState(false);
   const [currentFocusSession, setCurrentFocusSession] = useState([]);
+  const [inFocus, setInFocus] = useState(currentFocusSession != null);
 
   let history = useHistory();
   let location = useLocation();
@@ -47,11 +47,6 @@ function App() {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log('Delay 1 second to enable db reading')
-    }, 1000);
-    clearTimeout(timer);
-
     ipcRenderer.on("get-services", (event, services) => {
       updateServices(services);
     });
@@ -71,6 +66,9 @@ function App() {
 
     ipcRenderer.on("focus-end-successful", (e) => {
       setInFocus(false);
+      const timer = setTimeout(() => {
+        console.log('Delay 1 s for db to update')
+      }, 1000);
       history.push("/summary");
     });
 
@@ -86,7 +84,18 @@ function App() {
 
     ipcRenderer.send("current-focus-request");
 
-  }, []);
+    /*const interval = setInterval(() => {
+      console.log("updating status....");
+
+      ipcRenderer.on("current-focus-request", (e, focusSession) => {
+        setCurrentFocusSession(focusSession);
+        console.log(focusSession);
+      });
+
+      ipcRenderer.send("current-focus-request");
+    }, 3000);
+    return () =>  clearInterval(interval);*/
+    }, []);
 
   return (
     <div className="app">
@@ -126,7 +135,7 @@ function App() {
         </Route>
 
         <Route path="/focus">
-          { currentFocusSession != null ?
+          { currentFocusSession ?
               <Focus currentFocusSession={currentFocusSession} /> : null}
         </Route>
 
