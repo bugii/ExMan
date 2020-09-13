@@ -48,29 +48,30 @@ export default function TodoList(props) {
     return (
         <List className={classes.root} dense>
             <h2 style={{margin: "0px 15px"}}>To Do List</h2>
-            {props.todoList.map((task) => {
-                const labelId = `checkbox-list-label-${task}`;
-
-                return (
-                    <ListItem key={task} role={undefined} dense button onClick={handleToggle(task)}>
-                        <ListItemIcon>
-                            <Checkbox
-                                edge="start"
-                                checked={checked.indexOf(task) !== -1}
-                                tabIndex={-1}
-                                disableRipple
-                                inputProps={{'aria-labelledby': labelId}}
-                            />
-                        </ListItemIcon>
-                        <ListItemText id={labelId} primary={task}/>
-                        <ListItemSecondaryAction>
-                            <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(task)}>
-                                <DeleteIcon/>
-                            </IconButton>
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                );
-            })}
+            {props.todoList.length > 0 ? (
+                props.todoList.map((task) => {
+                        const labelId = `checkbox-list-label-${task}`;
+                        return (
+                            <ListItem key={task} role={undefined} dense button onClick={handleToggle(task)}>
+                                <ListItemIcon>
+                                    <Checkbox
+                                        edge="start"
+                                        checked={checked.indexOf(task) !== -1}
+                                        tabIndex={-1}
+                                        disableRipple
+                                        inputProps={{'aria-labelledby': labelId}}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText id={labelId} primary={task}/>
+                                <ListItemSecondaryAction>
+                                    <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(task)}>
+                                        <DeleteIcon/>
+                                    </IconButton>
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                        );
+                    }
+                )) : <p>No goals added yet. ;)</p>}
         </List>
     );
 }

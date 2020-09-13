@@ -54,12 +54,12 @@ function FocusGoalsPopup(props) {
         ipcRenderer.send("focus-goals-request", {
             goals: todoList
         });
-        props.closePreFocusPopup();
+        props.close();
     };
 
     useEffect(() => {
         ipcRenderer.on("focus-goals-set", (e) => {
-            props.closePreFocusPopup();
+            props.close();
         });
     }, []);
 
@@ -72,7 +72,7 @@ function FocusGoalsPopup(props) {
             <DialogTitle id="simple-dialog-title">Focus Goals</DialogTitle>
         <PreFocusDiv>
             <div style={{position: 'absolute', top: 0, right: 0}}>
-                <IconButton onClick={props.closePreFocusPopup}>
+                <IconButton onClick={props.close}>
                     <CloseIcon fontSize="large"/>
                 </IconButton>
             </div>
@@ -104,8 +104,7 @@ function FocusGoalsPopup(props) {
                         <AddCircleIcon style={{fontSize: 40, color: Colors.turquoise}}/>
                     </IconButton>
                 </div>
-                <TodoList todoList={todoList} deleteTodos={deleteTodos} todo={todo} handleChange={handleChange}
-                          addTodos={addTodos}/>
+                <TodoList todoList={todoList} deleteTodos={deleteTodos} handleChange={handleChange}/>
             </div>
 
             <Button

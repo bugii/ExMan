@@ -41,7 +41,7 @@ const FocusMenuButtons = styled.div`
 function Focus(props) {
     let history = useHistory();
 
-    const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(props.currentFocusSession.goals > 0);
+    const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(true);
 
     const escapeFocus = () => {
         // send ipc message to main process to start session there too (db etc)
@@ -57,8 +57,9 @@ function Focus(props) {
 
     return (
         <FocusDiv>
-            <FocusGoalsPopup open={showFocusGoalsPopup} goals={props.currentFocusSession.goals ? props.currentFocusSession.goals : []}
-                                 closePreFocusPopup={() => setShowFocusGoalsPopup(false)}/>
+            <FocusGoalsPopup open={showFocusGoalsPopup}
+                             goals={props.currentFocusSession.goals ? props.currentFocusSession.goals : []}
+                             close={() => setShowFocusGoalsPopup(false)}/>
 
             <h1 style={{color: Colors.navy, fontSize: 80, textAlign: "center"}}>
                 STAY FOCUSED!
