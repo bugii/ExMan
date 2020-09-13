@@ -27,6 +27,7 @@ const {
   getCurrentFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
+  getAllFutureFocusSessions,
   setEndTime,
   setFocusGoals,
 } = require("./db/db");
@@ -187,6 +188,10 @@ ipcMain.on("get-previous-focus-session", (e, args) => {
 
 ipcMain.on("get-all-past-focus-sessions", (e, args) => {
   e.reply("get-all-past-focus-sessions", getAllFocusSessions());
+});
+
+ipcMain.on("get-all-future-focus-sessions", (e, args) => {
+  e.reply("get-all-future-focus-sessions", getAllFutureFocusSessions());
 });
 
 const openService = (id) => {
