@@ -71,9 +71,11 @@ function Summary(props) {
 
     return (
         <SummaryDiv>
-            {showPostFocusPopup ? (
+            {showPostFocusPopup && focusSession ? (
                 <PostFocusPopup
-                    closePostFocusPopup={() => setshowPostFocusPopup(false)}
+                    goals={focusSession.goals ? focusSession.goals : []}
+                    open={showPostFocusPopup}
+                    close={() => setshowPostFocusPopup(false)}
                 />
             ) : null}
 
