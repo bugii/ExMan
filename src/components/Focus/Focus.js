@@ -6,7 +6,8 @@ import Countdown from "./Countdown";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Tooltip from "@material-ui/core/Tooltip";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
-import PreFocusPopup from "./Popups/PreFocusPopup";
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import FocusGoalsPopup from "./Popups/FocusGoalsPopup";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -40,7 +41,7 @@ const FocusMenuButtons = styled.div`
 function Focus(props) {
     let history = useHistory();
 
-    const [showPreFocusPopup, setshowPreFocusPopup] = useState(true);
+    const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(props.currentFocusSession.goals > 0);
 
     const escapeFocus = () => {
         // send ipc message to main process to start session there too (db etc)
@@ -56,10 +57,8 @@ function Focus(props) {
 
     return (
         <FocusDiv>
-            {showPreFocusPopup ? (
-                <PreFocusPopup goals={props.currentFocusSession.goals ? props.currentFocusSession.goals : []}
-                               closePreFocusPopup={() => setshowPreFocusPopup(false)}/>
-            ) : null}
+            <FocusGoalsPopup open={showFocusGoalsPopup} goals={props.currentFocusSession.goals ? props.currentFocusSession.goals : []}
+                                 closePreFocusPopup={() => setShowFocusGoalsPopup(false)}/>
 
             <h1 style={{color: Colors.navy, fontSize: 80, textAlign: "center"}}>
                 STAY FOCUSED!
@@ -70,6 +69,12 @@ function Focus(props) {
                 <Tooltip title="End focus session" arrow placement="top">
                     <HighlightOffIcon
                         onClick={escapeFocus}
+                        style={{color: Colors.snow, fontSize: 80, margin: "2rem"}}
+                    />
+                </Tooltip>
+                <Tooltip title="Edit Goals" arrow placement="top">
+                    <ListAltIcon
+                        onClick={() => setShowFocusGoalsPopup(true)}
                         style={{color: Colors.snow, fontSize: 80, margin: "2rem"}}
                     />
                 </Tooltip>

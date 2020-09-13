@@ -7,15 +7,15 @@ import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import CloseIcon from "@material-ui/icons/Close";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 export const PreFocusDiv = styled.div`
-  position: absolute;
-  z-index: 2;
-  height: 80vh;
-  width: 900px;
+   height: 460px;
+   width: 850px;
   background: ${Colors.snow};
   display: flex;
   flex-direction: column;
@@ -23,14 +23,9 @@ export const PreFocusDiv = styled.div`
   justify-content: space-around;
   color: ${Colors.navy};
   overflow: auto;
-
-  input {
-    width: 300px;
-    height: 25px;
-  }
 `;
 
-function PreFocusPopup(props) {
+function FocusGoalsPopup(props) {
 
     const [todo, setTodo] = useState("");
     const [todoList, setTodoList] = useState(props.goals);
@@ -69,13 +64,18 @@ function PreFocusPopup(props) {
     }, []);
 
     return (
+        <Dialog
+            aria-labelledby="simple-dialog-title"
+            open={props.open}
+            maxWidth={"lg"}
+        >
+            <DialogTitle id="simple-dialog-title">Focus Goals</DialogTitle>
         <PreFocusDiv>
-            <div style={{position: 'absolute', top: 15, right: 15}}>
+            <div style={{position: 'absolute', top: 0, right: 0}}>
                 <IconButton onClick={props.closePreFocusPopup}>
                     <CloseIcon fontSize="large"/>
                 </IconButton>
             </div>
-            <h1 style={{margin: 0}}>FOCUS GOALS</h1>
             <div style={{
                 display: "flex",
                 alignItems: "center",
@@ -83,7 +83,7 @@ function PreFocusPopup(props) {
                 width: "90%",
                 margin: 20
             }}>
-                <div style={{width: 320}}>
+                <div style={{width: 300}}>
                     <p>What do you want to focus on during this focus session?</p>
                     <OutlinedInput
                         id="todo"
@@ -92,23 +92,12 @@ function PreFocusPopup(props) {
                         onChange={handleChange}
                         value={todo}
                         onKeyPress={onEnterPress}
-                        /*endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                    ria-label="add"
-                                    size="medium"
-                                    onClick={addTodos}
-                                    edge="end"
-                                >
-                                    <AddCircleIcon style={{fontSize: 40}}/>
-                                </IconButton>
-                            </InputAdornment>
-                        }*/
+                        style={{width: "100%", backgroundColor:'white'}}
                     />
                 </div>
-                <div style={{minWidth: 150, textAlign: 'center'}}>
+                <div style={{ margin: 10, textAlign: 'center'}}>
                     <IconButton
-                        ria-label="add"
+                        aria-label="add"
                         size="medium"
                         onClick={addTodos}
                     >
@@ -125,13 +114,15 @@ function PreFocusPopup(props) {
                     color: "white",
                     width: "200px",
                     textAlign: "center",
+                    margin: "10px"
                 }}
                 onClick={handleSubmit}
             >
                 submit
             </Button>
         </PreFocusDiv>
+        </Dialog>
     );
 }
 
-export default PreFocusPopup;
+export default FocusGoalsPopup;
