@@ -15,10 +15,16 @@ const getUnreadChats = async (webContentsId) => {
     .executeJavaScript("window.getUnreadChats()");
   return unreadChats;
 };
+
+const getAuthStatus = (webContentsId) => {
+  return true;
+};
+
 module.exports = {
   setDnd,
   setOnline,
   getMessages,
   sendMessage,
   getUnreadChats,
+  getAuthStatus,
 };

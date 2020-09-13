@@ -3,6 +3,7 @@ const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
+const { write } = require("lowdb/adapters/FileSync");
 
 const adapter = new FileSync(path.join(app.getPath("userData"), "db.json"));
 const db = low(adapter);
@@ -16,6 +17,16 @@ function init() {
   if (!db.has("services").value()) {
     db.set("services", []).write();
   }
+
+  db.get("services")
+    .map((el) => (el["webContentsId"] = null))
+    .write();
+  db.get("services")
+    .map((el) => (el["ready"] = false))
+    .write();
+  db.get("services")
+    .map((el) => (el["authed"] = false))
+    .write();
 
   if (!db.has("pastFocusSessions").value()) {
     db.set("pastFocusSessions", []).write();
@@ -31,6 +42,9 @@ function init() {
         "Currently, I am working in focus mode. I will answer you as soon as possible.",
     },
   ]).write();
+  if (!db.has("futureFocusSessions").value()) {
+    db.set("futureFocusSessions", []).write();
+  }
 
   return db;
 }
@@ -44,6 +58,8 @@ function addService(name) {
       name,
       webContentsId: null,
       unreadCount: 0,
+      ready: false,
+      authed: false,
     })
     .write();
 
@@ -59,9 +75,7 @@ function deleteService(id) {
   return getServices();
 }
 
-function createFocusSession(startTime, endTime) {
-  // maybe required to check if there is still a focus session not finished
-
+function createNewFocusSession(startTime, endTime) {
   // Check which services were active at the start of the focus session
   let services = getServices();
   // add additional fields to each service: 'lastUpdated', 'autoReplied', and a 'messages' array to store new messages that arrive during focus mode
@@ -73,6 +87,7 @@ function createFocusSession(startTime, endTime) {
   }));
 
   const id = uuidv4();
+  const goals = [];
 
   db.set("currentFocusSession", {
     id,
@@ -80,7 +95,22 @@ function createFocusSession(startTime, endTime) {
     endTime,
     originalEndTime: endTime,
     services,
+    goals,
   }).write();
+}
+
+function createNewFutureFocusSession(startTime, endTime) {
+  const id = uuidv4();
+
+  db.get("futureFocusSessions")
+    .push({
+      id,
+      startTime,
+      endTime,
+    })
+    .write();
+
+  return id;
 }
 
 function getCurrentFocusSession() {
@@ -93,6 +123,10 @@ function endCurrentFocusSession() {
   db.get("pastFocusSessions").push(currentFocusSession).write();
   // Set current focus session to null again
   db.set("currentFocusSession", null).write();
+}
+
+function deleteFutureFocusSession(id) {
+  db.get("futureFocusSessions").remove({ id }).write();
 }
 
 function getPreviousFocusSession() {
@@ -109,6 +143,16 @@ function getAutoresponse() {
 
 function updateAutoresponse(newResponse) {
   db.get("autoResponse").assign({ autoResponse: newResponse }).write();
+function getAllFutureFocusSessions() {
+  return db.get("futureFocusSessions").value();
+}
+
+function setEndTime(timestamp) {
+  db.get("currentFocusSession").assign({ endTime: timestamp }).write();
+}
+
+function setFocusGoals(goals) {
+  db.get("currentFocusSession").assign({ goals: goals }).write();
 }
 
 module.exports = {
@@ -117,11 +161,16 @@ module.exports = {
   addService,
   getServices,
   deleteService,
-  createFocusSession,
+  createNewFocusSession,
+  createNewFutureFocusSession,
   getCurrentFocusSession,
   endCurrentFocusSession,
+  deleteFutureFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
   getAutoresponse,
   updateAutoresponse,
+  getAllFutureFocusSessions,
+  setEndTime,
+  setFocusGoals,
 };

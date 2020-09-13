@@ -4,7 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
-import {FormButtons} from "./NewFocusSession";
+import { FormButtons } from "./NewFocusSession";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -32,18 +32,15 @@ function ScheduleFocusSession(props) {
     const endDateTime = new Date(end);
     console.log("start: ", startDateTime);
     console.log("end: ", endDateTime);
-    ipcRenderer.send("focus-start-request", {
-            startTime: startDateTime.getTime(),
-            endTime: endDateTime.getTime(),
-        });
+    ipcRenderer.send("focus-schedule-request", {
+      startTime: startDateTime.getTime(),
+      endTime: endDateTime.getTime(),
+    });
     props.closeDialog();
   };
 
   return (
-    <Dialog
-      aria-labelledby="simple-dialog-title"
-      open={props.open}
-    >
+    <Dialog aria-labelledby="simple-dialog-title" open={props.open}>
       <DialogTitle id="simple-dialog-title">Schedule Focus Session</DialogTitle>
       <FormContainer noValidate>
         <TextField
@@ -55,7 +52,7 @@ function ScheduleFocusSession(props) {
           InputLabelProps={{
             shrink: true,
           }}
-          style={{ margin: "1rem"}}
+          style={{ margin: "1rem" }}
         />
         <TextField
           id="end"
@@ -70,18 +67,18 @@ function ScheduleFocusSession(props) {
         />
         <FormButtons>
           <Button
-              variant="contained"
-              color="0"
-              onClick={props.closeDialog}
-              style={{margin: "1rem"}}
+            variant="contained"
+            color="0"
+            onClick={props.closeDialog}
+            style={{ margin: "1rem" }}
           >
             Cancel
           </Button>
           <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit}
-              style={{margin: "1rem"}}
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            style={{ margin: "1rem" }}
           >
             Submit
           </Button>
