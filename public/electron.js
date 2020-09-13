@@ -27,7 +27,6 @@ const {
   getCurrentFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
-  updateAutoresponse,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
@@ -181,10 +180,6 @@ ipcMain.on("get-previous-focus-session", (e, args) => {
 
 ipcMain.on("get-all-past-focus-sessions", (e, args) => {
   e.reply("get-all-past-focus-sessions", getAllFocusSessions());
-});
-
-ipcMain.on("updateAutoResponse", (e, args) => {
-  e.reply("get-all-past-focus-sessions", updateAutoresponse(args));
 });
 
 async function createWindow() {

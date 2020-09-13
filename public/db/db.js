@@ -24,14 +24,6 @@ function init() {
   // On startup no focus session can be active
   db.set("currentFocusSession", null).write();
 
-  // set default auto-response message
-  db.set("autoResponse", [
-    {
-      autoReply:
-        "Currently, I am working in focus mode. I will answer you as soon as possible.",
-    },
-  ]).write();
-
   return db;
 }
 
@@ -103,14 +95,6 @@ function getAllFocusSessions() {
   return db.get("pastFocusSessions").value();
 }
 
-function getAutoresponse() {
-  return db.get("autoResponse[0].autoReply").value();
-}
-
-function updateAutoresponse(newResponse) {
-  db.get("autoResponse").assign({ autoResponse: newResponse }).write();
-}
-
 module.exports = {
   init,
   getDb,
@@ -122,6 +106,4 @@ module.exports = {
   endCurrentFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
-  getAutoresponse,
-  updateAutoresponse,
 };
