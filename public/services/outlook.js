@@ -16,15 +16,10 @@ const getUnreadChats = async (webContentsId) => {
   return unreadChats;
 };
 
-const getAuthStatus = (webContentsId) => {
-  return true;
-};
-
 module.exports = {
   setDnd,
   setOnline,
   getMessages,
   sendMessage,
   getUnreadChats,
-  getAuthStatus,
 };

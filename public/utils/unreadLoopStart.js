@@ -1,5 +1,4 @@
 const { getDb, getServices } = require("../db/db");
-const { getMainWindow } = require("../db/memoryDb");
 
 const { getUnreadChats: getUnreadChatsGmail } = require("../services/gmail");
 const {
@@ -12,7 +11,7 @@ const {
   getUnreadChats: getUnreadChatsWhatsapp,
 } = require("../services/whatsapp");
 
-async function unreadLoopStart(webContentsId) {
+async function unreadLoopStart(webContentsId, reactWebContent) {
   console.log("unread loop start");
   const service = getDb().get("services").find({ webContentsId }).value();
 
@@ -100,6 +99,9 @@ async function unreadLoopStart(webContentsId) {
       default:
         break;
     }
+
+    // Update renderer
+    reactWebContent.send("update-services", getServices());
   }, 10000);
 }
 

@@ -220,21 +220,9 @@ const getUnreadChats = async (webContentsId) => {
   return unreadChats;
 };
 
-const getAuthStatus = async (webContentsId) => {
-  try {
-    const token = await getToken(webContentsId);
-    console.log(token);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
 module.exports = {
   setDnd,
   setOnline,
   getMessages,
-  sendMessage,
   getUnreadChats,
-  getAuthStatus,
 };

@@ -1,13 +1,12 @@
-import React, {useEffect, useState} from "react";
-import {useHistory} from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Colors from "../Colors";
 import Countdown from "./Countdown";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import Tooltip from "@material-ui/core/Tooltip";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import FocusGoalsPopup from "./Popups/FocusGoalsPopup";
+import PreFocusPopup from "./Popups/PreFocusPopup";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -39,55 +38,47 @@ const FocusMenuButtons = styled.div`
 `;
 
 function Focus(props) {
-    let history = useHistory();
+  let history = useHistory();
 
-    const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(true);
+  const [showPreFocusPopup, setshowPreFocusPopup] = useState(true);
 
-    const escapeFocus = () => {
-        // send ipc message to main process to start session there too (db etc)
-        ipcRenderer.send("focus-end-request");
-    };
+  const escapeFocus = () => {
+    // send ipc message to main process to start session there too (db etc)
+    ipcRenderer.send("focus-end-request");
+  };
 
-    const minimizeFocus = () => {
-        //navigate back home without ending focus session
-        history.push("/");
-    };
+  const minimizeFocus = () => {
+    //navigate back home without ending focus session
+    history.push("/");
+  };
 
-    const focusTime = props.currentFocusSession.endTime ? (props.currentFocusSession.endTime - new Date()) / 1000 : -1;
+  return (
+    <FocusDiv>
+      {showPreFocusPopup ? (
+        <PreFocusPopup closePreFocusPopup={() => setshowPreFocusPopup(false)} />
+      ) : null}
 
-    return (
-        <FocusDiv>
-            <FocusGoalsPopup open={showFocusGoalsPopup}
-                             goals={props.currentFocusSession.goals ? props.currentFocusSession.goals : []}
-                             close={() => setShowFocusGoalsPopup(false)}/>
-
-            <h1 style={{color: Colors.navy, fontSize: 80, textAlign: "center"}}>
-                STAY FOCUSED!
-            </h1>
-            <Countdown focusLength={focusTime}/>
-            <FocusText>We are taking care of your messages for you.</FocusText>
-            <FocusMenuButtons>
-                <Tooltip title="End focus session" arrow placement="top">
-                    <HighlightOffIcon
-                        onClick={escapeFocus}
-                        style={{color: Colors.snow, fontSize: 80, margin: "2rem"}}
-                    />
-                </Tooltip>
-                <Tooltip title="Edit Goals" arrow placement="top">
-                    <ListAltIcon
-                        onClick={() => setShowFocusGoalsPopup(true)}
-                        style={{color: Colors.snow, fontSize: 80, margin: "2rem"}}
-                    />
-                </Tooltip>
-                <Tooltip title="Break focus to see chat" arrow placement="top">
-                    <QuestionAnswerIcon
-                        onClick={minimizeFocus}
-                        style={{color: Colors.snow, fontSize: 80, margin: "2rem"}}
-                    />
-                </Tooltip>
-            </FocusMenuButtons>
-        </FocusDiv>
-    );
+      <h1 style={{ color: Colors.navy, fontSize: 80, textAlign: "center" }}>
+        STAY FOCUSED!
+      </h1>
+      <Countdown focusLength={props.focusLength} />
+      <FocusText>We are taking care of your messages for you.</FocusText>
+      <FocusMenuButtons>
+        <Tooltip title="End focus session" arrow placement="top">
+          <HighlightOffIcon
+            onClick={escapeFocus}
+            style={{ color: Colors.snow, fontSize: 80, margin: "2rem" }}
+          />
+        </Tooltip>
+        <Tooltip title="Break focus to see chat" arrow placement="top">
+          <QuestionAnswerIcon
+            onClick={minimizeFocus}
+            style={{ color: Colors.snow, fontSize: 80, margin: "2rem" }}
+          />
+        </Tooltip>
+      </FocusMenuButtons>
+    </FocusDiv>
+  );
 }
 
 export default Focus;

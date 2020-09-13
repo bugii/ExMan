@@ -70,11 +70,9 @@ function Summary(props) {
 
   return (
     <SummaryDiv>
-      {showPostFocusPopup && focusSession ? (
+      {showPostFocusPopup ? (
         <PostFocusPopup
-          goals={focusSession.goals ? focusSession.goals : []}
-          open={showPostFocusPopup}
-          close={() => setshowPostFocusPopup(false)}
+          closePostFocusPopup={() => setshowPostFocusPopup(false)}
         />
       ) : null}
 
@@ -112,18 +110,14 @@ function Summary(props) {
                       deleteApp={props.deleteApp}
                     />
                   </th>
-                  {service.messages
-                    ? service.messages.map((message) => (
-                        <Table>
-                          <tr>
-                            <th>{message.timestamp}</th>
-                            <th>{message.id}</th>
-                            <th>{message.body}</th>
-                          </tr>
-                        </Table>
-                      ))
-                    : null}
-                  {/* Including the following table below as sample data for dev purposes */}
+                  {/*service.messages ? service.messages.map((message) => (
+                                        <Table>
+                                            <tr>
+                                                <th>{message.timestamp}</th>
+                                                <th>{message.id}</th>
+                                                <th>{message.body}</th>
+                                            </tr>
+                                        </Table>)) : null */}
                   <Table>
                     <tr>
                       <th>09:35</th>

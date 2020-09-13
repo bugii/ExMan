@@ -1,22 +1,13 @@
-const { webContents } = require("electron");
 const { getCurrentFocusSession, endCurrentFocusSession } = require("../db/db");
-const {
-  getIntervallRefs,
-  getTimeoutRefs,
-  getMainWindow,
-} = require("../db/memoryDb");
 const { setOnline: setOnlineSlack } = require("../services/slack");
 const { setOnline: setOnlineTeams } = require("../services/teams");
 
-function focusEnd() {
+function focusEnd(intervallRefs) {
   console.log("focus end");
   //get ongoing focus sessions
   const currentFocusSession = getCurrentFocusSession();
   // TODO: set status to active again for all services -> use 'setOnline' function
   currentFocusSession.services.forEach((service) => {
-    // unmute audio on focus-end
-    webContents.fromId(service.webContentsId).setAudioMuted(false);
-
     switch (service.name) {
       case "slack":
         // stop dnd mode on slack
@@ -40,14 +31,11 @@ function focusEnd() {
   });
 
   // End all the intervalls
-  getIntervallRefs().forEach((intervallRef) => clearInterval(intervallRef));
-  // End all timeouts (in case of an early termination of the focus session)
-  getTimeoutRefs().forEach((timeoutRef) => clearTimeout(timeoutRef));
-
+  intervallRefs.forEach((intervallRef) => {
+    clearInterval(intervallRef);
+  });
   // remove current focus session from db
   endCurrentFocusSession();
-  // tell react that focus has ended, so it can update the state
-  getMainWindow().webContents.send("focus-end-successful");
 }
 
 module.exports = focusEnd;

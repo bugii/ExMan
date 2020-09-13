@@ -52,12 +52,3 @@ window.getUnreadChats = () => {
   });
   return count;
 };
-
-window.isAuth = () => {
-  const el = document.querySelector("._1BjNO");
-
-  if (el) {
-    return true;
-  }
-  return false;
-};
