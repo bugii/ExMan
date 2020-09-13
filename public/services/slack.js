@@ -123,6 +123,7 @@ const getMessages = async (webContentsId, startTime, messages) => {
       .then(async (response) => {
         response.data.messages.forEach(async (m) => {
           if (m.user !== userID) {
+            let alreadyReplied;
             username = await getUsername(webContentsId, m.user);
 
             // save message in database
@@ -133,17 +134,38 @@ const getMessages = async (webContentsId, startTime, messages) => {
               .get("messages")
               .push({ title: username, body: m.text, timestamp: m.ts })
               .write();
-            // do an auto-reply by using the sendMessage function
-            sendMessage(webContentsId, channel, messages);
 
-            // store auto-replied single_channel in db
-            getDb()
+            const repliedList = getDb()
               .get("currentFocusSession")
               .get("services")
               .find({ webContentsId })
               .get("autoReplied")
-              .push({ channel })
-              .write();
+              .value();
+
+            console.log(repliedList);
+            repliedList.forEach((l) => {
+              if (l.channel != channel) {
+                console.log(m.user);
+                alreadyReplied = false;
+              } else {
+                alreadyReplied = true;
+                return;
+              }
+            });
+
+            if (!alreadyReplied) {
+              // do an auto-reply by using the sendMessage function
+              sendMessage(webContentsId, channel, messages);
+
+              // store auto-replied single_channel in db
+              getDb()
+                .get("currentFocusSession")
+                .get("services")
+                .find({ webContentsId })
+                .get("autoReplied")
+                .push({ channel })
+                .write();
+            }
           }
         });
       });

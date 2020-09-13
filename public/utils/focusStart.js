@@ -2,6 +2,7 @@ const {
   getDb,
   createFocusSession,
   getCurrentFocusSession,
+  getAutoresponse,
 } = require("../db/db");
 
 const {
@@ -30,6 +31,8 @@ function focusStart(startTime, endTime) {
   let syncToken;
   let teamsInfos;
 
+  const message = getAutoresponse();
+
   // 2. Set status of apps to DND if possible
   // Get all registered services
   const currentFocusSession = getCurrentFocusSession();
@@ -39,11 +42,7 @@ function focusStart(startTime, endTime) {
         setDndSlack(service.webContentsId, diffMins);
         currentFocusSessionIntervalSlack = setInterval(function () {
           var startTime = new Date().getTime() / 1000 - 10;
-          getMessagesSlack(
-            service.webContentsId,
-            startTime,
-            "Hello from ExMan"
-          );
+          getMessagesSlack(service.webContentsId, startTime, message);
         }, 10001);
         break;
 
@@ -63,7 +62,7 @@ function focusStart(startTime, endTime) {
           currentTeamsSessionInitial
             ? currentTeamsSessionInitial["syncToken"]
             : null,
-          "Hello from electron"
+          message
         );
 
         currentFocusSessionIntervalTeams = setInterval(function () {
@@ -77,7 +76,7 @@ function focusStart(startTime, endTime) {
             service.webContentsId,
             startTime,
             currentTeamsSession ? currentTeamsSession["syncToken"] : null,
-            "Hello from electron"
+            message
           );
         }, 20000);
         break;
