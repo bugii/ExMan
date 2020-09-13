@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useHistory} from "react-router-dom";
 import styled from "styled-components";
 import Colors from "../Colors";
 import Countdown from "./Countdown";
@@ -38,47 +38,50 @@ const FocusMenuButtons = styled.div`
 `;
 
 function Focus(props) {
-  let history = useHistory();
+    let history = useHistory();
 
-  const [showPreFocusPopup, setshowPreFocusPopup] = useState(true);
+    const [showPreFocusPopup, setshowPreFocusPopup] = useState(true);
 
-  const escapeFocus = () => {
-    // send ipc message to main process to start session there too (db etc)
-    ipcRenderer.send("focus-end-request");
-  };
+    const escapeFocus = () => {
+        // send ipc message to main process to start session there too (db etc)
+        ipcRenderer.send("focus-end-request");
+    };
 
-  const minimizeFocus = () => {
-    //navigate back home without ending focus session
-    history.push("/");
-  };
+    const minimizeFocus = () => {
+        //navigate back home without ending focus session
+        history.push("/");
+    };
 
-  return (
-    <FocusDiv>
-      {showPreFocusPopup ? (
-        <PreFocusPopup closePreFocusPopup={() => setshowPreFocusPopup(false)} />
-      ) : null}
+    const focusTime = props.currentFocusSession.endTime ? (props.currentFocusSession.endTime - new Date()) / 1000 : -1;
 
-      <h1 style={{ color: Colors.navy, fontSize: 80, textAlign: "center" }}>
-        STAY FOCUSED!
-      </h1>
-      <Countdown focusLength={props.focusLength} />
-      <FocusText>We are taking care of your messages for you.</FocusText>
-      <FocusMenuButtons>
-        <Tooltip title="End focus session" arrow placement="top">
-          <HighlightOffIcon
-            onClick={escapeFocus}
-            style={{ color: Colors.snow, fontSize: 80, margin: "2rem" }}
-          />
-        </Tooltip>
-        <Tooltip title="Break focus to see chat" arrow placement="top">
-          <QuestionAnswerIcon
-            onClick={minimizeFocus}
-            style={{ color: Colors.snow, fontSize: 80, margin: "2rem" }}
-          />
-        </Tooltip>
-      </FocusMenuButtons>
-    </FocusDiv>
-  );
+    return (
+        <FocusDiv>
+            {showPreFocusPopup ? (
+                <PreFocusPopup goals={props.currentFocusSession.goals ? props.currentFocusSession.goals : []}
+                               closePreFocusPopup={() => setshowPreFocusPopup(false)}/>
+            ) : null}
+
+            <h1 style={{color: Colors.navy, fontSize: 80, textAlign: "center"}}>
+                STAY FOCUSED!
+            </h1>
+            <Countdown focusLength={focusTime}/>
+            <FocusText>We are taking care of your messages for you.</FocusText>
+            <FocusMenuButtons>
+                <Tooltip title="End focus session" arrow placement="top">
+                    <HighlightOffIcon
+                        onClick={escapeFocus}
+                        style={{color: Colors.snow, fontSize: 80, margin: "2rem"}}
+                    />
+                </Tooltip>
+                <Tooltip title="Break focus to see chat" arrow placement="top">
+                    <QuestionAnswerIcon
+                        onClick={minimizeFocus}
+                        style={{color: Colors.snow, fontSize: 80, margin: "2rem"}}
+                    />
+                </Tooltip>
+            </FocusMenuButtons>
+        </FocusDiv>
+    );
 }
 
 export default Focus;

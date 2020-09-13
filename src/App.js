@@ -23,6 +23,7 @@ function App() {
   const [startTime, setStartTime] = useState(new Date().getTime());
   const [endTime, setEndTime] = useState(new Date().getTime());
   const [inFocus, setInFocus] = useState(false);
+  const [currentFocusSession, setCurrentFocusSession] = useState([]);
 
   let history = useHistory();
   let location = useLocation();
@@ -72,6 +73,14 @@ function App() {
       history.push("/services");
       setActiveService(id);
     });
+
+    ipcRenderer.on("current-focus-request", (e, focusSession) => {
+      setCurrentFocusSession(focusSession);
+      console.log(focusSession);
+    });
+
+    ipcRenderer.send("current-focus-request");
+
   }, []);
 
   return (
@@ -84,14 +93,12 @@ function App() {
           deleteApp={deleteApp}
         />
       </div>
-      {location.pathname != "/focus" && inFocus ? (
+      {location.pathname !== "/focus" && currentFocusSession ? (
         <FocusBubble
           handleClick={returnToFocus}
           currentPath={location.pathname}
         />
-      ) : (
-        false
-      )}
+      ) : null}
 
       <div className="main-content">
         <Route path="/" exact>
@@ -114,7 +121,7 @@ function App() {
         </Route>
 
         <Route path="/focus">
-          <Focus focusLength={(endTime - new Date()) / 1000} />
+          <Focus currentFocusSession={currentFocusSession} />
         </Route>
 
         <Route path="/add-service">

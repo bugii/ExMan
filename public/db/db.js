@@ -80,6 +80,7 @@ function createNewFocusSession(startTime, endTime) {
   }));
 
   const id = uuidv4();
+  const goals = [];
 
   db.set("currentFocusSession", {
     id,
@@ -87,6 +88,7 @@ function createNewFocusSession(startTime, endTime) {
     endTime,
     originalEndTime: endTime,
     services,
+    goals,
   }).write();
 }
 
@@ -136,6 +138,10 @@ function setEndTime(timestamp) {
   db.get("currentFocusSession").assign({ endTime: timestamp }).write();
 }
 
+function setFocusGoals(goals) {
+  db.get("currentFocusSession").assign({ goals: goals }).write();
+}
+
 module.exports = {
   init,
   getDb,
@@ -151,4 +157,5 @@ module.exports = {
   getAllFocusSessions,
   getAllFutureFocusSessions,
   setEndTime,
+  setFocusGoals,
 };

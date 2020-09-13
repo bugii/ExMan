@@ -28,6 +28,7 @@ const {
   getPreviousFocusSession,
   getAllFocusSessions,
   setEndTime,
+  setFocusGoals,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
@@ -136,9 +137,16 @@ ipcMain.on("focus-schedule-request", (e, { startTime, endTime }) => {
   scheduleFocus(startTime, endTime);
 });
 
+ipcMain.on("focus-goals-request",(e, { goals }) => {
+  console.log("focus goal request from react", goals);
+  setFocusGoals(goals);
+  // if focus goals were set successfully, update the react app
+  e.reply("current-focus-request", getCurrentFocusSession());
+});
+
 ipcMain.on("focus-end-request", (e) => {
   console.log("focus end request from react");
-  // manually set the endTime of the foucus session to the current time. This results in endTime != originalEndTime -> we can see which sessions were aborted manually
+  // manually set the endTime of the focus session to the current time. This results in endTime != originalEndTime -> we can see which sessions were aborted manually
   setEndTime(new Date().getTime());
   focusEnd();
   // if focus end successful, update the react app

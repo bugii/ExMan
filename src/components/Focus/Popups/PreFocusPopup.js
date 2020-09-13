@@ -1,17 +1,15 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import Colors from "../../Colors";
 import Button from "@material-ui/core/Button";
 import TodoList from "../TodoList";
-import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import List from "@material-ui/core/List";
 import CloseIcon from "@material-ui/icons/Close";
-import {SummaryDiv} from "../../Summary/Summary";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputAdornment from "@material-ui/core/InputAdornment";
-//import GoalsTable from "../GoalsTable";
+
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 export const PreFocusDiv = styled.div`
   position: absolute;
@@ -35,9 +33,7 @@ export const PreFocusDiv = styled.div`
 function PreFocusPopup(props) {
 
     const [todo, setTodo] = useState("");
-    const [todoList, setTodoList] = useState([]);
-
-    const listItems = todoList.map((number) => <li>{number}</li>);
+    const [todoList, setTodoList] = useState(props.goals);
 
     const onEnterPress = (event) => {
         if (event.key === 'Enter') {
@@ -59,6 +55,19 @@ function PreFocusPopup(props) {
         todoList.splice(index, 1);
     };
 
+    const handleSubmit = () => {
+        ipcRenderer.send("focus-goals-request", {
+            goals: todoList
+        });
+        props.closePreFocusPopup();
+    };
+
+    useEffect(() => {
+        ipcRenderer.on("focus-goals-set", (e) => {
+            props.closePreFocusPopup();
+        });
+    }, []);
+
     return (
         <PreFocusDiv>
             <div style={{position: 'absolute', top: 15, right: 15}}>
@@ -75,27 +84,27 @@ function PreFocusPopup(props) {
                 margin: 20
             }}>
                 <div style={{width: 320}}>
-                <p>What do you want to focus on during this focus session?</p>
-                <OutlinedInput
-                    id="todo"
-                    size="small"
-                    type="string"
-                    onChange={handleChange}
-                    value={todo}
-                    onKeyPress={onEnterPress}
-                    /*endAdornment={
-                        <InputAdornment position="end">
-                            <IconButton
-                                ria-label="add"
-                                size="medium"
-                                onClick={addTodos}
-                                edge="end"
-                            >
-                                <AddCircleIcon style={{fontSize: 40}}/>
-                            </IconButton>
-                        </InputAdornment>
-                    }*/
-                />
+                    <p>What do you want to focus on during this focus session?</p>
+                    <OutlinedInput
+                        id="todo"
+                        size="small"
+                        type="string"
+                        onChange={handleChange}
+                        value={todo}
+                        onKeyPress={onEnterPress}
+                        /*endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    ria-label="add"
+                                    size="medium"
+                                    onClick={addTodos}
+                                    edge="end"
+                                >
+                                    <AddCircleIcon style={{fontSize: 40}}/>
+                                </IconButton>
+                            </InputAdornment>
+                        }*/
+                    />
                 </div>
                 <div style={{minWidth: 150, textAlign: 'center'}}>
                     <IconButton
@@ -117,9 +126,9 @@ function PreFocusPopup(props) {
                     width: "200px",
                     textAlign: "center",
                 }}
-                onClick={props.closePreFocusPopup}
+                onClick={handleSubmit}
             >
-                {" start focus session "}
+                submit
             </Button>
         </PreFocusDiv>
     );
