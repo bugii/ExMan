@@ -110,14 +110,15 @@ function Summary(props) {
                                             deleteApp={props.deleteApp}
                                         />
                                     </th>
-                                    {/*service.messages ? service.messages.map((message) => (
+                                    {service.messages ? service.messages.map((message) => (
                                         <Table>
                                             <tr>
                                                 <th>{message.timestamp}</th>
                                                 <th>{message.id}</th>
                                                 <th>{message.body}</th>
                                             </tr>
-                                        </Table>)) : null */}
+                                        </Table>)) : null}
+                                    {/* Including the following table below as sample data for dev purposes */}
                                     <Table>
                                         <tr>
                                             <th>09:35</th>

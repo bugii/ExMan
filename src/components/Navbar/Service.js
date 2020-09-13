@@ -10,7 +10,6 @@ const { Menu, MenuItem } = remote;
 export const ServiceDiv = styled.div`
   position: relative;
   display: inline-block;
-  top: 0px;
   width: 82px;
   height: 66px;
 `;
