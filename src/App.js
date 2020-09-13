@@ -47,6 +47,11 @@ function App() {
   };
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log('Delay 1 second to enable db reading')
+    }, 1000);
+    clearTimeout(timer);
+
     ipcRenderer.on("get-services", (event, services) => {
       updateServices(services);
     });
@@ -121,7 +126,8 @@ function App() {
         </Route>
 
         <Route path="/focus">
-          <Focus currentFocusSession={currentFocusSession} />
+          { currentFocusSession != null ?
+              <Focus currentFocusSession={currentFocusSession} /> : null}
         </Route>
 
         <Route path="/add-service">
