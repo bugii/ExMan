@@ -7,9 +7,16 @@ import Colors from "../Colors";
 const { remote } = window.require("electron");
 const { Menu, MenuItem } = remote;
 
+export const ServiceDiv = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 82px;
+  height: 66px;
+`;
+
 export const ServiceIcon = styled.img`
   width: 50px;
-  margin: 0.5rem 1rem;
+  margin: 8px 16px;
 `;
 
 export const MessageCountBubble = styled.div`
@@ -18,8 +25,8 @@ export const MessageCountBubble = styled.div`
   background-color: red;
   border-radius: 100%;
   position: absolute;
-  top: 5px;
-  right: 20px;
+  top: 0px;
+  right: 0px;
   text-align: center;
   font-size: small;
   color: white;
@@ -49,12 +56,23 @@ function Service(props) {
   };
 
   return (
-    <div onContextMenu={contextClick} onClick={handleClick} style={{position: 'relative'}}>
-      <Tooltip title={props.name} arrow placement="right">
-        <ServiceIcon src={props.icon} />
-      </Tooltip>
-        { props.unreadCount ? <MessageCountBubble> {props.unreadCount} </MessageCountBubble> : false}
-    </div>
+      <ServiceDiv>
+          {!props.isAuthed || !props.isReady ? (
+              <MessageCountBubble> ! </MessageCountBubble>
+          ) : null}
+          {props.unreadCount ? (
+              <MessageCountBubble> {props.unreadCount} </MessageCountBubble>
+          ) : null}
+          <div
+              onContextMenu={contextClick}
+              onClick={handleClick}
+              style={{position: "absolute"}}
+          >
+            <Tooltip title={props.name} arrow placement="right">
+              <ServiceIcon src={props.icon}/>
+            </Tooltip>
+          </div>
+      </ServiceDiv>
   );
 }
 

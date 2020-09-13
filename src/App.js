@@ -19,10 +19,11 @@ const ipcRenderer = electron.ipcRenderer;
 function App() {
   const [services, setServices] = useState([]);
   const [nrOfServices, setNrOfServices] = useState(0);
-  const [activeService, setActiveService] = useState("home");
+  const [activeService, setActiveService] = useState(null);
   const [startTime, setStartTime] = useState(new Date().getTime());
   const [endTime, setEndTime] = useState(new Date().getTime());
-  const [inFocus, setInFocus] = useState(false);
+  const [currentFocusSession, setCurrentFocusSession] = useState([]);
+  const [inFocus, setInFocus] = useState(currentFocusSession != null);
 
   let history = useHistory();
   let location = useLocation();
@@ -65,9 +66,36 @@ function App() {
 
     ipcRenderer.on("focus-end-successful", (e) => {
       setInFocus(false);
+      const timer = setTimeout(() => {
+        console.log('Delay 1 s for db to update')
+      }, 1000);
       history.push("/summary");
     });
-  }, []);
+
+    ipcRenderer.on("open-service", (e, id) => {
+      history.push("/services");
+      setActiveService(id);
+    });
+
+    ipcRenderer.on("current-focus-request", (e, focusSession) => {
+      setCurrentFocusSession(focusSession);
+      console.log(focusSession);
+    });
+
+    ipcRenderer.send("current-focus-request");
+
+    /*const interval = setInterval(() => {
+      console.log("updating status....");
+
+      ipcRenderer.on("current-focus-request", (e, focusSession) => {
+        setCurrentFocusSession(focusSession);
+        console.log(focusSession);
+      });
+
+      ipcRenderer.send("current-focus-request");
+    }, 3000);
+    return () =>  clearInterval(interval);*/
+    }, []);
 
   return (
     <div className="app">
@@ -79,7 +107,12 @@ function App() {
           deleteApp={deleteApp}
         />
       </div>
-      {(location.pathname != "/focus" && inFocus) ? <FocusBubble handleClick={returnToFocus} currentPath={location.pathname}/> : false}
+      {location.pathname !== "/focus" && currentFocusSession ? (
+        <FocusBubble
+          handleClick={returnToFocus}
+          currentPath={location.pathname}
+        />
+      ) : null}
 
       <div className="main-content">
         <Route path="/" exact>
@@ -102,7 +135,8 @@ function App() {
         </Route>
 
         <Route path="/focus">
-          <Focus focusLength={(endTime - new Date()) / 1000} />
+          { currentFocusSession ?
+              <Focus currentFocusSession={currentFocusSession} /> : null}
         </Route>
 
         <Route path="/add-service">
@@ -118,7 +152,10 @@ function App() {
         </Route>
 
         <Route path="/summary">
-          <Summary offeredServices={offeredServices} setActiveService={setActiveService}/>
+          <Summary
+            offeredServices={offeredServices}
+            setActiveService={setActiveService}
+          />
         </Route>
       </div>
     </div>

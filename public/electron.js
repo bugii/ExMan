@@ -27,19 +27,25 @@ const {
   getCurrentFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
+  updateAutoresponse,
+  getAllFutureFocusSessions,
+  setEndTime,
+  setFocusGoals,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
 const focusEnd = require("./utils/focusEnd");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 const unreadLoopStart = require("./utils/unreadLoopStart");
+const authLoopStart = require("./utils/authLoopStart");
+const scheduleFocus = require("./utils/scheduleFocus");
+const { storeMainWindow, getMainWindow } = require("./db/memoryDb");
 
 const isMac = process.platform === "darwin";
 
-// Initialize db or if there are services stored in the db, use them
+// Initialize db
 const db = init();
 
-let mainWindow;
 let mainMenu;
 
 mainMenu = Menu.buildFromTemplate([
@@ -76,13 +82,13 @@ Menu.setApplicationMenu(mainMenu);
 ipcMain.on("add-service", (event, name) => {
   console.log("add service", name);
   const services = addService(name);
-  mainWindow.webContents.send("update-services", services);
+  getMainWindow().webContents.send("update-services", services);
 });
 
 ipcMain.on("delete-service", (event, id) => {
   console.log("delete service", id);
   const services = deleteService(id);
-  mainWindow.webContents.send("update-services", services);
+  getMainWindow().webContents.send("update-services", services);
 });
 
 ipcMain.on("get-services", (event, args) => {
@@ -106,44 +112,45 @@ ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
     e.preventDefault();
     shell.openExternal(url);
   });
-  webContent.setAudioMuted(true);
 
   // add reference to db
   db.get("services").find({ id }).assign({ webContentsId }).write();
+  // mark as ready
+  db.get("services").find({ id }).assign({ ready: true }).write();
 
   // avoid calling the following code multiple times per webview..
   // react calls this on the dom-ready event for the webview,
   // which is why this could be called multiple times -> unnessecary computing
   if (!idsWhereWebviewWasRendered.find((el) => el === id)) {
     // Start checking for unread messages/emails/chats
-    unreadLoopStart(webContentsId, mainWindow.webContents);
+    unreadLoopStart(webContentsId);
+    authLoopStart(webContentsId);
     idsWhereWebviewWasRendered.push(id);
   }
 });
 
-let intervallRefs = [];
-let focusEndTimeoutRef = null;
-
 ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
   console.log("focus requested from react", startTime, endTime);
-  intervallRefs = focusStart(startTime, endTime);
+  focusStart(startTime, endTime);
+});
 
-  //TODO: add option to delay start of focus session, or add function to schedule session
+ipcMain.on("focus-schedule-request", (e, { startTime, endTime }) => {
+  console.log("schedule focus request from react", startTime, endTime);
+  scheduleFocus(startTime, endTime);
+});
 
-  // if focus start successful, update the react app
-  e.reply("focus-start-successful", { startTime, endTime });
-  // schedule automatic focus end
-  focusEndTimeoutRef = setTimeout(() => {
-    focusEnd(intervallRefs);
-    // tell react that focus has ended, so it can update the state
-    e.reply("focus-end-successful");
-  }, endTime - new Date().getTime());
+ipcMain.on("focus-goals-request", (e, { goals }) => {
+  console.log("focus goal request from react", goals);
+  setFocusGoals(goals);
+  // if focus goals were set successfully, update the react app
+  e.reply("current-focus-request", getCurrentFocusSession());
 });
 
 ipcMain.on("focus-end-request", (e) => {
   console.log("focus end request from react");
-  focusEnd(intervallRefs);
-  clearTimeout(focusEndTimeoutRef);
+  // manually set the endTime of the focus session to the current time. This results in endTime != originalEndTime -> we can see which sessions were aborted manually
+  setEndTime(new Date().getTime());
+  focusEnd();
   // if focus end successful, update the react app
   e.reply("focus-end-successful");
 });
@@ -160,7 +167,9 @@ ipcMain.on("notification", (event, { id, title, body }) => {
   if (!currentFocus) {
     console.log("forward notification", id);
     // forward notification
-    new Notification({ title, body, silent: true }).show();
+    const notification = new Notification({ title, body, silent: true });
+    notification.on("click", () => openService(id));
+    notification.show();
   } else {
     console.log("block notification", id);
     // if there is a focus session ongoing, store the notification
@@ -182,12 +191,25 @@ ipcMain.on("get-all-past-focus-sessions", (e, args) => {
   e.reply("get-all-past-focus-sessions", getAllFocusSessions());
 });
 
+ipcMain.on("updateAutoResponse", (e, args) => {
+  e.reply("get-all-past-focus-sessions", updateAutoresponse(args));
+});
+
+ipcMain.on("get-all-future-focus-sessions", (e, args) => {
+  e.reply("get-all-future-focus-sessions", getAllFutureFocusSessions());
+});
+
+const openService = (id) => {
+  // If a new notification comes in, open the corresponding service in the frontend
+  getMainWindow().webContents.send("open-service", id);
+};
+
 async function createWindow() {
   // If you want to clear cache (helpful for testing new users)
   // await session.defaultSession.clearStorageData();
 
   // Main Browser Window
-  mainWindow = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
@@ -205,6 +227,8 @@ async function createWindow() {
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
   if (isDev) mainWindow.webContents.openDevTools({ mode: "detach" });
+
+  storeMainWindow(mainWindow);
 }
 
 // This method will be called when Electron has finished
@@ -212,6 +236,11 @@ async function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
   createWindow();
+
+  // Update renderer loop
+  setInterval(() => {
+    getMainWindow().send("update-services", getServices());
+  }, 3000);
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {

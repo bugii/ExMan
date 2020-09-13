@@ -43,6 +43,8 @@ function Navbar(props) {
               setActiveService={props.setActiveService}
               name={service.name}
               unreadCount={service.unreadCount}
+              isReady={service.ready}
+              isAuthed={service.authed}
               icon={props.offeredServices[service.name].icon}
               deleteApp={props.deleteApp}
             />

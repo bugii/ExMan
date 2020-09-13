@@ -11,7 +11,7 @@ function Webview(props) {
     z = 0;
   }
 
-  const enableDevTools = (el) => {
+  const webviewRef = (el) => {
     if (el) {
       el.addEventListener("dom-ready", () => {
         // the webcontentsId is stored in the database for easy reference from the main process
@@ -27,7 +27,7 @@ function Webview(props) {
     <div>
       <webview
         style={{ zIndex: z, backgroundColor: "#FCF7F8" }}
-        ref={enableDevTools}
+        ref={webviewRef}
         src={props.url}
         useragent={props.useragent}
         allowpopups="true"
