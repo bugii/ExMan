@@ -143,8 +143,6 @@ function getAutoresponse() {
 
 function updateAutoresponse(newResponse) {
   db.get("autoResponse").assign({ autoResponse: newResponse }).write();
-}
-
 function getAllFutureFocusSessions() {
   return db.get("futureFocusSessions").value();
 }
