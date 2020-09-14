@@ -18,7 +18,7 @@ npm start
 
 Note: On mac, don't use the integrated terminal from VsCode
 
-### Build
+#### Production Build
 
 ```bash
 npm run build
