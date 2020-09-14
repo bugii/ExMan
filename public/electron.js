@@ -98,6 +98,11 @@ ipcMain.on('update-frontend', (e) => {
   e.reply('update-frontend', {services, currentFocusSession})
 })
 
+ipcMain.on('refresh-service', (e, webContentsId) => {
+  console.log(`refreshing ${webContentsId}`)
+  webContents.fromId(webContentsId).reload()
+})
+
 const idsWhereWebviewWasRendered = [];
 
 ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {

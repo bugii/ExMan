@@ -45,9 +45,19 @@ function Service(props) {
       },
     })
   );
+  menu.append(
+    new MenuItem({
+      label: 'Refresh',
+      click() {
+        console.log(`refreshing ${props.id}`)
+        props.refreshApp(props.webContentsId)
+      }
+    })
+  )
 
   const contextClick = () => {
-    menu.popup({ window: remote.getCurrentWindow() });
+    // Don't show context menu if in focus mode
+    if (!props.currentFocusSession) menu.popup({ window: remote.getCurrentWindow() });
   };
 
   const handleClick = () => {

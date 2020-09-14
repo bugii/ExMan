@@ -39,6 +39,10 @@ function App() {
     setServices(services);
   };
 
+  const refreshApp = (webContentsId) => {
+    ipcRenderer.send('refresh-service', webContentsId)
+  }
+
   const returnToFocus = () => {
     history.push("/focus");
   };
@@ -78,6 +82,8 @@ function App() {
           services={services}
           offeredServices={offeredServices}
           deleteApp={deleteApp}
+          currentFocusSession={currentFocusSession}
+          refreshApp={refreshApp}
         />
       </div>
       {location.pathname !== "/focus" && currentFocusSession ? (

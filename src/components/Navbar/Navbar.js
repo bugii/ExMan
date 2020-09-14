@@ -47,6 +47,10 @@ function Navbar(props) {
               isAuthed={service.authed}
               icon={props.offeredServices[service.name].icon}
               deleteApp={props.deleteApp}
+              currentFocusSession={props.currentFocusSession}
+              webContentsId={service.webContentsId}
+              refreshApp={props.refreshApp}
+
             />
           ))}
         </div>
