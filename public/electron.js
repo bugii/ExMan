@@ -174,7 +174,10 @@ ipcMain.on("notification", (event, { id, title, body }) => {
     console.log("forward notification", id);
     // forward notification
     const notification = new Notification({ title, body, silent: true });
-    notification.on("click", () => openService(id));
+    notification.on("click", () => {
+      getMainWindow().show()
+      openService(id)
+    });
     notification.show();
   } else {
     console.log("block notification", id);
