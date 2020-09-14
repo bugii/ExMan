@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // With the remote module I am able to get the __dirname from the electron.js file (which is the same as public -> can be used to get preload scripts)
 const electron = window.require("electron");
@@ -11,8 +11,11 @@ function Webview(props) {
     z = 0;
   }
 
+  const [registered, setregistered] = useState(false)
+
   const webviewRef = (el) => {
-    if (el) {
+    if (el && !registered) {
+      setregistered(true)
       el.addEventListener("dom-ready", () => {
         // the webcontentsId is stored in the database for easy reference from the main process
         ipcRenderer.send("webview-rendered", {

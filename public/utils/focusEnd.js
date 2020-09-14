@@ -12,7 +12,7 @@ function focusEnd() {
   console.log("focus end");
   //get ongoing focus sessions
   const currentFocusSession = getCurrentFocusSession();
-  // TODO: set status to active again for all services -> use 'setOnline' function
+  
   currentFocusSession.services.forEach((service) => {
     // unmute audio on focus-end
     webContents.fromId(service.webContentsId).setAudioMuted(false);

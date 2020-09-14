@@ -20,10 +20,7 @@ function App() {
   const [services, setServices] = useState([]);
   const [nrOfServices, setNrOfServices] = useState(0);
   const [activeService, setActiveService] = useState(null);
-  const [startTime, setStartTime] = useState(new Date().getTime());
-  const [endTime, setEndTime] = useState(new Date().getTime());
-  const [currentFocusSession, setCurrentFocusSession] = useState([]);
-  const [inFocus, setInFocus] = useState(currentFocusSession != null);
+  const [currentFocusSession, setCurrentFocusSession] = useState(null);
 
   let history = useHistory();
   let location = useLocation();
@@ -47,54 +44,30 @@ function App() {
   };
 
   useEffect(() => {
-    ipcRenderer.on("get-services", (event, services) => {
-      updateServices(services);
-    });
 
-    ipcRenderer.send("get-services");
-
-    ipcRenderer.on("update-services", (event, services) => {
+    ipcRenderer.on("update-frontend", (event, {services, currentFocusSession}) => {
       updateServices(services);
-    });
+      setCurrentFocusSession(currentFocusSession)
+    });    
+
+    ipcRenderer.send("update-frontend");
 
     ipcRenderer.on("focus-start-successful", (e, { startTime, endTime }) => {
-      setStartTime(startTime);
-      setEndTime(endTime);
-      setInFocus(true);
+      const {services, currentFocusSession} = ipcRenderer.sendSync('update-frontend');
+      updateServices(services);
+      setCurrentFocusSession(currentFocusSession)
       history.push("/focus");
     });
 
-    ipcRenderer.on("focus-end-successful", (e) => {
-      setInFocus(false);
-      const timer = setTimeout(() => {
-        console.log("Delay 1 s for db to update");
-      }, 1000);
+    ipcRenderer.on("focus-end-successful", (e) => {      
       history.push("/summary");
+      setCurrentFocusSession(null);
     });
 
     ipcRenderer.on("open-service", (e, id) => {
       history.push("/services");
       setActiveService(id);
     });
-
-    ipcRenderer.on("current-focus-request", (e, focusSession) => {
-      setCurrentFocusSession(focusSession);
-      console.log(focusSession);
-    });
-
-    ipcRenderer.send("current-focus-request");
-
-    const interval = setInterval(() => {
-      console.log("updating status....");
-
-      ipcRenderer.on("current-focus-request", (e, focusSession) => {
-        setCurrentFocusSession(focusSession);
-        console.log(focusSession);
-      });
-
-      ipcRenderer.send("current-focus-request");
-    }, 3000);
-    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -135,9 +108,7 @@ function App() {
         </Route>
 
         <Route path="/focus">
-          {currentFocusSession ? (
             <Focus currentFocusSession={currentFocusSession} />
-          ) : null}
         </Route>
 
         <Route path="/add-service">

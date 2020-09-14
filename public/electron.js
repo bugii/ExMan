@@ -91,11 +91,12 @@ ipcMain.on("delete-service", (event, id) => {
   getMainWindow().webContents.send("update-services", services);
 });
 
-ipcMain.on("get-services", (event, args) => {
-  const services = getServices();
-  console.log("getting services", services);
-  event.reply("get-services", services);
-});
+ipcMain.on('update-frontend', (e) => {
+  const services = getServices()
+  const currentFocusSession = getCurrentFocusSession()
+  e.returnValue = {services, currentFocusSession}
+  e.reply('update-frontend', {services, currentFocusSession})
+})
 
 const idsWhereWebviewWasRendered = [];
 
@@ -192,7 +193,6 @@ ipcMain.on("get-all-past-focus-sessions", (e, args) => {
 });
 
 ipcMain.on("updateAutoResponse", (e, message) => {
-  console.log("habasch");
   updateAutoresponse(message);
 });
 
@@ -240,8 +240,8 @@ app.whenReady().then(async () => {
 
   // Update renderer loop
   setInterval(() => {
-    getMainWindow().send("update-services", getServices());
-  }, 3000);
+    getMainWindow().send("update-frontend", {services: getServices(), currentFocusSession: getCurrentFocusSession()});
+  }, 1000);
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {

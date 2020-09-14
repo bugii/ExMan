@@ -24,7 +24,7 @@ async function unreadLoopStart(webContentsId) {
         const unreadChatsSlack = await getUnreadChatsSlack(
           service.webContentsId
         );
-        console.log("unread chats slack", unreadChatsSlack);
+        //console.log("unread chats slack", unreadChatsSlack);
         getDb()
           .get("services")
           .find({ id: service.id })
@@ -37,7 +37,7 @@ async function unreadLoopStart(webContentsId) {
         const unreadChatsTeams = await getUnreadChatsTeams(
           service.webContentsId
         );
-        console.log("unread chats teams", unreadChatsTeams);
+        //console.log("unread chats teams", unreadChatsTeams);
         getDb()
           .get("services")
           .find({ id: service.id })
@@ -50,7 +50,7 @@ async function unreadLoopStart(webContentsId) {
         const unreadChatsSkype = await getUnreadChatsSkype(
           service.webContentsId
         );
-        console.log("unread chats skype", unreadChatsSkype);
+        //console.log("unread chats skype", unreadChatsSkype);
         getDb()
           .get("services")
           .find({ id: service.id })
@@ -63,7 +63,7 @@ async function unreadLoopStart(webContentsId) {
         const unreadChatsWhatsapp = await getUnreadChatsWhatsapp(
           service.webContentsId
         );
-        console.log("unread chats whatsapp", unreadChatsWhatsapp);
+        //console.log("unread chats whatsapp", unreadChatsWhatsapp);
         getDb()
           .get("services")
           .find({ id: service.id })
@@ -76,7 +76,7 @@ async function unreadLoopStart(webContentsId) {
         const unreadChatsGmail = await getUnreadChatsGmail(
           service.webContentsId
         );
-        console.log("unread emails gmail", unreadChatsGmail);
+        //console.log("unread emails gmail", unreadChatsGmail);
         getDb()
           .get("services")
           .find({ id: service.id })
@@ -88,7 +88,7 @@ async function unreadLoopStart(webContentsId) {
         const unreadChatsOutlook = await getUnreadChatsOutlook(
           service.webContentsId
         );
-        console.log("unread emails outlook", unreadChatsOutlook);
+        //console.log("unread emails outlook", unreadChatsOutlook);
         getDb()
           .get("services")
           .find({ id: service.id })
@@ -100,7 +100,7 @@ async function unreadLoopStart(webContentsId) {
       default:
         break;
     }
-  }, 10000);
+  }, 1000);
 }
 
 module.exports = unreadLoopStart;
