@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Colors from "../components/Colors";
 import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -26,6 +27,7 @@ export const AutoResponse = styled.div`
 `;
 
 function Settings() {
+  let history = useHistory();
   let [autoReply, setAutoReply] = useState("");
 
   const handleChange = (e) => {
@@ -34,8 +36,9 @@ function Settings() {
 
   const autoResponse = (e) => {
     // send ipc message to main process to start session there too (db etc)
-    ipcRenderer.send("updateAutoResponse", e.target.value);
+    ipcRenderer.send("updateAutoResponse", autoReply);
     console.log("Response update successful");
+    history.push("/");
   };
 
   return (

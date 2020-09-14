@@ -67,7 +67,7 @@ function App() {
     ipcRenderer.on("focus-end-successful", (e) => {
       setInFocus(false);
       const timer = setTimeout(() => {
-        console.log('Delay 1 s for db to update')
+        console.log("Delay 1 s for db to update");
       }, 1000);
       history.push("/summary");
     });
@@ -84,7 +84,7 @@ function App() {
 
     ipcRenderer.send("current-focus-request");
 
-    /*const interval = setInterval(() => {
+    const interval = setInterval(() => {
       console.log("updating status....");
 
       ipcRenderer.on("current-focus-request", (e, focusSession) => {
@@ -94,8 +94,8 @@ function App() {
 
       ipcRenderer.send("current-focus-request");
     }, 3000);
-    return () =>  clearInterval(interval);*/
-    }, []);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="app">
@@ -135,8 +135,9 @@ function App() {
         </Route>
 
         <Route path="/focus">
-          { currentFocusSession ?
-              <Focus currentFocusSession={currentFocusSession} /> : null}
+          {currentFocusSession ? (
+            <Focus currentFocusSession={currentFocusSession} />
+          ) : null}
         </Route>
 
         <Route path="/add-service">
