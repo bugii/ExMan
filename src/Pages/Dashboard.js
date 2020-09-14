@@ -48,10 +48,14 @@ function Dashboard() {
 
     }, []);
 
-    const formatTime = (inputTime) => {
-        let time = new Date();
-        time.setTime(inputTime);
-        return time.getHours() + ':' + ("0" + time.getMinutes()).substr(-2);
+    const formatSessionTimes = (start, end) => {
+        let date = new Date(start);
+        let startTime = new Date();
+        let endTime = new Date();
+        startTime.setTime(start);
+        endTime.setTime(end);
+        return date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() + ' : ' + startTime.getHours() + ':' +
+            ("0" + startTime.getMinutes()).substr(-2) + ' to ' + endTime.getHours() + ':' + ("0" + endTime.getMinutes()).substr(-2) ;
     };
 
     // Just displaying all focus sessions, not doing anything with it for now
@@ -69,7 +73,7 @@ function Dashboard() {
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
-                                from {formatTime(focusSession.startTime)} to {formatTime(focusSession.endTime)}
+                                {formatSessionTimes(focusSession.startTime, focusSession.endTime)}
                             </AccordionSummary>
                             <AccordionDetails>
                                 <div><b>Focus Session ID: &nbsp;</b>{focusSession.id}</div>
@@ -98,7 +102,7 @@ function Dashboard() {
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
-                                from {formatTime(focusSession.startTime)} to {formatTime(focusSession.endTime)}
+                                {formatSessionTimes(focusSession.startTime, focusSession.endTime)}
                             </AccordionSummary>
                             <AccordionDetails>
                                 <div><b>Focus Session ID: &nbsp;</b>{focusSession.id}</div>
