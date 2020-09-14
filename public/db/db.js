@@ -36,12 +36,10 @@ function init() {
   db.set("currentFocusSession", null).write();
 
   // set default auto-response message
-  db.set("autoResponse", [
-    {
-      autoReply:
-        "Currently, I am working in focus mode. I will answer you as soon as possible.",
-    },
-  ]).write();
+  db.set("settings", {
+    autoReply:
+      "Currently, I am working in focus mode. I will answer you as soon as possible.",
+  }).write();
   if (!db.has("futureFocusSessions").value()) {
     db.set("futureFocusSessions", []).write();
   }
@@ -138,11 +136,12 @@ function getAllFocusSessions() {
 }
 
 function getAutoresponse() {
-  return db.get("autoResponse[0].autoReply").value();
+  return db.get("settings.autoReply").value();
 }
 
 function updateAutoresponse(newResponse) {
-  db.get("autoResponse").assign({ autoResponse: newResponse }).write();
+  console.log("bäähli");
+  db.get("settings").assign({ autoReply: newResponse }).write();
 }
 
 function getAllFutureFocusSessions() {

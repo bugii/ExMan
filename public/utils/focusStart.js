@@ -35,10 +35,6 @@ function focusStart(startTime, endTime) {
   let currentFocusSessionIntervalSlack;
   let currentFocusSessionIntervalTeams;
 
-  let skypeToken;
-  let syncToken;
-  let teamsInfos;
-
   const message = getAutoresponse();
 
   // 2. Set status of apps to DND if possible and start auto message loop
@@ -51,7 +47,7 @@ function focusStart(startTime, endTime) {
     switch (service.name) {
       case "slack":
         setDndSlack(service.webContentsId, diffMins);
-        const currentFocusSessionIntervalSlack = setInterval(function () {
+        currentFocusSessionIntervalSlack = setInterval(function () {
           var startTime = new Date().getTime() / 1000 - 10;
           getMessagesSlack(service.webContentsId, startTime, message);
         }, 10001);
@@ -78,7 +74,7 @@ function focusStart(startTime, endTime) {
           message
         );
 
-        const currentFocusSessionIntervalTeams = setInterval(function () {
+        currentFocusSessionIntervalTeams = setInterval(function () {
           const currentTeamsSession = getDb()
             .get("currentFocusSession")
             .get("services")

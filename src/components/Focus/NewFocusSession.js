@@ -36,7 +36,6 @@ function NewFocusSession(props) {
     console.log(start.toTimeString(), end.toTimeString());
     console.log(start.getTime().toString(), end.getTime().toString());
 
-
     ipcRenderer.send("focus-start-request", {
       startTime: start.getTime(),
       endTime: end.getTime(),
@@ -46,21 +45,18 @@ function NewFocusSession(props) {
   };
 
   return (
-      <Dialog
-          aria-labelledby="simple-dialog-title"
-          open={props.open}
-      >
-        <DialogTitle id="simple-dialog-title">Create Focus Session</DialogTitle>
-        <FormContainer noValidate>
-          <TextField
-              id="minutes"
-              label="Session Length (min)"
-              type="number"
-              onChange={handleChange}
-              defaultValue={duration}
-              style={{margin: "1rem"}}
-          />
-          {/*<TextField
+    <Dialog aria-labelledby="simple-dialog-title" open={props.open}>
+      <DialogTitle id="simple-dialog-title">Create Focus Session</DialogTitle>
+      <FormContainer noValidate>
+        <TextField
+          id="minutes"
+          label="Session Length (min)"
+          type="number"
+          onChange={handleChange}
+          defaultValue={duration}
+          style={{ margin: "1rem" }}
+        />
+        {/*<TextField
                     id="endTime"
                     label="End Time"
                     type="time"
@@ -73,26 +69,26 @@ function NewFocusSession(props) {
                     }}
                     style={{margin: "1rem"}}
                 />*/}
-          <FormButtons>
-            <Button
-                variant="contained"
-                color="0"
-                onClick={props.closeDialog}
-                style={{margin: "1rem"}}
-            >
-              Cancel
-            </Button>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSubmit}
-                style={{margin: "1rem"}}
-            >
-              Submit
-            </Button>
-          </FormButtons>
-        </FormContainer>
-      </Dialog>
+        <FormButtons>
+          <Button
+            variant="contained"
+            color="0"
+            onClick={props.closeDialog}
+            style={{ margin: "1rem" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            style={{ margin: "1rem" }}
+          >
+            Submit
+          </Button>
+        </FormButtons>
+      </FormContainer>
+    </Dialog>
   );
 }
 

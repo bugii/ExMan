@@ -191,8 +191,9 @@ ipcMain.on("get-all-past-focus-sessions", (e, args) => {
   e.reply("get-all-past-focus-sessions", getAllFocusSessions());
 });
 
-ipcMain.on("updateAutoResponse", (e, args) => {
-  e.reply("get-all-past-focus-sessions", updateAutoresponse(args));
+ipcMain.on("updateAutoResponse", (e, message) => {
+  console.log("habasch");
+  updateAutoresponse(message);
 });
 
 ipcMain.on("get-all-future-focus-sessions", (e, args) => {
