@@ -39,30 +39,35 @@ function App() {
   };
 
   const refreshApp = (webContentsId) => {
-    ipcRenderer.send('refresh-service', webContentsId)
-  }
+    ipcRenderer.send("refresh-service", webContentsId);
+  };
 
   const returnToFocus = () => {
     history.push("/focus");
   };
 
   useEffect(() => {
-    console.log('registering event listeners')
-    ipcRenderer.on("update-frontend", (event, {services, currentFocusSession}) => {
-      updateServices(services);
-      setCurrentFocusSession(currentFocusSession)
-    });    
+    console.log("registering event listeners");
+    ipcRenderer.on(
+      "update-frontend",
+      (event, { services, currentFocusSession }) => {
+        updateServices(services);
+        setCurrentFocusSession(currentFocusSession);
+      }
+    );
 
     // ipcRenderer.send("update-frontend");
 
     ipcRenderer.on("focus-start-successful", (e, { startTime, endTime }) => {
-      const {services, currentFocusSession} = ipcRenderer.sendSync('update-frontend-sync');
+      const { services, currentFocusSession } = ipcRenderer.sendSync(
+        "update-frontend-sync"
+      );
       updateServices(services);
-      setCurrentFocusSession(currentFocusSession)
+      setCurrentFocusSession(currentFocusSession);
       history.push("/focus");
     });
 
-    ipcRenderer.on("focus-end-successful", (e) => {      
+    ipcRenderer.on("focus-end-successful", (e) => {
       history.push("/summary");
       setCurrentFocusSession(null);
     });
@@ -113,7 +118,7 @@ function App() {
         </Route>
 
         <Route path="/focus">
-            <Focus currentFocusSession={currentFocusSession} />
+          <Focus currentFocusSession={currentFocusSession} />
         </Route>
 
         <Route path="/add-service">
