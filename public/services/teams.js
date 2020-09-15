@@ -1,9 +1,11 @@
 const { webContents } = require("electron");
 const axios = require("axios");
-const { getDb } = require("../db/db");
+const { getDb, getAutoResponseStatus } = require("../db/db");
 
 let res;
 let autoReplied;
+
+const teamsAutoResponse = getAutoResponseStatus("teams");
 
 const isReplied = (Replied, channel) => {
   Replied.forEach((reply) => {
@@ -162,7 +164,8 @@ const syncTokenLoop = async (webContentsId, res, skypetoken, message) => {
 
       if (
         single_channel.includes("@unq.gbl.spaces") &&
-        !isReplied(autoReplied, single_channel)
+        !isReplied(autoReplied, single_channel) &&
+        teamsAutoResponse
       ) {
         //do an auto-reply
         sendMessage(single_channel, message, skypetoken);

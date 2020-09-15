@@ -56,6 +56,7 @@ function addService(name) {
       name,
       webContentsId: null,
       unreadCount: 0,
+      autoResponse: true,
       ready: false,
       authed: false,
     })
@@ -140,7 +141,6 @@ function getAutoresponse() {
 }
 
 function updateAutoresponse(newResponse) {
-  console.log("bäähli");
   db.get("settings").assign({ autoReply: newResponse }).write();
 }
 
@@ -154,6 +154,29 @@ function setEndTime(timestamp) {
 
 function setFocusGoals(goals) {
   db.get("currentFocusSession").assign({ goals: goals }).write();
+}
+
+function toggleAutoResponseAvailablity(service) {
+  let currentState = db
+    .get("services")
+    .find({ name: service })
+    .get("autoResponse")
+    .value();
+  currentState = !currentState;
+  db.get("services")
+    .find({ name: service })
+    .assign({ autoResponse: currentState })
+    .write();
+  return currentState;
+}
+
+function getAutoResponseStatus(service) {
+  let currentState = db
+    .get("services")
+    .find({ name: service })
+    .get("autoResponse")
+    .value();
+  return currentState;
 }
 
 module.exports = {
@@ -174,4 +197,6 @@ module.exports = {
   getAllFutureFocusSessions,
   setEndTime,
   setFocusGoals,
+  toggleAutoResponseAvailablity,
+  getAutoResponseStatus,
 };

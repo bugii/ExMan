@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Colors from "../../Colors";
 import Button from "@material-ui/core/Button";
@@ -21,38 +21,42 @@ export const PreFocusDiv = styled.div`
 `;
 
 export const ToDoListDiv = styled.div`
-    text-align: left;
+  text-align: left;
 `;
-
 function PreFocusPopup(props) {
+  let [todo, setTodo] = useState("");
+  let [todoList, setTodoList] = useState([]);
 
-    let [todo, setTodo] = useState("");
-    let [todoList, setTodoList] = useState([]);
+  const listItems = todoList.map((number) => <li>{number}</li>);
 
-    const listItems = todoList.map((number) => <li>{number}</li>);
-
-    const handleChange = (e) => {
-        setTodo(e.target.value);
-    };
+  const handleChange = (e) => {
+    setTodo(e.target.value);
+  };
 
   const addTodos = () => {
-    //var item = document.getElementById("item").value;
     setTodoList(todoList.concat(todo));
     console.log("Add Todo: ", todo);
     setTodo("");
   };
 
   const deleteTodos = () => {
-      todoList.splice(0, 1);
+    todoList.splice(0, 1);
   };
 
   return (
     <PreFocusDiv>
       <h2>What do you want to focus on during this focus session?</h2>
-        <ToDoListDiv>{listItems}
-      <input id="item" type="text" value={todo} onChange={handleChange} style={{margin: "15px 5px 5px 5px"}}/>
-        </ToDoListDiv>
-        <div style={{ display: "flex" }}>
+      <ToDoListDiv>
+        {listItems}
+        <input
+          id="item"
+          type="text"
+          value={todo}
+          onChange={handleChange}
+          style={{ margin: "15px 5px 5px 5px" }}
+        />
+      </ToDoListDiv>
+      <div style={{ display: "flex" }}>
         <Button
           style={{
             marginRight: "10px",

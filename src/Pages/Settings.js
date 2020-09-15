@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Colors from "../components/Colors";
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
+import ResponseSwitch from "./ResponseSwitch";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -19,11 +20,12 @@ export const SettingsDiv = styled.div`
   align-items: center;
 `;
 
-export const AutoResponse = styled.div`
+export const Settingsbox = styled.div`
   border: 1px solid black;
   width: 80%;
   padding: 20px;
   border-radius: 20px;
+  margin-bottom: 10px;
 `;
 
 function Settings() {
@@ -44,8 +46,8 @@ function Settings() {
   return (
     <SettingsDiv>
       <h2>Settings</h2>
-      <AutoResponse>
-        <h4>Auto-response</h4>
+      <Settingsbox>
+        <h4>Customize Auto-response</h4>
         <p>Set your customized auto-response message:</p>
         <input
           value={autoReply}
@@ -62,7 +64,12 @@ function Settings() {
             {" save auto-response"}
           </Button>
         </div>
-      </AutoResponse>
+      </Settingsbox>
+      <Settingsbox>
+        <h4>Auto-responding platforms</h4>
+        <p> Choose which communication platform should do an auto response</p>
+        <ResponseSwitch />
+      </Settingsbox>
     </SettingsDiv>
   );
 }

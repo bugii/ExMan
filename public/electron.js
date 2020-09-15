@@ -31,6 +31,8 @@ const {
   getAllFutureFocusSessions,
   setEndTime,
   setFocusGoals,
+  toggleAutoResponseAvailablity,
+  getAutoResponseStatus,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
@@ -91,17 +93,17 @@ ipcMain.on("delete-service", (event, id) => {
   getMainWindow().webContents.send("update-services", services);
 });
 
-ipcMain.on('update-frontend', (e) => {
-  const services = getServices()
-  const currentFocusSession = getCurrentFocusSession()
-  e.returnValue = {services, currentFocusSession}
-  e.reply('update-frontend', {services, currentFocusSession})
-})
+ipcMain.on("update-frontend", (e) => {
+  const services = getServices();
+  const currentFocusSession = getCurrentFocusSession();
+  e.returnValue = { services, currentFocusSession };
+  e.reply("update-frontend", { services, currentFocusSession });
+});
 
-ipcMain.on('refresh-service', (e, webContentsId) => {
-  console.log(`refreshing ${webContentsId}`)
-  webContents.fromId(webContentsId).reload()
-})
+ipcMain.on("refresh-service", (e, webContentsId) => {
+  console.log(`refreshing ${webContentsId}`);
+  webContents.fromId(webContentsId).reload();
+});
 
 const idsWhereWebviewWasRendered = [];
 
@@ -175,8 +177,8 @@ ipcMain.on("notification", (event, { id, title, body }) => {
     // forward notification
     const notification = new Notification({ title, body, silent: true });
     notification.on("click", () => {
-      getMainWindow().show()
-      openService(id)
+      getMainWindow().show();
+      openService(id);
     });
     notification.show();
   } else {
@@ -202,6 +204,14 @@ ipcMain.on("get-all-past-focus-sessions", (e, args) => {
 
 ipcMain.on("updateAutoResponse", (e, message) => {
   updateAutoresponse(message);
+});
+
+ipcMain.on("toggleAutoResponse", (e, service) => {
+  toggleAutoResponseAvailablity(service);
+});
+
+ipcMain.on("getAutoResponseStatus", (e, service) => {
+  return getAutoResponseStatus(service);
 });
 
 ipcMain.on("get-all-future-focus-sessions", (e, args) => {
@@ -248,7 +258,10 @@ app.whenReady().then(async () => {
 
   // Update renderer loop
   setInterval(() => {
-    getMainWindow().send("update-frontend", {services: getServices(), currentFocusSession: getCurrentFocusSession()});
+    getMainWindow().send("update-frontend", {
+      services: getServices(),
+      currentFocusSession: getCurrentFocusSession(),
+    });
   }, 1000);
 
   // ask for permissions (mic, camera and screen capturing) on a mac

@@ -1,6 +1,8 @@
 const { session, webContents } = require("electron");
 const axios = require("axios");
-const { getDb } = require("../db/db");
+const { getDb, getAutoResponseStatus } = require("../db/db");
+
+const slackAutoResponse = getAutoResponseStatus("slack");
 
 const getToken = async (webContentsId) => {
   // execute getToken funtion in the slack renderer to get token from localStorage
@@ -153,7 +155,7 @@ const getMessages = async (webContentsId, startTime, messages) => {
               }
             });
 
-            if (!alreadyReplied) {
+            if (!alreadyReplied && slackAutoResponse) {
               // do an auto-reply by using the sendMessage function
               sendMessage(webContentsId, channel, messages);
 
