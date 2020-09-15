@@ -13,7 +13,7 @@ const {
 } = require("../services/whatsapp");
 
 async function unreadLoopStart(webContentsId) {
-  console.log("unread loop start");
+  console.log(`unread loop start ${webContentsId}`);
   const service = getDb().get("services").find({ webContentsId }).value();
 
   let intervallRef;

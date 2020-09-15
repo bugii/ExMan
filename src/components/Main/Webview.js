@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 // With the remote module I am able to get the __dirname from the electron.js file (which is the same as public -> can be used to get preload scripts)
 const electron = window.require("electron");

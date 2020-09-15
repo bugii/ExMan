@@ -94,8 +94,8 @@ function Summary(props) {
             {formatTime(focusSession.endTime)}
           </p>
           <ChartsDiv>
-            <img src={sampleSummaryChart1} style={{ maxHeight: 300 }} />
-            <img src={sampleSummaryChart2} style={{ maxHeight: 300 }} />
+            <img src={sampleSummaryChart1} alt='chart1' style={{ maxHeight: 300 }} />
+            <img src={sampleSummaryChart2} alt='chart2' style={{ maxHeight: 300 }} />
           </ChartsDiv>
           <div style={{ display: "flex" }}>
             {focusSession.services.map((service) => (

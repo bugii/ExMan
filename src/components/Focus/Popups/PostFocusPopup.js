@@ -20,7 +20,7 @@ export const PostFocusDiv = styled.div`
 
 function PostFocusPopup(props) {
 
-    const [todoList, setTodoList] = useState(props.goals ? props.goals : []);
+    const [todoList, ] = useState(props.goals ? props.goals : []);
 
     const deleteTodos = (index) => {
         todoList.splice(index, 1);

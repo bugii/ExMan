@@ -1,4 +1,4 @@
-const { getDb } = require("../db/db");
+const { getDb, getCurrentFocusSession, allServicesReadyAndAuthed, getAllFutureFocusSessions, deleteFutureFocusSession } = require("../db/db");
 
 const { getAuthStatus: getAuthStatusGmail } = require("../services/gmail");
 const { getAuthStatus: getAuthStatusOutlook } = require("../services/outlook");
@@ -8,6 +8,9 @@ const { getAuthStatus: getAuthStatusTeams } = require("../services/teams");
 const {
   getAuthStatus: getAuthStatusWhatsapp,
 } = require("../services/whatsapp");
+const focusStart = require("./focusStart");
+const scheduleFocus = require("./scheduleFocus");
+const focusEnd = require("./focusEnd");
 
 async function authLoopStart(webContentsId) {
   console.log("auth loop start", webContentsId);
@@ -101,6 +104,39 @@ async function authLoopStart(webContentsId) {
       default:
         break;
     }
+
+    // Check whether all services are ready & authed
+    if (allServicesReadyAndAuthed()) {
+      console.log('all services are ready')
+      // check if there is a currentFocus Session, if so -> start automatically
+      const currentFocusSession = getCurrentFocusSession()
+      const futureFocusSessions = getAllFutureFocusSessions()
+      if (currentFocusSession) {
+        // still going?
+        if (currentFocusSession.endTime > new Date().getTime()) {
+            console.log('current focus session found, starting..')
+            focusStart(currentFocusSession.startTime, currentFocusSession.endTime, currentFocusSession.id)
+        }
+        else {
+          // end the currentFocusSession
+          console.log('current focus session already ended, ending..')
+          focusEnd()
+        }
+      }
+      // check if there are future focus Sessions -> register them again
+        futureFocusSessions.forEach(focusSession => {
+          
+          if (focusSession.endTime > new Date().getTime()) {
+            // end in the future
+            console.log('future session found, registering..')
+            scheduleFocus(focusSession.startTime, focusSession.endTime, focusSession.id)
+          }
+          else {
+            console.log('future session is completely in the past, deleting..')
+            deleteFutureFocusSession(focusSession.id)
+          }
+        })
+      }
   }, 3000);
 }
 

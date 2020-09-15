@@ -42,6 +42,7 @@ const unreadLoopStart = require("./utils/unreadLoopStart");
 const authLoopStart = require("./utils/authLoopStart");
 const scheduleFocus = require("./utils/scheduleFocus");
 const { storeMainWindow, getMainWindow } = require("./db/memoryDb");
+const exportDb = require("./utils/exportDb");
 
 const isMac = process.platform === "darwin";
 
@@ -66,11 +67,14 @@ mainMenu = Menu.buildFromTemplate([
     ],
   },
   {
-    label: "View",
+    label: "File",
     submenu: [
-      { role: "reload" },
-      { role: "forcereload" },
-      { role: "toggledevtools" },
+      {
+        label: "Export",
+        click: () => {
+          exportDb();
+        },
+      },
     ],
   },
   {
@@ -94,10 +98,17 @@ ipcMain.on("delete-service", (event, id) => {
 });
 
 ipcMain.on("update-frontend", (e) => {
+  console.log("update frontend");
+  const services = getServices();
+  const currentFocusSession = getCurrentFocusSession();
+  e.reply("update-frontend", { services, currentFocusSession });
+});
+
+ipcMain.on("update-frontend-sync", (e) => {
+  console.log("update frontend sync");
   const services = getServices();
   const currentFocusSession = getCurrentFocusSession();
   e.returnValue = { services, currentFocusSession };
-  e.reply("update-frontend", { services, currentFocusSession });
 });
 
 ipcMain.on("refresh-service", (e, webContentsId) => {
@@ -108,7 +119,7 @@ ipcMain.on("refresh-service", (e, webContentsId) => {
 const idsWhereWebviewWasRendered = [];
 
 ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
-  console.log("webview rendered", id, webContentsId);
+  // console.log("webview rendered", id, webContentsId);
   const webContent = webContents.fromId(webContentsId);
   // Bring the id into the webview webcontents (to associate the notifications with the right service)
   webContent.send("id", id);
@@ -161,13 +172,6 @@ ipcMain.on("focus-end-request", (e) => {
   focusEnd();
   // if focus end successful, update the react app
   e.reply("focus-end-successful");
-});
-
-ipcMain.on("current-focus-request", (e) => {
-  console.log("current focus request from react");
-  const currentFocus = getCurrentFocusSession();
-  console.log(currentFocus);
-  e.reply("current-focus-request", currentFocus);
 });
 
 ipcMain.on("notification", (event, { id, title, body }) => {
@@ -224,9 +228,6 @@ const openService = (id) => {
 };
 
 async function createWindow() {
-  // If you want to clear cache (helpful for testing new users)
-  // await session.defaultSession.clearStorageData();
-
   // Main Browser Window
   const mainWindow = new BrowserWindow({
     width: 1200,
@@ -240,7 +241,7 @@ async function createWindow() {
   // Used to get the directory of the public folder into the react app (required for preload scripts)
   app.dirname = __dirname;
 
-  mainWindow.loadURL(
+  await mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
       : `file://${path.join(__dirname, "../build/index.html")}`
@@ -254,9 +255,12 @@ async function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-  createWindow();
+  await createWindow();
+
+  // getMainWindow().send("update-frontend", {services: getServices(), currentFocusSession: getCurrentFocusSession()});
 
   // Update renderer loop
+  console.log("update loop start");
   setInterval(() => {
     getMainWindow().send("update-frontend", {
       services: getServices(),
