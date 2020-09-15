@@ -32,9 +32,6 @@ function init() {
     db.set("pastFocusSessions", []).write();
   }
 
-  // On startup no focus session can be active
-  db.set("currentFocusSession", null).write();
-
   // set default auto-response message
   db.set("settings", {
     autoReply:
@@ -156,6 +153,20 @@ function setFocusGoals(goals) {
   db.get("currentFocusSession").assign({ goals: goals }).write();
 }
 
+function allServicesReadyAndAuthed() {
+  const services = getServices()
+  
+  for (let index = 0; index < services.length; index++) {
+    const service = services[index];
+
+    if (!service.ready || !service.authed) {
+      return false
+    }
+  }
+  return true
+
+}
+
 module.exports = {
   init,
   getDb,
@@ -174,4 +185,5 @@ module.exports = {
   getAllFutureFocusSessions,
   setEndTime,
   setFocusGoals,
+  allServicesReadyAndAuthed
 };

@@ -26,10 +26,14 @@ const {
   syncTokenLoop: teamsLoop,
 } = require("../services/teams");
 
-function focusStart(startTime, endTime) {
+function focusStart(startTime, endTime, id=null) {
   console.log("focus start from", startTime, "to", endTime);
   // 1. Create a focus object in DB to reference and update with data later on
-  createNewFocusSession(startTime, endTime);
+  // Only create new focus session if id is not provided: avoids overwriting of focus sessions if a focus
+  // session after the app was closed and reopened again (with a still ongoing focus session)
+  if (!id) {
+    createNewFocusSession(startTime, endTime);
+  }
 
   const diffMins = (endTime - startTime) / 1000 / 60;
   console.log("diff mins", diffMins);
