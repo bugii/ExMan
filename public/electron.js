@@ -40,6 +40,7 @@ const unreadLoopStart = require("./utils/unreadLoopStart");
 const authLoopStart = require("./utils/authLoopStart");
 const scheduleFocus = require("./utils/scheduleFocus");
 const { storeMainWindow, getMainWindow } = require("./db/memoryDb");
+const exportDb = require("./utils/exportDb");
 
 const isMac = process.platform === "darwin";
 
@@ -62,6 +63,17 @@ mainMenu = Menu.buildFromTemplate([
       { type: "separator" },
       { role: "quit" },
     ],
+  },
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Export',
+        click: () => {
+          exportDb()
+        }
+      }
+    ]
   },
   {
     label: "View",
