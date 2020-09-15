@@ -1,5 +1,5 @@
 function insertWebviewCss(webContent, webContentsId) {
-  console.log("injecting CSS", webContentsId);
+  // console.log("injecting CSS", webContentsId);
   webContent.insertCSS(`
   .desktop-capturer-selection {
     position: fixed;

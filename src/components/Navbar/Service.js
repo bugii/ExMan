@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import Tooltip from "@material-ui/core/Tooltip";
 import { useHistory } from "react-router-dom";
-import Colors from "../Colors";
 
 const { remote } = window.require("electron");
 const { Menu, MenuItem } = remote;

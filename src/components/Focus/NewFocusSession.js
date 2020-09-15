@@ -4,7 +4,6 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
-import Colors from "../Colors";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 

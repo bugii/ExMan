@@ -11,7 +11,6 @@ import FocusBubble from "./components/Focus/FocusBubble";
 import Settings from "./Pages/Settings";
 import Dashboard from "./Pages/Dashboard";
 import Summary from "./components/Summary/Summary";
-import NewFocusSession from "./components/Focus/NewFocusSession";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -48,16 +47,16 @@ function App() {
   };
 
   useEffect(() => {
-
+    console.log('registering event listeners')
     ipcRenderer.on("update-frontend", (event, {services, currentFocusSession}) => {
       updateServices(services);
       setCurrentFocusSession(currentFocusSession)
     });    
 
-    ipcRenderer.send("update-frontend");
+    // ipcRenderer.send("update-frontend");
 
     ipcRenderer.on("focus-start-successful", (e, { startTime, endTime }) => {
-      const {services, currentFocusSession} = ipcRenderer.sendSync('update-frontend');
+      const {services, currentFocusSession} = ipcRenderer.sendSync('update-frontend-sync');
       updateServices(services);
       setCurrentFocusSession(currentFocusSession)
       history.push("/focus");
