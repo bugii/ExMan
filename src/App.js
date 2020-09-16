@@ -11,6 +11,7 @@ import FocusBubble from "./components/Focus/FocusBubble";
 import Settings from "./Pages/Settings";
 import Dashboard from "./Pages/Dashboard";
 import Summary from "./components/Summary/Summary";
+import BreakFocusPopup from "./components/Focus/Popups/BreakFocusPopup";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -126,7 +127,7 @@ function App() {
         </Route>
 
         <Route path="/settings">
-          <Settings />
+          <Settings services={services} />
         </Route>
 
         <Route path="/dashboard">

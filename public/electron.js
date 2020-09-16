@@ -214,8 +214,8 @@ ipcMain.on("toggleAutoResponse", (e, service) => {
   toggleAutoResponseAvailablity(service);
 });
 
-ipcMain.on("getAutoResponseStatus", (e, service) => {
-  return getAutoResponseStatus(service);
+ipcMain.on("getAutoResponseStatus", (e, id) => {
+  return getAutoResponseStatus(id);
 });
 
 ipcMain.on("get-all-future-focus-sessions", (e, args) => {

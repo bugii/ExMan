@@ -153,24 +153,24 @@ function setFocusGoals(goals) {
   db.get("currentFocusSession").assign({ goals: goals }).write();
 }
 
-function toggleAutoResponseAvailablity(service) {
+function toggleAutoResponseAvailablity(id) {
   let currentState = db
     .get("services")
-    .find({ name: service })
+    .find({ id })
     .get("autoResponse")
     .value();
   currentState = !currentState;
   db.get("services")
-    .find({ name: service })
+    .find({ id })
     .assign({ autoResponse: currentState })
     .write();
   return currentState;
 }
 
-function getAutoResponseStatus(service) {
+function getAutoResponseStatus(id) {
   let currentState = db
     .get("services")
-    .find({ name: service })
+    .find({ id })
     .get("autoResponse")
     .value();
   return currentState;

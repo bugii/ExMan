@@ -28,7 +28,7 @@ export const Settingsbox = styled.div`
   margin-bottom: 10px;
 `;
 
-function Settings() {
+function Settings(props) {
   let history = useHistory();
   let [autoReply, setAutoReply] = useState("");
 
@@ -68,7 +68,7 @@ function Settings() {
       <Settingsbox>
         <h4>Auto-responding platforms</h4>
         <p> Choose which communication platform should do an auto response</p>
-        <ResponseSwitch />
+        <ResponseSwitch services={props.services} />
       </Settingsbox>
     </SettingsDiv>
   );

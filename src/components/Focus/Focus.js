@@ -8,6 +8,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import FocusGoalsPopup from "./Popups/FocusGoalsPopup";
+import BreakFocusPopup from "./Popups/BreakFocusPopup";
+import { FormatListBulletedTwoTone } from "@material-ui/icons";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -43,14 +45,15 @@ function Focus(props) {
 
   const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(true);
 
+  const [showBreakFocusPopup, setShowBreakFocusPopup] = useState(false);
+
   const escapeFocus = () => {
     // send ipc message to main process to start session there too (db etc)
     ipcRenderer.send("focus-end-request");
   };
 
-  const minimizeFocus = () => {
-    //navigate back home without ending focus session
-    history.push("/");
+  const openBreakFocusPopup = () => {
+    setShowBreakFocusPopup(true);
   };
 
   const focusTime = props.currentFocusSession.endTime
@@ -66,6 +69,9 @@ function Focus(props) {
         }
         close={() => setShowFocusGoalsPopup(false)}
       />
+      {showBreakFocusPopup ? (
+        <BreakFocusPopup close={() => setShowBreakFocusPopup(false)} />
+      ) : null}
 
       <h1 style={{ color: Colors.navy, fontSize: 80, textAlign: "center" }}>
         STAY FOCUSED!
@@ -87,7 +93,7 @@ function Focus(props) {
         </Tooltip>
         <Tooltip title="Break focus to see chat" arrow placement="top">
           <QuestionAnswerIcon
-            onClick={minimizeFocus}
+            onClick={() => setShowBreakFocusPopup(true)}
             style={{ color: Colors.snow, fontSize: 80, margin: "2rem" }}
           />
         </Tooltip>

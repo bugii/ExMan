@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Switch from "@material-ui/core/Switch";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -9,49 +9,32 @@ const ipcRenderer = electron.ipcRenderer;
 const currentStatusSlack = ipcRenderer.send("getAutoResponseStatus", "slack");
 console.log(currentStatusSlack);
 
-export default function SwitchesSize() {
-  let [checkedslack, setCheckedSlack] = React.useState(
-    ipcRenderer.send("getAutoResponseStatus", "slack")
-  );
-  let [checkedteams, setCheckedTeams] = React.useState(false);
+export default function SwitchesSize(props) {
+  let [checked, setCheckedSlack] = useState(props);
+  let [checkedteams, setCheckedTeams] = useState(false);
 
-  checkedslack = ipcRenderer.send("getAutoResponseStatus", "slack");
+  checked = ipcRenderer.send("getAutoResponseStatus", "slack");
 
-  const toggleCheckedSlack = () => {
-    let prev = ipcRenderer.send("toggleAutoResponse", "slack");
-    console.log(prev);
-    setCheckedSlack((prev) => !prev);
-    console.log(typeof setCheckedSlack);
-    console.log(checkedslack);
+  const toggleChecked = (id) => {
+    ipcRenderer.send("toggleAutoResponse", id);
   };
 
-  const toggleCheckedTeams = () => {
-    //setCheckedTeams = ipcRenderer.send("toggleAutoResponse", "teams");
-    setCheckedTeams((prev) => !prev);
-  };
+  const serviceCheckers = props.services.map((service) => {
+    if (service.name === "teams" || service.name === "slack") {
+      return (
+        <FormControlLabel
+          control={
+            <Switch
+              color="primary"
+              checked={service.autoResponse}
+              onChange={() => toggleChecked(service.id)}
+            />
+          }
+          label={service.id}
+        />
+      );
+    }
+  });
 
-  return (
-    <FormGroup>
-      <FormControlLabel
-        control={
-          <Switch
-            color="primary"
-            checked={checkedslack}
-            onChange={toggleCheckedSlack}
-          />
-        }
-        label="Slack"
-      />
-      <FormControlLabel
-        control={
-          <Switch
-            color="primary"
-            checked={checkedteams}
-            onChange={toggleCheckedTeams}
-          />
-        }
-        label="Teams"
-      />
-    </FormGroup>
-  );
+  return <FormGroup>{serviceCheckers}</FormGroup>;
 }
