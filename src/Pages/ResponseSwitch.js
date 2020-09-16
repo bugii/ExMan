@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Switch from "@material-ui/core/Switch";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -10,11 +10,6 @@ const currentStatusSlack = ipcRenderer.send("getAutoResponseStatus", "slack");
 console.log(currentStatusSlack);
 
 export default function SwitchesSize(props) {
-  let [checked, setCheckedSlack] = useState(props);
-  let [checkedteams, setCheckedTeams] = useState(false);
-
-  checked = ipcRenderer.send("getAutoResponseStatus", "slack");
-
   const toggleChecked = (id) => {
     ipcRenderer.send("toggleAutoResponse", id);
   };

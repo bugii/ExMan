@@ -12,9 +12,10 @@ function focusEnd() {
   console.log("focus end");
   //get ongoing focus sessions
   const currentFocusSession = getCurrentFocusSession();
-  
+
   currentFocusSession.services.forEach((service) => {
     // unmute audio on focus-end
+    console.log(service.webContentsId);
     webContents.fromId(service.webContentsId).setAudioMuted(false);
 
     switch (service.name) {

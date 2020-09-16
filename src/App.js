@@ -11,7 +11,6 @@ import FocusBubble from "./components/Focus/FocusBubble";
 import Settings from "./Pages/Settings";
 import Dashboard from "./Pages/Dashboard";
 import Summary from "./components/Summary/Summary";
-import BreakFocusPopup from "./components/Focus/Popups/BreakFocusPopup";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -48,7 +47,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log("registering event listeners");
     ipcRenderer.on(
       "update-frontend",
       (event, { services, currentFocusSession }) => {

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Colors from "../Colors";
 import Countdown from "./Countdown";
@@ -9,7 +8,6 @@ import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import FocusGoalsPopup from "./Popups/FocusGoalsPopup";
 import BreakFocusPopup from "./Popups/BreakFocusPopup";
-import { FormatListBulletedTwoTone } from "@material-ui/icons";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -41,8 +39,6 @@ const FocusMenuButtons = styled.div`
 `;
 
 function Focus(props) {
-  let history = useHistory();
-
   const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(true);
 
   const [showBreakFocusPopup, setShowBreakFocusPopup] = useState(false);
@@ -52,9 +48,9 @@ function Focus(props) {
     ipcRenderer.send("focus-end-request");
   };
 
-  const openBreakFocusPopup = () => {
-    setShowBreakFocusPopup(true);
-  };
+  // const openBreakFocusPopup = () => {
+  //   setShowBreakFocusPopup(true);
+  // };
 
   const focusTime = props.currentFocusSession.endTime
     ? (props.currentFocusSession.endTime - new Date()) / 1000
