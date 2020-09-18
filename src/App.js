@@ -66,9 +66,6 @@ function App() {
 
     ipcRenderer.on("focus-end-successful", (e) => {
       setInFocus(false);
-      const timer = setTimeout(() => {
-        console.log("Delay 1 s for db to update");
-      }, 1000);
       history.push("/summary");
     });
 
