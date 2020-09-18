@@ -5,7 +5,6 @@ import Service from "./Service";
 import Colors from "../Colors";
 import styled from "styled-components";
 import HomeIcon from "@material-ui/icons/Home";
-import Tooltip from "@material-ui/core/Tooltip";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 
@@ -29,12 +28,10 @@ function Navbar(props) {
   return (
     <NavbarDiv>
       <div>
-        <Tooltip title="home" arrow placement="right">
-          <HomeIcon
-            onClick={() => history.push("/")}
-            style={{ color: Colors.snow, fontSize: 50, margin: "0.5rem 1rem" }}
-          />
-        </Tooltip>
+        <HomeIcon
+          onClick={() => history.push("/")}
+          style={{ color: Colors.snow, fontSize: 50, margin: "0.5rem 1rem" }}
+        />
         <div>
           {props.services.map((service) => (
             <Service
@@ -47,42 +44,39 @@ function Navbar(props) {
               isAuthed={service.authed}
               icon={props.offeredServices[service.name].icon}
               deleteApp={props.deleteApp}
+              currentFocusSession={props.currentFocusSession}
+              webContentsId={service.webContentsId}
+              refreshApp={props.refreshApp}
             />
           ))}
         </div>
       </div>
 
       <div>
-        <Tooltip title="add app" arrow placement="right">
-          <AddCircleOutlineIcon
-            onClick={() => history.push("/add-service")}
-            style={{
-              color: Colors.snow,
-              fontSize: 50,
-              margin: "0.5rem 1rem",
-            }}
-          />
-        </Tooltip>
-        <Tooltip title="open dashboard">
-          <EqualizerIcon
-            onClick={() => history.push("/dashboard")}
-            style={{
-              color: Colors.snow,
-              fontSize: 50,
-              margin: "0.5rem 1rem",
-            }}
-          />
-        </Tooltip>
-        <Tooltip title="settings" arrow placement="right">
-          <SettingsIcon
-            onClick={() => history.push("/settings")}
-            style={{
-              color: Colors.snow,
-              fontSize: 50,
-              margin: "0.5rem 1rem",
-            }}
-          />
-        </Tooltip>
+        <AddCircleOutlineIcon
+          onClick={() => history.push("/add-service")}
+          style={{
+            color: Colors.snow,
+            fontSize: 50,
+            margin: "0.5rem 1rem",
+          }}
+        />
+        <EqualizerIcon
+          onClick={() => history.push("/dashboard")}
+          style={{
+            color: Colors.snow,
+            fontSize: 50,
+            margin: "0.5rem 1rem",
+          }}
+        />
+        <SettingsIcon
+          onClick={() => history.push("/settings")}
+          style={{
+            color: Colors.snow,
+            fontSize: 50,
+            margin: "0.5rem 1rem",
+          }}
+        />
       </div>
     </NavbarDiv>
   );

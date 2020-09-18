@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Colors from "../Colors";
 import Countdown from "./Countdown";
@@ -8,6 +7,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import FocusGoalsPopup from "./Popups/FocusGoalsPopup";
+import BreakFocusPopup from "./Popups/BreakFocusPopup";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -39,19 +39,18 @@ const FocusMenuButtons = styled.div`
 `;
 
 function Focus(props) {
-  let history = useHistory();
-
   const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(true);
+
+  const [showBreakFocusPopup, setShowBreakFocusPopup] = useState(false);
 
   const escapeFocus = () => {
     // send ipc message to main process to start session there too (db etc)
     ipcRenderer.send("focus-end-request");
   };
 
-  const minimizeFocus = () => {
-    //navigate back home without ending focus session
-    history.push("/");
-  };
+  // const openBreakFocusPopup = () => {
+  //   setShowBreakFocusPopup(true);
+  // };
 
   const focusTime = props.currentFocusSession.endTime
     ? (props.currentFocusSession.endTime - new Date()) / 1000
@@ -66,6 +65,9 @@ function Focus(props) {
         }
         close={() => setShowFocusGoalsPopup(false)}
       />
+      {showBreakFocusPopup ? (
+        <BreakFocusPopup close={() => setShowBreakFocusPopup(false)} />
+      ) : null}
 
       <h1 style={{ color: Colors.navy, fontSize: 80, textAlign: "center" }}>
         STAY FOCUSED!
@@ -87,7 +89,7 @@ function Focus(props) {
         </Tooltip>
         <Tooltip title="Break focus to see chat" arrow placement="top">
           <QuestionAnswerIcon
-            onClick={minimizeFocus}
+            onClick={() => setShowBreakFocusPopup(true)}
             style={{ color: Colors.snow, fontSize: 80, margin: "2rem" }}
           />
         </Tooltip>

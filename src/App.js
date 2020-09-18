@@ -11,7 +11,6 @@ import FocusBubble from "./components/Focus/FocusBubble";
 import Settings from "./Pages/Settings";
 import Dashboard from "./Pages/Dashboard";
 import Summary from "./components/Summary/Summary";
-import NewFocusSession from "./components/Focus/NewFocusSession";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -20,10 +19,7 @@ function App() {
   const [services, setServices] = useState([]);
   const [nrOfServices, setNrOfServices] = useState(0);
   const [activeService, setActiveService] = useState(null);
-  const [startTime, setStartTime] = useState(new Date().getTime());
-  const [endTime, setEndTime] = useState(new Date().getTime());
-  const [currentFocusSession, setCurrentFocusSession] = useState([]);
-  const [inFocus, setInFocus] = useState(currentFocusSession != null);
+  const [currentFocusSession, setCurrentFocusSession] = useState(null);
 
   let history = useHistory();
   let location = useLocation();
@@ -42,56 +38,43 @@ function App() {
     setServices(services);
   };
 
+  const refreshApp = (webContentsId) => {
+    ipcRenderer.send("refresh-service", webContentsId);
+  };
+
   const returnToFocus = () => {
     history.push("/focus");
   };
 
   useEffect(() => {
-    ipcRenderer.on("get-services", (event, services) => {
-      updateServices(services);
-    });
+    ipcRenderer.on(
+      "update-frontend",
+      (event, { services, currentFocusSession }) => {
+        updateServices(services);
+        setCurrentFocusSession(currentFocusSession);
+      }
+    );
 
-    ipcRenderer.send("get-services");
-
-    ipcRenderer.on("update-services", (event, services) => {
-      updateServices(services);
-    });
+    // ipcRenderer.send("update-frontend");
 
     ipcRenderer.on("focus-start-successful", (e, { startTime, endTime }) => {
-      setStartTime(startTime);
-      setEndTime(endTime);
-      setInFocus(true);
+      const { services, currentFocusSession } = ipcRenderer.sendSync(
+        "update-frontend-sync"
+      );
+      updateServices(services);
+      setCurrentFocusSession(currentFocusSession);
       history.push("/focus");
     });
 
     ipcRenderer.on("focus-end-successful", (e) => {
-      setInFocus(false);
       history.push("/summary");
+      setCurrentFocusSession(null);
     });
 
     ipcRenderer.on("open-service", (e, id) => {
       history.push("/services");
       setActiveService(id);
     });
-
-    ipcRenderer.on("current-focus-request", (e, focusSession) => {
-      setCurrentFocusSession(focusSession);
-      console.log(focusSession);
-    });
-
-    ipcRenderer.send("current-focus-request");
-
-    const interval = setInterval(() => {
-      console.log("updating status....");
-
-      ipcRenderer.on("current-focus-request", (e, focusSession) => {
-        setCurrentFocusSession(focusSession);
-        console.log(focusSession);
-      });
-
-      ipcRenderer.send("current-focus-request");
-    }, 3000);
-    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -102,6 +85,8 @@ function App() {
           services={services}
           offeredServices={offeredServices}
           deleteApp={deleteApp}
+          currentFocusSession={currentFocusSession}
+          refreshApp={refreshApp}
         />
       </div>
       {location.pathname !== "/focus" && currentFocusSession ? (
@@ -132,9 +117,7 @@ function App() {
         </Route>
 
         <Route path="/focus">
-          {currentFocusSession ? (
-            <Focus currentFocusSession={currentFocusSession} />
-          ) : null}
+          <Focus currentFocusSession={currentFocusSession} />
         </Route>
 
         <Route path="/add-service">
@@ -142,7 +125,7 @@ function App() {
         </Route>
 
         <Route path="/settings">
-          <Settings />
+          <Settings services={services} />
         </Route>
 
         <Route path="/dashboard">

@@ -32,9 +32,6 @@ function init() {
     db.set("pastFocusSessions", []).write();
   }
 
-  // On startup no focus session can be active
-  db.set("currentFocusSession", null).write();
-
   // set default auto-response message
   db.set("settings", {
     autoReply:
@@ -56,6 +53,7 @@ function addService(name) {
       name,
       webContentsId: null,
       unreadCount: 0,
+      autoResponse: true,
       ready: false,
       authed: false,
     })
@@ -140,7 +138,6 @@ function getAutoresponse() {
 }
 
 function updateAutoresponse(newResponse) {
-  console.log("bäähli");
   db.get("settings").assign({ autoReply: newResponse }).write();
 }
 
@@ -154,6 +151,42 @@ function setEndTime(timestamp) {
 
 function setFocusGoals(goals) {
   db.get("currentFocusSession").assign({ goals: goals }).write();
+}
+
+function toggleAutoResponseAvailablity(id) {
+  let currentState = db
+    .get("services")
+    .find({ id })
+    .get("autoResponse")
+    .value();
+  currentState = !currentState;
+  db.get("services")
+    .find({ id })
+    .assign({ autoResponse: currentState })
+    .write();
+  return currentState;
+}
+
+function getAutoResponseStatus(id) {
+  let currentState = db
+    .get("services")
+    .find({ id })
+    .get("autoResponse")
+    .value();
+  return currentState;
+}
+
+function allServicesReadyAndAuthed() {
+  const services = getServices();
+
+  for (let index = 0; index < services.length; index++) {
+    const service = services[index];
+
+    if (!service.ready || !service.authed) {
+      return false;
+    }
+  }
+  return true;
 }
 
 module.exports = {
@@ -174,4 +207,7 @@ module.exports = {
   getAllFutureFocusSessions,
   setEndTime,
   setFocusGoals,
+  toggleAutoResponseAvailablity,
+  getAutoResponseStatus,
+  allServicesReadyAndAuthed,
 };

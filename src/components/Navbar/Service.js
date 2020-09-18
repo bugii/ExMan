@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Tooltip from "@material-ui/core/Tooltip";
 import { useHistory } from "react-router-dom";
-import Colors from "../Colors";
 
 const { remote } = window.require("electron");
 const { Menu, MenuItem } = remote;
@@ -45,9 +43,20 @@ function Service(props) {
       },
     })
   );
+  menu.append(
+    new MenuItem({
+      label: "Refresh",
+      click() {
+        console.log(`refreshing ${props.id}`);
+        props.refreshApp(props.webContentsId);
+      },
+    })
+  );
 
   const contextClick = () => {
-    menu.popup({ window: remote.getCurrentWindow() });
+    // Don't show context menu if in focus mode
+    if (!props.currentFocusSession)
+      menu.popup({ window: remote.getCurrentWindow() });
   };
 
   const handleClick = () => {
@@ -56,23 +65,21 @@ function Service(props) {
   };
 
   return (
-      <ServiceDiv>
-          {!props.isAuthed || !props.isReady ? (
-              <MessageCountBubble> ! </MessageCountBubble>
-          ) : null}
-          {props.unreadCount ? (
-              <MessageCountBubble> {props.unreadCount} </MessageCountBubble>
-          ) : null}
-          <div
-              onContextMenu={contextClick}
-              onClick={handleClick}
-              style={{position: "absolute"}}
-          >
-            <Tooltip title={props.name} arrow placement="right">
-              <ServiceIcon src={props.icon}/>
-            </Tooltip>
-          </div>
-      </ServiceDiv>
+    <ServiceDiv>
+      {!props.isAuthed || !props.isReady ? (
+        <MessageCountBubble> ! </MessageCountBubble>
+      ) : null}
+      {props.unreadCount ? (
+        <MessageCountBubble> {props.unreadCount} </MessageCountBubble>
+      ) : null}
+      <div
+        onContextMenu={contextClick}
+        onClick={handleClick}
+        style={{ position: "absolute" }}
+      >
+        <ServiceIcon src={props.icon} />
+      </div>
+    </ServiceDiv>
   );
 }
 
