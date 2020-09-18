@@ -5,6 +5,7 @@ const {
   createNewFocusSession,
   getCurrentFocusSession,
   getAutoresponse,
+  getServices,
 } = require("../db/db");
 
 const focusEnd = require("./focusEnd");
@@ -44,9 +45,9 @@ function focusStart(startTime, endTime, id = null) {
   const message = getAutoresponse();
 
   // 2. Set status of apps to DND if possible and start auto message loop
-  const currentFocusSession = getCurrentFocusSession();
+  const services = getServices();
 
-  currentFocusSession.services.forEach((service) => {
+  services.forEach((service) => {
     // mute audio on focus-start
     webContents.fromId(service.webContentsId).setAudioMuted(true);
 

@@ -1,5 +1,9 @@
 const { webContents } = require("electron");
-const { getCurrentFocusSession, endCurrentFocusSession } = require("../db/db");
+const {
+  getCurrentFocusSession,
+  endCurrentFocusSession,
+  getServices,
+} = require("../db/db");
 const {
   getIntervallRefs,
   getTimeoutRefs,
@@ -11,9 +15,9 @@ const { setOnline: setOnlineTeams } = require("../services/teams");
 function focusEnd() {
   console.log("focus end");
   //get ongoing focus sessions
-  const currentFocusSession = getCurrentFocusSession();
+  const services = getServices();
 
-  currentFocusSession.services.forEach((service) => {
+  services.forEach((service) => {
     // unmute audio on focus-end
     console.log(service.webContentsId);
     webContents.fromId(service.webContentsId).setAudioMuted(false);

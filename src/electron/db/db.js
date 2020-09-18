@@ -52,7 +52,6 @@ function addService(name) {
       id,
       name,
       webContentsId: null,
-      unreadCount: 0,
       autoResponse: true,
       ready: false,
       authed: false,
@@ -76,8 +75,9 @@ function createNewFocusSession(startTime, endTime) {
   let services = getServices();
   // add additional fields to each service: 'lastUpdated', 'autoReplied', and a 'messages' array to store new messages that arrive during focus mode
   services = services.map((service) => ({
-    ...service,
-    lastUpdated: startTime,
+    id: service.id,
+    name: service.name,
+    unreadCount: 0,
     autoReplied: [],
     messages: [],
   }));
