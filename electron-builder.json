@@ -6,7 +6,8 @@
   "directories": {
     "buildResources": "rescources"
   },
-  "files": ["rescources/icon.png"],
+  "extends": null,
+  "files": ["./build/**/*", "./src/electron/**/*", "rescources/icon.png"],
   "mac": {
     "entitlements": "resources/entitlements.mac.plist",
     "extendInfo": {

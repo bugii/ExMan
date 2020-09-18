@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
 const { remote } = window.require("electron");
+
 const { Menu, MenuItem } = remote;
 
 export const ServiceDiv = styled.div`

@@ -8,6 +8,7 @@ const {
   shell,
   systemPreferences,
   Menu,
+  protocol,
 } = require("electron");
 
 const {
@@ -81,20 +82,22 @@ mainMenu = Menu.buildFromTemplate([
     label: "Edit",
     role: "editMenu",
   },
+  {
+    label: "Dev",
+    submenu: [{ role: "reload" }, { role: "forceReload" }],
+  },
 ]);
 
 Menu.setApplicationMenu(mainMenu);
 
 ipcMain.on("add-service", (event, name) => {
   console.log("add service", name);
-  const services = addService(name);
-  getMainWindow().webContents.send("update-services", services);
+  addService(name);
 });
 
 ipcMain.on("delete-service", (event, id) => {
   console.log("delete service", id);
-  const services = deleteService(id);
-  getMainWindow().webContents.send("update-services", services);
+  deleteService(id);
 });
 
 ipcMain.on("update-frontend", (e) => {
@@ -235,6 +238,7 @@ async function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       webviewTag: true,
+      webSecurity: isDev ? false : true,
     },
   });
 
@@ -244,10 +248,9 @@ async function createWindow() {
   await mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
-      : `file://${path.join(__dirname, "../build/index.html")}`
+      : `file://${path.join(__dirname, "../../build/index.html")}`
   );
   if (isDev) mainWindow.webContents.openDevTools({ mode: "detach" });
-
   storeMainWindow(mainWindow);
 }
 
@@ -257,7 +260,10 @@ async function createWindow() {
 app.whenReady().then(async () => {
   await createWindow();
 
-  // getMainWindow().send("update-frontend", {services: getServices(), currentFocusSession: getCurrentFocusSession()});
+  getMainWindow().send("update-frontend", {
+    services: getServices(),
+    currentFocusSession: getCurrentFocusSession(),
+  });
 
   // Update renderer loop
   console.log("update loop start");

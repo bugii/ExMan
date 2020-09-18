@@ -11,11 +11,11 @@ function Webview(props) {
     z = 0;
   }
 
-  const [registered, setregistered] = useState(false)
+  const [registered, setregistered] = useState(false);
 
   const webviewRef = (el) => {
     if (el && !registered) {
-      setregistered(true)
+      setregistered(true);
       el.addEventListener("dom-ready", () => {
         // the webcontentsId is stored in the database for easy reference from the main process
         ipcRenderer.send("webview-rendered", {
@@ -35,11 +35,7 @@ function Webview(props) {
         useragent={props.useragent}
         allowpopups="true"
         disablewebsecurity="true"
-        preload={
-          process.env.NODE_ENV === "development"
-            ? `file://${remote.app.dirname}/preload/${props.name}.js`
-            : `${process.env.PUBLIC_URL}/preload/${props.name}.js`
-        }
+        preload={`file://${remote.app.dirname}/preload/${props.name}.js`}
         webpreferences="allowRemoteContent"
       />
     </div>
