@@ -1,31 +1,8 @@
-const { webContents } = require("electron");
-
-const {
-  getDb,
-  createNewFocusSession,
-  getCurrentFocusSession,
-  getAutoresponse,
-  getServices,
-} = require("../db/db");
-
+const { createNewFocusSession } = require("../db/db");
 const focusEnd = require("./focusEnd");
+const { storeTimeoutRef, getMainWindow, setFocus } = require("../db/memoryDb");
 
-const {
-  storeIntervallRef,
-  storeTimeoutRef,
-  getMainWindow,
-} = require("../db/memoryDb");
-
-const {
-  setDnd: setDndSlack,
-  getMessages: getMessagesSlack,
-} = require("../services/slack");
-
-const {
-  setDnd: setDndTeams,
-  getMessages: getMessagesTeams,
-  syncTokenLoop: teamsLoop,
-} = require("../services/teams");
+const serviceManager = require("../services/ServicesManger");
 
 function focusStart(startTime, endTime, id = null) {
   console.log("focus start from", startTime, "to", endTime);
@@ -39,69 +16,10 @@ function focusStart(startTime, endTime, id = null) {
   const diffMins = (endTime - startTime) / 1000 / 60;
   console.log("diff mins", diffMins);
 
-  let currentFocusSessionIntervalSlack;
-  let currentFocusSessionIntervalTeams;
-
-  const message = getAutoresponse();
-
-  // 2. Set status of apps to DND if possible and start auto message loop
-  const services = getServices();
-
+  const services = serviceManager.getServicesComplete();
   services.forEach((service) => {
-    // mute audio on focus-start
-    webContents.fromId(service.webContentsId).setAudioMuted(true);
-
-    switch (service.name) {
-      case "slack":
-        setDndSlack(service.webContentsId, diffMins);
-        currentFocusSessionIntervalSlack = setInterval(function () {
-          var startTime = new Date().getTime() / 1000 - 10;
-          getMessagesSlack(service.webContentsId, startTime, message);
-        }, 10001);
-        storeIntervallRef(currentFocusSessionIntervalSlack);
-
-        break;
-
-      case "teams":
-        setDndTeams(service.webContentsId);
-        var startTime = new Date().getTime() / 1000 - 60;
-
-        const currentTeamsSessionInitial = getDb()
-          .get("currentFocusSession")
-          .get("services")
-          .find({ webContentsId: service.webContentsId })
-          .value();
-
-        getMessagesTeams(
-          service.webContentsId,
-          startTime,
-          currentTeamsSessionInitial
-            ? currentTeamsSessionInitial["syncToken"]
-            : null,
-          message
-        );
-
-        currentFocusSessionIntervalTeams = setInterval(function () {
-          const currentTeamsSession = getDb()
-            .get("currentFocusSession")
-            .get("services")
-            .find({ webContentsId: service.webContentsId })
-            .value();
-
-          getMessagesTeams(
-            service.webContentsId,
-            startTime,
-            currentTeamsSession ? currentTeamsSession["syncToken"] : null,
-            message
-          );
-        }, 20000);
-        storeIntervallRef(currentFocusSessionIntervalTeams);
-
-        break;
-
-      default:
-        break;
-    }
+    // Call each individual focusStart method for each service
+    service.focusStart(diffMins);
   });
 
   // if focus start successful, update the react app
@@ -110,10 +28,13 @@ function focusStart(startTime, endTime, id = null) {
     endTime,
   });
 
+  setFocus(true);
+
   // schedule automatic focus end
   const focusEndTimeoutRef = setTimeout(() => {
     focusEnd();
   }, endTime - new Date().getTime());
+
   storeTimeoutRef(focusEndTimeoutRef);
 }
 

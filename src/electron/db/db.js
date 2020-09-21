@@ -3,7 +3,6 @@ const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
-const { write } = require("lowdb/adapters/FileSync");
 
 const adapter = new FileSync(path.join(app.getPath("userData"), "db.json"));
 const db = low(adapter);
@@ -18,47 +17,38 @@ function init() {
     db.set("services", []).write();
   }
 
-  db.get("services")
-    .map((el) => (el["webContentsId"] = null))
-    .write();
-  db.get("services")
-    .map((el) => (el["ready"] = false))
-    .write();
-  db.get("services")
-    .map((el) => (el["authed"] = false))
-    .write();
-
   if (!db.has("pastFocusSessions").value()) {
     db.set("pastFocusSessions", []).write();
   }
 
-  // set default auto-response message
-  db.set("settings", {
-    autoReply:
-      "Currently, I am working in focus mode. I will answer you as soon as possible.",
-  }).write();
   if (!db.has("futureFocusSessions").value()) {
     db.set("futureFocusSessions", []).write();
+  }
+
+  if (!db.has("messagesOutOfFocus").value()) {
+    db.set("messagesOutOfFocus", {}).write();
+  }
+
+  // set default auto-response message, if not present
+  if (!db.has("settings").value()) {
+    db.set("settings", {
+      autoReply:
+        "Currently, I am working in focus mode. I will answer you as soon as possible.",
+    }).write();
   }
 
   return db;
 }
 
-function addService(name) {
-  const id = uuidv4();
+function addService(service) {
   // WebContents will be added as soon as the webview is attached to the DOM
   db.get("services")
     .push({
-      id,
-      name,
-      webContentsId: null,
-      autoResponse: true,
-      ready: false,
-      authed: false,
+      id: service.id,
+      name: service.name,
+      autoResponse: service.autoResponse,
     })
     .write();
-
-  return getServices();
 }
 
 function getServices() {
@@ -167,26 +157,37 @@ function toggleAutoResponseAvailablity(id) {
   return currentState;
 }
 
-function getAutoResponseStatus(id) {
-  let currentState = db
+function storeNotification(id, title, body) {
+  db.get("currentFocusSession")
     .get("services")
     .find({ id })
-    .get("autoResponse")
-    .value();
-  return currentState;
+    .get("messages")
+    .push({ title, body })
+    .write();
 }
 
-function allServicesReadyAndAuthed() {
-  const services = getServices();
+function storeNotificationInArchive(id) {
+  const hasMessages = db.get("messagesOutOfFocus").has(id).value();
 
-  for (let index = 0; index < services.length; index++) {
-    const service = services[index];
-
-    if (!service.ready || !service.authed) {
-      return false;
-    }
+  if (!hasMessages) {
+    db.get("messagesOutOfFocus")
+      .assign({ [id]: { messages: [] } })
+      .write();
   }
-  return true;
+
+  db.get("messagesOutOfFocus")
+    .get(id)
+    .get("messages")
+    .push(new Date().getTime())
+    .write();
+}
+
+function setUnreadChats(id, number) {
+  db.get("currentFocusSession")
+    .get("services")
+    .find({ id })
+    .assign({ unreadCount: number })
+    .write();
 }
 
 module.exports = {
@@ -208,6 +209,7 @@ module.exports = {
   setEndTime,
   setFocusGoals,
   toggleAutoResponseAvailablity,
-  getAutoResponseStatus,
-  allServicesReadyAndAuthed,
+  storeNotification,
+  storeNotificationInArchive,
+  setUnreadChats,
 };

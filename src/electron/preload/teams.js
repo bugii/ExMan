@@ -27,6 +27,7 @@ function getTokens() {
   const skypeToken = JSON.parse(
     localStorage.getItem(`ts.${id}.auth.skype.token`)
   )["skypeToken"];
+
   return [presenceToken, skypeToken];
 }
 

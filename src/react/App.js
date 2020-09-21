@@ -17,7 +17,6 @@ const ipcRenderer = electron.ipcRenderer;
 
 function App() {
   const [services, setServices] = useState([]);
-  const [nrOfServices, setNrOfServices] = useState(0);
   const [activeService, setActiveService] = useState(null);
   const [currentFocusSession, setCurrentFocusSession] = useState(null);
 
@@ -34,7 +33,6 @@ function App() {
   };
 
   const updateServices = (services) => {
-    setNrOfServices(services.length);
     setServices(services);
   };
 
@@ -55,7 +53,7 @@ function App() {
       }
     );
 
-    // ipcRenderer.send("update-frontend");
+    ipcRenderer.send("update-frontend");
 
     ipcRenderer.on("focus-start-successful", (e, { startTime, endTime }) => {
       const { services, currentFocusSession } = ipcRenderer.sendSync(
@@ -98,7 +96,7 @@ function App() {
 
       <div className="main-content">
         <Route path="/" exact>
-          <Home nrOfServices={nrOfServices} />
+          <Home nrOfServices={services.length} />
         </Route>
 
         {/* For the services we don't use the exact prop -> this way it is always rendered. If you just want to show the services and not Home for example -> use history.push("/services") or any other route that has no other matches */}

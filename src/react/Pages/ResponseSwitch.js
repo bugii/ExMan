@@ -6,9 +6,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
-const currentStatusSlack = ipcRenderer.send("getAutoResponseStatus", "slack");
-console.log(currentStatusSlack);
-
 export default function SwitchesSize(props) {
   const toggleChecked = (id) => {
     ipcRenderer.send("toggleAutoResponse", id);

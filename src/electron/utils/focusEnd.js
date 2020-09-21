@@ -1,47 +1,21 @@
 const { webContents } = require("electron");
-const {
-  getCurrentFocusSession,
-  endCurrentFocusSession,
-  getServices,
-} = require("../db/db");
+const { endCurrentFocusSession } = require("../db/db");
 const {
   getIntervallRefs,
   getTimeoutRefs,
   getMainWindow,
 } = require("../db/memoryDb");
-const { setOnline: setOnlineSlack } = require("../services/slack");
-const { setOnline: setOnlineTeams } = require("../services/teams");
+
+const serviceManager = require("../services/ServicesManger");
 
 function focusEnd() {
   console.log("focus end");
   //get ongoing focus sessions
-  const services = getServices();
+  const services = serviceManager.getServicesComplete();
 
   services.forEach((service) => {
-    // unmute audio on focus-end
-    console.log(service.webContentsId);
-    webContents.fromId(service.webContentsId).setAudioMuted(false);
-
-    switch (service.name) {
-      case "slack":
-        // stop dnd mode on slack
-        setOnlineSlack(service.webContentsId);
-        break;
-
-      case "teams":
-        // stop dnd mode on teams
-        setOnlineTeams(service.webContentsId);
-        break;
-
-      case "skype":
-        break;
-
-      case "whatsapp":
-        break;
-
-      default:
-        break;
-    }
+    // End the focus of each service by calling each service's focusEnd() function
+    service.focusEnd();
   });
 
   // End all the intervalls

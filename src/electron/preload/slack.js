@@ -17,7 +17,6 @@ function getToken() {
   ];
   // As of now we just support 1 workspace for slack, so just taking the first item is fine
   var token = security_objects[Object.keys(security_objects)[0]].token;
-  console.log(token);
   return token;
 }
 
@@ -61,5 +60,5 @@ window.getUnreadChats = () => {
   const allMessages =
     document.querySelectorAll(SELECTOR_CHANNELS_UNREAD).length - directMessages;
 
-  return allMessages;
+  return allMessages + directMessages;
 };

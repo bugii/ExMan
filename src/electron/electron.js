@@ -8,7 +8,6 @@ const {
   shell,
   systemPreferences,
   Menu,
-  protocol,
 } = require("electron");
 
 const {
@@ -16,15 +15,10 @@ const {
   hasPromptedForPermission,
 } = require("mac-screen-capture-permissions");
 
-const axios = require("axios");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const {
-  init,
-  getDb,
-  addService,
-  getServices,
-  deleteService,
+  init: db_init,
   getCurrentFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
@@ -32,23 +26,25 @@ const {
   getAllFutureFocusSessions,
   setEndTime,
   setFocusGoals,
-  toggleAutoResponseAvailablity,
-  getAutoResponseStatus,
+  storeNotification,
+  storeNotificationInArchive,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
 const focusEnd = require("./utils/focusEnd");
 const insertWebviewCss = require("./utils/insertWebviewCss");
-const unreadLoopStart = require("./utils/unreadLoopStart");
-const authLoopStart = require("./utils/authLoopStart");
 const scheduleFocus = require("./utils/scheduleFocus");
-const { storeMainWindow, getMainWindow } = require("./db/memoryDb");
+const { storeMainWindow, getMainWindow, getFocus } = require("./db/memoryDb");
 const exportDb = require("./utils/exportDb");
+const servicesManager = require("./services/ServicesManger");
+const eventEmitter = require("./utils/eventEmitter");
+const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
 
 const isMac = process.platform === "darwin";
 
 // Initialize db
-const db = init();
+db_init();
+servicesManager.init();
 
 let mainMenu;
 
@@ -90,26 +86,28 @@ mainMenu = Menu.buildFromTemplate([
 
 Menu.setApplicationMenu(mainMenu);
 
+eventEmitter.on("all-services-authed", allServicesAuthedHandler);
+
 ipcMain.on("add-service", (event, name) => {
   console.log("add service", name);
-  addService(name);
+  servicesManager.addService({ id: null, name, autoResponse: false });
 });
 
 ipcMain.on("delete-service", (event, id) => {
   console.log("delete service", id);
-  deleteService(id);
+  servicesManager.deleteService(id);
 });
 
 ipcMain.on("update-frontend", (e) => {
   console.log("update frontend");
-  const services = getServices();
+  const services = servicesManager.getServices();
   const currentFocusSession = getCurrentFocusSession();
   e.reply("update-frontend", { services, currentFocusSession });
 });
 
 ipcMain.on("update-frontend-sync", (e) => {
   console.log("update frontend sync");
-  const services = getServices();
+  const services = servicesManager.getServices();
   const currentFocusSession = getCurrentFocusSession();
   e.returnValue = { services, currentFocusSession };
 });
@@ -119,9 +117,9 @@ ipcMain.on("refresh-service", (e, webContentsId) => {
   webContents.fromId(webContentsId).reload();
 });
 
-const idsWhereWebviewWasRendered = [];
-
 ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
+  const service = servicesManager.getService(id);
+
   // console.log("webview rendered", id, webContentsId);
   const webContent = webContents.fromId(webContentsId);
   // Bring the id into the webview webcontents (to associate the notifications with the right service)
@@ -135,20 +133,8 @@ ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
     shell.openExternal(url);
   });
 
-  // add reference to db
-  db.get("services").find({ id }).assign({ webContentsId }).write();
-  // mark as ready
-  db.get("services").find({ id }).assign({ ready: true }).write();
-
-  // avoid calling the following code multiple times per webview..
-  // react calls this on the dom-ready event for the webview,
-  // which is why this could be called multiple times -> unnessecary computing
-  if (!idsWhereWebviewWasRendered.find((el) => el === id)) {
-    // Start checking for unread messages/emails/chats
-    unreadLoopStart(webContentsId);
-    authLoopStart(webContentsId);
-    idsWhereWebviewWasRendered.push(id);
-  }
+  service.setWebcontentsId(webContentsId);
+  service.startLoop();
 });
 
 ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
@@ -178,8 +164,7 @@ ipcMain.on("focus-end-request", (e) => {
 });
 
 ipcMain.on("notification", (event, { id, title, body }) => {
-  const currentFocus = getCurrentFocusSession();
-  if (!currentFocus) {
+  if (!getFocus()) {
     console.log("forward notification", id);
     // forward notification
     const notification = new Notification({ title, body, silent: true });
@@ -188,16 +173,12 @@ ipcMain.on("notification", (event, { id, title, body }) => {
       openService(id);
     });
     notification.show();
+    // Also store the notification in archive
+    storeNotificationInArchive(id);
   } else {
     console.log("block notification", id);
     // if there is a focus session ongoing, store the notification
-    getDb()
-      .get("currentFocusSession")
-      .get("services")
-      .find({ id })
-      .get("messages")
-      .push({ title, body })
-      .write();
+    storeNotification(id, title, body);
   }
 });
 
@@ -213,12 +194,14 @@ ipcMain.on("updateAutoResponse", (e, message) => {
   updateAutoresponse(message);
 });
 
-ipcMain.on("toggleAutoResponse", (e, service) => {
-  toggleAutoResponseAvailablity(service);
+ipcMain.on("toggleAutoResponse", (e, id) => {
+  const service = servicesManager.getService(id);
+  service.toggleAutoResponseAvailablity();
 });
 
 ipcMain.on("getAutoResponseStatus", (e, id) => {
-  return getAutoResponseStatus(id);
+  const service = servicesManager.getService(id);
+  return service.autoResponse;
 });
 
 ipcMain.on("get-all-future-focus-sessions", (e, args) => {
@@ -238,7 +221,7 @@ async function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       webviewTag: true,
-      webSecurity: isDev ? false : true,
+      //   webSecurity: isDev ? false : true,
     },
   });
 
@@ -261,15 +244,15 @@ app.whenReady().then(async () => {
   await createWindow();
 
   getMainWindow().send("update-frontend", {
-    services: getServices(),
+    services: servicesManager.getServices(),
     currentFocusSession: getCurrentFocusSession(),
   });
 
-  // Update renderer loop
+  //Update renderer loop
   console.log("update loop start");
   setInterval(() => {
     getMainWindow().send("update-frontend", {
-      services: getServices(),
+      services: servicesManager.getServices(),
       currentFocusSession: getCurrentFocusSession(),
     });
   }, 1000);
