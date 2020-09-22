@@ -26,6 +26,7 @@ const {
   getAllFutureFocusSessions,
   setEndTime,
   setFocusGoals,
+  setRating,
   storeNotification,
   storeNotificationInArchive,
   storeBreakFocusClicks,
@@ -163,6 +164,14 @@ ipcMain.on("focus-end-request", (e) => {
   focusEnd();
   // if focus end successful, update the react app
   e.reply("focus-end-successful");
+});
+
+ipcMain.on("previous-session-update", (e, {rating}) => {
+  console.log("previous session update");
+  // submit rating value to focus session
+  setRating(rating);
+  // update goals with which were accomplished
+
 });
 
 ipcMain.on("notification", (event, { id, title, body }) => {

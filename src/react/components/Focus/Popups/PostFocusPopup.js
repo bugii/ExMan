@@ -1,12 +1,16 @@
 import React, {useState} from "react";
 import styled from "styled-components";
 import Colors from "../../Colors";
+import Rating from "@material-ui/lab/Rating";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
 import TodoList from "../TodoList";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 export const PostFocusDiv = styled.div`
   height: 460px;
@@ -20,6 +24,7 @@ export const PostFocusDiv = styled.div`
 
 function PostFocusPopup(props) {
 
+    const [rating, setRating] = useState(0);
     const [todoList, ] = useState(props.goals ? props.goals : []);
 
     const deleteTodos = (index) => {
@@ -27,6 +32,16 @@ function PostFocusPopup(props) {
     };
 
     const handleSubmit = () => {
+        /*let list = {todoList : false};
+        console.log("TodoList before checkboxes: ", list);
+        todoList.map((item) => {
+            if (checked.contains(item))
+                list[item] = true;
+        });*/
+        ipcRenderer.send("previous-session-update", {
+            goals: todoList,
+            rating: rating,
+        });
         props.close();
     };
 
@@ -43,8 +58,16 @@ function PostFocusPopup(props) {
                         <CloseIcon fontSize="large"/>
                     </IconButton>
                 </div>
+                <p>How productive were you during this focus session?</p>
+                <Rating
+                    name="simple-controlled"
+                    value={rating}
+                    onChange={(event, newValue) => {
+                        setRating(newValue);
+                    }}
+                />
                 <p>Did you accomplish your goals? Mark them off here.</p>
-                <TodoList todoList={todoList} deleteTodos={deleteTodos}/>
+                <TodoList todoList={todoList} deleteTodos={deleteTodos} hideDelete={true} />
                 <Button
                     style={{
                         backgroundColor: Colors.navy,

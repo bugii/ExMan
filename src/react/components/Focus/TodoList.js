@@ -48,7 +48,7 @@ export default function TodoList(props) {
                 props.todoList.map((task) => {
                         const labelId = `checkbox-list-label-${task}`;
                         return (
-                            <ListItem key={task} role={undefined} dense button onClick={handleToggle(task)}>
+                            <ListItem key={task} role={undefined} dense>
                                 <ListItemIcon>
                                     <Checkbox
                                         edge="start"
@@ -56,14 +56,16 @@ export default function TodoList(props) {
                                         tabIndex={-1}
                                         disableRipple
                                         inputProps={{'aria-labelledby': labelId}}
+                                        onClick={handleToggle(task)}
                                     />
                                 </ListItemIcon>
                                 <ListItemText id={labelId} primary={task}/>
+                                {props.hideDelete ? null :
                                 <ListItemSecondaryAction>
                                     <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(task)}>
                                         <DeleteIcon/>
                                     </IconButton>
-                                </ListItemSecondaryAction>
+                                </ListItemSecondaryAction>}
                             </ListItem>
                         );
                     }

@@ -9,6 +9,7 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
+import Rating from "@material-ui/lab/Rating";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -59,10 +60,11 @@ function Dashboard() {
         <DashboardDiv>
             <h1 style={{textAlign: "center", color: Colors.navy}}>DASHBOARD</h1>
 
-            <Grid>
-                <Grid item xs={12}>
-                    <h2>Past Focus Sessions Data</h2>
-                    {pastFocusSessions.map((focusSession) => (
+            <Grid container justify="center" spacing={3} style={{textAlign: "center"}}>
+                <Grid item xs={6}>
+                    <h1 style={{color: Colors.turquoise, fontSize: 50}}>{pastFocusSessions.length}</h1>
+                    <h2>Past Focus Sessions</h2>
+                    {[...pastFocusSessions].reverse().map((focusSession) => (
                         <Accordion>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon/>}
@@ -70,27 +72,30 @@ function Dashboard() {
                                 id="panel1a-header"
                             >
                                 {formatSessionTimes(focusSession.startTime, focusSession.endTime)}
+                                <Rating name="read-only" value={focusSession.rating} readOnly style={{marginLeft: 10}} />
                             </AccordionSummary>
-                            <AccordionDetails>
-                                <div><b>Focus Session ID: &nbsp;</b>{focusSession.id}</div>
+                            <AccordionDetails style={{flexDirection: "column"}}>
+                                <div style={{marginBottom: 10}}><b>Focus Session ID: &nbsp;</b>{focusSession.id}</div>
                                 <div><b>Services: </b></div>
                                 <List>
-                                    {focusSession.services.reverse().map((service) => (
+                                    {focusSession.services.length > 0 ? focusSession.services.map((service) => (
                                         <ListItem key={service.id}>
-                                            <ListItemText> <b>{service.name}</b>
-                                                {service.messages.map((message) => (
+                                            <ListItemText>
+                                                <p style={{margin: 5}}><b>{service.name}</b></p>
+                                                {service.messages.length > 0 ? service.messages.map((message) => (
                                                     <div key={message.body}>{message.body}</div>
-                                                ))}
+                                                )) : "none"}
                                             </ListItemText>
                                         </ListItem>
-                                    ))}
+                                    )) : "No services active during this focus session :("}
                                 </List>
                             </AccordionDetails>
                         </Accordion>
                     ))}
                 </Grid>
-                <Grid item>
-                    <h2>Future Focus Sessions Data</h2>
+                <Grid item xs={6}>
+                    <h1 style={{color: Colors.turquoise, fontSize: 50}}>{futureFocusSessions.length}</h1>
+                    <h2>Future Focus Sessions</h2>
                     {futureFocusSessions.map((focusSession) => (
                         <Accordion>
                             <AccordionSummary

@@ -17,6 +17,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "axios": "^0.19.2",
     "cross-env": "^7.0.2",
     "electron-is-dev": "^1.2.0",
@@ -31,10 +32,13 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "components": "^0.1.0",
     "concurrently": "^5.3.0",
     "electron": "^9.3.1",
     "electron-builder": "^22.8.1",
+    "hooks": "^0.3.2",
     "react-app-rewired": "^2.1.6",
+    "react-charts": "^2.0.0-beta.7",
     "wait-on": "^5.2.0"
   },
   "browserslist": {

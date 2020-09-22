@@ -74,7 +74,6 @@ function createNewFocusSession(startTime, endTime) {
   }));
 
   const id = uuidv4();
-  const goals = [];
 
   db.set("currentFocusSession", {
     id,
@@ -83,7 +82,8 @@ function createNewFocusSession(startTime, endTime) {
     originalEndTime: endTime,
     services,
     brokenFocus: [],
-    goals,
+    goals: [],
+    rating: null,
   }).write();
 }
 
@@ -143,6 +143,10 @@ function setEndTime(timestamp) {
 
 function setFocusGoals(goals) {
   db.get("currentFocusSession").assign({ goals }).write();
+}
+
+function setRating(rating) {
+  db.get("pastFocusSessions").last().assign({ rating }).write();
 }
 
 function storeBreakFocusClicks(breakFocusEnd) {
@@ -232,6 +236,7 @@ module.exports = {
   getAllFutureFocusSessions,
   setEndTime,
   setFocusGoals,
+  setRating,
   toggleAutoResponseAvailablity,
   storeNotification,
   storeNotificationInArchive,
