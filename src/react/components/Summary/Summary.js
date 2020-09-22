@@ -9,6 +9,7 @@ import Service from "../Navbar/Service";
 import Table from "@material-ui/core/Table";
 import sampleSummaryChart1 from "../../images/sampleSummaryChart1.png";
 import sampleSummaryChart2 from "../../images/sampleSummaryChart2.png";
+import MessagesChart from "./MessagesChart";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -94,7 +95,8 @@ function Summary(props) {
             {formatTime(focusSession.endTime)}
           </p>
           <ChartsDiv>
-            <img src={sampleSummaryChart1} alt='chart1' style={{ maxHeight: 300 }} />
+            <MessagesChart/>
+            {/*<img src={sampleSummaryChart1} alt='chart1' style={{ maxHeight: 300 }} />*/}
             <img src={sampleSummaryChart2} alt='chart2' style={{ maxHeight: 300 }} />
           </ChartsDiv>
           <div style={{ display: "flex" }}>
