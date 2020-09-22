@@ -28,6 +28,8 @@ const {
   setFocusGoals,
   storeNotification,
   storeNotificationInArchive,
+  storeBreakFocusClicks,
+  updateBreakFocusPerService,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
@@ -202,6 +204,14 @@ ipcMain.on("toggleAutoResponse", (e, id) => {
 ipcMain.on("getAutoResponseStatus", (e, id) => {
   const service = servicesManager.getService(id);
   return service.autoResponse;
+});
+
+ipcMain.on("breakFocus", (e, breakFocusEnd) => {
+  storeBreakFocusClicks(breakFocusEnd);
+});
+
+ipcMain.on("updateBreakFocusService", (e, id) => {
+  updateBreakFocusPerService(id);
 });
 
 ipcMain.on("get-all-future-focus-sessions", (e, args) => {

@@ -3,9 +3,9 @@
 import teamsIcon from "./images/icons/teams.svg";
 import slackIcon from "./images/icons/slack.svg";
 import whatsappIcon from "./images/icons/whatsapp.svg";
-import skypeIcon from "./images/icons/skype.svg";
-import outlookIcon from "./images/icons/outlook.svg";
-import gmailIcon from "./images/icons/gmail.svg";
+//import skypeIcon from "./images/icons/skype.svg";
+//import outlookIcon from "./images/icons/outlook.svg";
+//import gmailIcon from "./images/icons/gmail.svg";
 
 export default {
   teams: {

@@ -4,6 +4,9 @@ import Colors from "../../Colors";
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
+
 export const BreakFocusWarning = styled.div`
   background-color: ${Colors.navy};
   width: 50%;
@@ -20,6 +23,7 @@ function BreakFocusPopup(props) {
   let history = useHistory();
 
   const minimizeFocus = () => {
+    ipcRenderer.send("breakFocus", false);
     //navigate back home without ending focus session
     history.push("/");
   };

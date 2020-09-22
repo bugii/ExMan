@@ -70,6 +70,7 @@ function createNewFocusSession(startTime, endTime) {
     unreadCount: 0,
     autoReplied: [],
     messages: [],
+    inFocusModeClicks: 0,
   }));
 
   const id = uuidv4();
@@ -81,6 +82,7 @@ function createNewFocusSession(startTime, endTime) {
     endTime,
     originalEndTime: endTime,
     services,
+    brokenFocus: [],
     goals,
   }).write();
 }
@@ -140,7 +142,29 @@ function setEndTime(timestamp) {
 }
 
 function setFocusGoals(goals) {
-  db.get("currentFocusSession").assign({ goals: goals }).write();
+  db.get("currentFocusSession").assign({ goals }).write();
+}
+
+function storeBreakFocusClicks(breakFocusEnd) {
+  if (!breakFocusEnd) {
+    db.get("currentFocusSession").get("brokenFocus").push([Date.now()]).write();
+  } else {
+    db.get("currentFocusSession")
+      .get("brokenFocus")
+      .last()
+      .push(Date.now())
+      .write();
+  }
+}
+
+function updateBreakFocusPerService(id) {
+  if (getCurrentFocusSession() != null) {
+    db.get("currentFocusSession")
+      .get("services")
+      .find({ id })
+      .update("inFocusModeClicks", (n) => n + 1)
+      .write();
+  }
 }
 
 function toggleAutoResponseAvailablity(id) {
@@ -212,4 +236,6 @@ module.exports = {
   storeNotification,
   storeNotificationInArchive,
   setUnreadChats,
+  storeBreakFocusClicks,
+  updateBreakFocusPerService,
 };

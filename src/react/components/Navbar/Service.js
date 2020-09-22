@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
 const { remote } = window.require("electron");
 
 const { Menu, MenuItem } = remote;
+
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 export const ServiceDiv = styled.div`
   position: relative;
@@ -61,6 +64,7 @@ function Service(props) {
   };
 
   const handleClick = () => {
+    ipcRenderer.send("updateBreakFocusService", props.id);
     props.setActiveService(props.id);
     history.push("/services");
   };

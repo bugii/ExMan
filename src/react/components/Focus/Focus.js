@@ -48,10 +48,6 @@ function Focus(props) {
     ipcRenderer.send("focus-end-request");
   };
 
-  // const openBreakFocusPopup = () => {
-  //   setShowBreakFocusPopup(true);
-  // };
-
   const focusTime = props.currentFocusSession.endTime
     ? (props.currentFocusSession.endTime - new Date()) / 1000
     : -1;

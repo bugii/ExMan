@@ -41,6 +41,7 @@ function App() {
   };
 
   const returnToFocus = () => {
+    ipcRenderer.send("breakFocus", true);
     history.push("/focus");
   };
 
