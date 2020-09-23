@@ -1,14 +1,20 @@
 const { createNewFocusSession } = require("../db/db");
 const focusEnd = require("./focusEnd");
 const { storeTimeoutRef, getMainWindow, setFocus } = require("../db/memoryDb");
-
 const serviceManager = require("../services/ServicesManger");
 
 function focusStart(startTime, endTime, id = null) {
+  // not all services authed -> can't start focus session
+  if (!serviceManager.allAuthed) {
+    getMainWindow().webContents.send("error", "/not-authed");
+    console.log("error starting focus session - not all services authed");
+    return;
+  }
+
   console.log("focus start from", startTime, "to", endTime);
   // 1. Create a focus object in DB to reference and update with data later on
-  // Only create new focus session if id is not provided: avoids overwriting of focus sessions if a focus
-  // session after the app was closed and reopened again (with a still ongoing focus session)
+  // Only create new focus session if id is not provided: avoids overwriting of focus sessions if
+  // the app was closed and reopened again (with a still ongoing focus session)
   if (!id) {
     createNewFocusSession(startTime, endTime);
   }

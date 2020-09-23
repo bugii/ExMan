@@ -11,6 +11,9 @@ import FocusBubble from "./components/Focus/FocusBubble";
 import Settings from "./Pages/Settings";
 import Dashboard from "./Pages/Dashboard";
 import Summary from "./components/Summary/Summary";
+import ErrorNotAuthed from "./components/Error/ErrorNotAuthed";
+import ErrorAlreadyInFocus from "./components/Error/ErrorAlreadyInFocus";
+import ErrorFocusOverlap from "./components/Error/ErrorFocusOverlap";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -63,6 +66,11 @@ function App() {
       updateServices(services);
       setCurrentFocusSession(currentFocusSession);
       history.push("/focus");
+    });
+
+    ipcRenderer.on("error", (e, redirectPath) => {
+      console.log("error - redirect to ", redirectPath);
+      history.push(redirectPath);
     });
 
     ipcRenderer.on("focus-end-successful", (e) => {
@@ -136,6 +144,18 @@ function App() {
             offeredServices={offeredServices}
             setActiveService={setActiveService}
           />
+        </Route>
+
+        <Route path="/not-authed">
+          <ErrorNotAuthed />
+        </Route>
+
+        <Route path="/already-focused">
+          <ErrorAlreadyInFocus />
+        </Route>
+
+        <Route path="/focus-overlap">
+          <ErrorFocusOverlap />
         </Route>
       </div>
     </div>

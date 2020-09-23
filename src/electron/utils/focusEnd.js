@@ -4,6 +4,7 @@ const {
   getIntervallRefs,
   getTimeoutRefs,
   getMainWindow,
+  setFocus,
 } = require("../db/memoryDb");
 
 const serviceManager = require("../services/ServicesManger");
@@ -25,6 +26,8 @@ function focusEnd() {
   endCurrentFocusSession();
   // tell react that focus has ended, so it can update the state
   getMainWindow().webContents.send("focus-end-successful");
+
+  setFocus(false);
 }
 
 module.exports = focusEnd;
