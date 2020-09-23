@@ -39,7 +39,7 @@ const FocusMenuButtons = styled.div`
 `;
 
 function Focus(props) {
-  const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(true);
+  const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(props.currentFocusSession.goals.length <= 0);
 
   const [showBreakFocusPopup, setShowBreakFocusPopup] = useState(false);
 
