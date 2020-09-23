@@ -91,7 +91,9 @@ function Summary(props) {
                           }}
                           key={message.body}
                         >
-                          {message.body}
+                          {service.name == "whatsapp"
+                            ? message.body.slice(0, -9)
+                            : message.body}
                         </div>
                         <div
                           style={{
