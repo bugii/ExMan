@@ -37,7 +37,7 @@ const focusStart = require("./utils/focusStart");
 const focusEnd = require("./utils/focusEnd");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 const scheduleFocus = require("./utils/scheduleFocus");
-const { storeMainWindow, getMainWindow, getFocus } = require("./db/memoryDb");
+const { storeMainWindow, getMainWindow, getFocus, storeIntervallRef } = require("./db/memoryDb");
 const exportDb = require("./utils/exportDb");
 const servicesManager = require("./services/ServicesManger");
 const eventEmitter = require("./utils/eventEmitter");
@@ -293,12 +293,13 @@ app.whenReady().then(async () => {
 
   //Update renderer loop
   console.log("update loop start");
-  setInterval(() => {
+  const ref = setInterval(() => {
     getMainWindow().send("update-frontend", {
       services: servicesManager.getServices(),
       currentFocusSession: getCurrentFocusSession(),
     });
   }, 1000);
+  storeIntervallRef(ref)
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {
