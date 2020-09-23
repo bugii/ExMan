@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import Colors from "../Colors";
 import PostFocusPopup from "../Focus/Popups/PostFocusPopup";
 import CloseIcon from "@material-ui/icons/Close";
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import Service from "../Navbar/Service";
 import Table from "@material-ui/core/Table";
@@ -46,98 +46,130 @@ export const Services = styled.div`
 `;
 
 function Summary(props) {
-  const [showPostFocusPopup, setshowPostFocusPopup] = useState(true);
-  const [focusSession, setFocusSession] = useState(null);
+    const [showPostFocusPopup, setshowPostFocusPopup] = useState(true);
+    const [focusSession, setFocusSession] = useState(null);
 
-  let history = useHistory();
+    let history = useHistory();
 
-  const handleClose = () => {
-    history.push("/");
-  };
+    const handleClose = () => {
+        history.push("/");
+    };
 
-  useEffect(() => {
-    ipcRenderer.on("get-previous-focus-session", (e, focusSession) => {
-      setFocusSession(focusSession);
-    });
-    // on mounted -> get the last focus session (the one that just finished) and display a summary
-    ipcRenderer.send("get-previous-focus-session");
-  }, []);
+    useEffect(() => {
+        ipcRenderer.on("get-previous-focus-session", (e, focusSession) => {
+            setFocusSession(focusSession);
+        });
+        // on mounted -> get the last focus session (the one that just finished) and display a summary
+        ipcRenderer.send("get-previous-focus-session");
+    }, []);
 
-  const formatTime = (inputTime) => {
-    let time = new Date();
-    time.setTime(inputTime);
-    return time.getHours() + ":" + ("0" + time.getMinutes()).substr(-2);
-  };
+    const formatTime = (inputTime) => {
+        let time = new Date();
+        time.setTime(inputTime);
+        return time.getHours() + ":" + ("0" + time.getMinutes()).substr(-2);
+    };
 
-  return (
-    <SummaryDiv>
-      {showPostFocusPopup && focusSession ? (
-        <PostFocusPopup
-          goals={focusSession.goals ? focusSession.goals : []}
-          open={showPostFocusPopup}
-          close={() => setshowPostFocusPopup(false)}
-        />
-      ) : null}
+    return (
+        <SummaryDiv>
+            {showPostFocusPopup && focusSession ? (
+                <PostFocusPopup
+                    goals={focusSession.goals ? focusSession.goals : []}
+                    open={showPostFocusPopup}
+                    close={() => setshowPostFocusPopup(false)}
+                />
+            ) : null}
 
-      <div style={{ position: "absolute", top: 15, right: 15 }}>
-        <IconButton onClick={handleClose}>
-          <CloseIcon fontSize="large" />
-        </IconButton>
-      </div>
+            <div style={{position: "absolute", top: 15, right: 15}}>
+                <IconButton onClick={handleClose}>
+                    <CloseIcon fontSize="large"/>
+                </IconButton>
+            </div>
 
-      <h1 style={{ color: Colors.navy }}>SUMMARY</h1>
+            <h1 style={{color: Colors.navy}}>SUMMARY</h1>
 
-      {focusSession ? (
-        <div>
-          <h4>{focusSession.id}</h4>
-          <p>
-            from {formatTime(focusSession.startTime)} to{" "}
-            {formatTime(focusSession.endTime)}
-          </p>
-          <ChartsDiv>
-            <MessagesChart/>
-            {/*<img src={sampleSummaryChart1} alt='chart1' style={{ maxHeight: 300 }} />*/}
-            <img src={sampleSummaryChart2} alt='chart2' style={{ maxHeight: 300 }} />
-          </ChartsDiv>
-          <div style={{ display: "flex" }}>
-            {focusSession.services.map((service) => (
-              <Table>
-                <tr>
-                  <th>
-                    <Service
-                      key={service.id}
-                      id={service.id}
-                      setActiveService={props.setActiveService}
-                      name={service.name}
-                      unreadCount={service.unreadCount}
-                      icon={props.offeredServices[service.name].icon}
-                      deleteApp={props.deleteApp}
-                    />
-                  </th>
-                  {service.messages
-                    ? service.messages.map((message) => (
+            {focusSession ? (
+                <div>
+                    <p>
+                        from {formatTime(focusSession.startTime)} to{" "}
+                        {formatTime(focusSession.endTime)}
+                    </p>
+                    <ChartsDiv>
+                        <MessagesChart/>
+                        {/*<img src={sampleSummaryChart1} alt='chart1' style={{ maxHeight: 300 }} />*/}
+                        <img src={sampleSummaryChart2} alt='chart2' style={{maxHeight: 300}}/>
+                    </ChartsDiv>
+                    <div style={{display: "flex", flexDirection: "column"}}>
                         <Table>
-                          <tr>
-                            <th>{message.timestamp}</th>
-                            <th>{message.id}</th>
-                            <th>{message.body}</th>
-                          </tr>
-                        </Table>
-                      ))
-                    : null}
-                  {/* Including the following table below as sample data for dev purposes */}
-                  <Table>
-                    <tr>
-                      <th>09:35</th>
-                      <th>Taylor</th>
-                      <th>This is a test message...</th>
-                    </tr>
-                  </Table>
-                </tr>
-              </Table>
-            ))}
+                            {focusSession.services.map((service) => (
+                                <tr>
+                                    <td>
+                                        <Service
+                                            key={service.id}
+                                            id={service.id}
+                                            setActiveService={props.setActiveService}
+                                            name={service.name}
+                                            unreadCount={service.unreadCount}
+                                            icon={props.offeredServices[service.name].icon}
+                                            deleteApp={props.deleteApp}
+                                        />
+                                    </td>
+                                    {service.messages.length > 0
+                                        ? service.messages.map((message) => (
+                                            <tr>
+                                                <td>{formatTime(message.timestamp)}</td>
+                                                <td>{message.title}</td>
+                                                <td>{message.body}</td>
+                                            </tr>
+                                        ))
+                                        :
+                                        <Table>
+                                            <tr>
+                                                <td>09:35</td>
+                                                <td>Taylor</td>
+                                                <td>This is a test message...</td>
+                                            </tr>
+                                        </Table>}
+                                </tr>
+                            ))};
 
-            {/*focusSession.services.map((service) => (
+                        </Table>
+                        {/*focusSession.services.map((service) => (
+                            <Table>
+                                <tr>
+                                    <th>
+                                        <Service
+                                            key={service.id}
+                                            id={service.id}
+                                            setActiveService={props.setActiveService}
+                                            name={service.name}
+                                            unreadCount={service.unreadCount}
+                                            icon={props.offeredServices[service.name].icon}
+                                            deleteApp={props.deleteApp}
+                                        />
+                                    </th>
+                                    {service.messages.length > 0
+                                        ? service.messages.map((message) => (
+                                            <Table style={{textAlign: "left"}}>
+                                                <tr>
+                                                    <td>{message.timestamp}</td>
+                                                    <td>{message.id}</td>
+                                                    <td>{message.body}</td>
+                                                </tr>
+                                            </Table>
+                                        ))
+                                        :
+                                        <Table>
+                                            <tr>
+                                                <td>09:35</td>
+                                                <td>Taylor</td>
+                                                <td>This is a test message...</td>
+                                            </tr>
+                                        </Table>}
+                                </tr>
+                            </Table>
+                        ))*/}
+
+                        {/*focusSession.services.map((service) => (
                                                     <Services>
                                                     <div key={service.id}>
                                                     <h5> {service.name} </h5>
@@ -187,11 +219,11 @@ function Summary(props) {
                                                     </div>
                                                     </Services>
                                                     ))*/}
-          </div>
-        </div>
-      ) : null}
-    </SummaryDiv>
-  );
+                    </div>
+                </div>
+            ) : null}
+        </SummaryDiv>
+    );
 }
 
 export default Summary;
