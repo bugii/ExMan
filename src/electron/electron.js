@@ -42,6 +42,7 @@ const exportDb = require("./utils/exportDb");
 const servicesManager = require("./services/ServicesManger");
 const eventEmitter = require("./utils/eventEmitter");
 const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
+const handleWindowClose = require("./utils/handleWindowClose");
 
 const isMac = process.platform === "darwin";
 
@@ -166,12 +167,11 @@ ipcMain.on("focus-end-request", (e) => {
   e.reply("focus-end-successful");
 });
 
-ipcMain.on("previous-session-update", (e, {rating}) => {
+ipcMain.on("previous-session-update", (e, { rating }) => {
   console.log("previous session update");
   // submit rating value to focus session
   setRating(rating);
   // update goals with which were accomplished
-
 });
 
 ipcMain.on("notification", (event, { id, title, body }) => {
@@ -286,6 +286,13 @@ app.whenReady().then(async () => {
       }
     }, 5000);
   }
+
+  getMainWindow().on("close", (e) => {
+    console.log(
+      "close window, deleting all the timeouts and intervalls in memory"
+    );
+    handleWindowClose();
+  });
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the
