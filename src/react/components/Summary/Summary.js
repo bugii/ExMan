@@ -95,9 +95,13 @@ function Summary(props) {
             {formatTime(focusSession.endTime)}
           </p>
           <ChartsDiv>
-            <MessagesChart/>
+            <MessagesChart />
             {/*<img src={sampleSummaryChart1} alt='chart1' style={{ maxHeight: 300 }} />*/}
-            <img src={sampleSummaryChart2} alt='chart2' style={{ maxHeight: 300 }} />
+            <img
+              src={sampleSummaryChart2}
+              alt="chart2"
+              style={{ maxHeight: 300 }}
+            />
           </ChartsDiv>
           <div style={{ display: "flex" }}>
             {focusSession.services.map((service) => (
@@ -120,7 +124,11 @@ function Summary(props) {
                           <tr>
                             <th>{message.timestamp}</th>
                             <th>{message.id}</th>
-                            <th>{message.body}</th>
+                            <th>
+                              {service.name == "whatsapp"
+                                ? message.body.slice(0, -9)
+                                : message.body}
+                            </th>
                           </tr>
                         </Table>
                       ))
