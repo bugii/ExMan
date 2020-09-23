@@ -204,6 +204,7 @@ ipcMain.on("notification", (event, { id, title, body }) => {
     // forward notification
     const notification = new Notification({ title, body, silent: true });
     notification.on("click", () => {
+      getMainWindow().restore();
       getMainWindow().show();
       openService(id);
     });
