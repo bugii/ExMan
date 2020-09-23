@@ -10,6 +10,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Rating from "@material-ui/lab/Rating";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -26,13 +27,26 @@ export const DashboardDiv = styled.div`
   flex-direction: column;
 `;
 
+export const LoadingDiv = styled.div`
+  position: absolute;
+  z-index: 1;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: ${Colors.snow};
+`;
+
 function Dashboard() {
   const [pastFocusSessions, setPastFocusSessions] = useState([]);
   const [futureFocusSessions, setFutureFocusSessions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     ipcRenderer.on("get-all-past-focus-sessions", (e, focusSessions) => {
       setPastFocusSessions(focusSessions);
+      setIsLoading(false);
     });
     // on mounted -> get all past focus sessions and do something with it
     ipcRenderer.send("get-all-past-focus-sessions");
@@ -67,103 +81,112 @@ function Dashboard() {
     );
   };
 
-  // Just displaying all focus sessions, not doing anything with it for now
-  return (
-    <DashboardDiv>
-      <h1 style={{ textAlign: "center", color: Colors.navy }}>DASHBOARD</h1>
+  if (isLoading) {
+    return (
+      <LoadingDiv>
+        <CircularProgress />
+      </LoadingDiv>
+    );
+  }
 
-      <Grid
-        container
-        justify="center"
-        spacing={3}
-        style={{ textAlign: "center" }}
-      >
-        <Grid item xs={6}>
-          <h1 style={{ color: Colors.turquoise, fontSize: 50 }}>
-            {pastFocusSessions.length}
-          </h1>
-          <h2>Past Focus Sessions</h2>
-          {[...pastFocusSessions].reverse().map((focusSession) => (
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                {formatSessionTimes(
-                  focusSession.startTime,
-                  focusSession.endTime
-                )}
-                <Rating
-                  name="read-only"
-                  value={focusSession.rating}
-                  readOnly
-                  style={{ marginLeft: 10 }}
-                />
-              </AccordionSummary>
-              <AccordionDetails style={{ flexDirection: "column" }}>
-                <div style={{ marginBottom: 10 }}>
-                  <b>Focus Session ID: &nbsp;</b>
-                  {focusSession.id}
-                </div>
-                <div>
-                  <b>Services: </b>
-                </div>
-                <List>
-                  {focusSession.services.length > 0
-                    ? focusSession.services.map((service) => (
-                        <ListItem key={service.id}>
-                          <ListItemText>
-                            <p style={{ margin: 5 }}>
-                              <b>{service.name}</b>
-                            </p>
-                            {service.messages.length > 0
-                              ? service.messages.map((message) => (
-                                  <div key={message.body}>
-                                    {service.name == "whatsapp"
-                                      ? message.body.slice(0, -9)
-                                      : message.body}
-                                  </div>
-                                ))
-                              : "none"}
-                          </ListItemText>
-                        </ListItem>
-                      ))
-                    : "No services active during this focus session :("}
-                </List>
-              </AccordionDetails>
-            </Accordion>
-          ))}
+  // Just displaying all focus sessions, not doing anything with it for now
+  else
+    return (
+      <DashboardDiv>
+        <h1 style={{ textAlign: "center", color: Colors.navy }}>DASHBOARD</h1>
+
+        <Grid
+          container
+          justify="center"
+          spacing={3}
+          style={{ textAlign: "center" }}
+        >
+          <Grid item xs={6}>
+            <h1 style={{ color: Colors.turquoise, fontSize: 50 }}>
+              {pastFocusSessions.length}
+            </h1>
+            <h2>Past Focus Sessions</h2>
+            {[...pastFocusSessions].reverse().map((focusSession) => (
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  {formatSessionTimes(
+                    focusSession.startTime,
+                    focusSession.endTime
+                  )}
+                  <Rating
+                    name="read-only"
+                    value={focusSession.rating}
+                    readOnly
+                    style={{ marginLeft: 10 }}
+                  />
+                </AccordionSummary>
+                <AccordionDetails style={{ flexDirection: "column" }}>
+                  <div style={{ marginBottom: 10 }}>
+                    <b>Focus Session ID: &nbsp;</b>
+                    {focusSession.id}
+                  </div>
+                  <div>
+                    <b>Services: </b>
+                  </div>
+                  <List>
+                    {focusSession.services.length > 0
+                      ? focusSession.services.map((service) => (
+                          <ListItem key={service.id}>
+                            <ListItemText>
+                              <p style={{ margin: 5 }}>
+                                <b>{service.name}</b>
+                              </p>
+                              {service.messages.length > 0
+                                ? service.messages.map((message) => (
+                                    <div key={message.body}>
+                                      {service.name == "whatsapp"
+                                        ? message.body.slice(0, -9)
+                                        : message.body}
+                                    </div>
+                                  ))
+                                : "none"}
+                            </ListItemText>
+                          </ListItem>
+                        ))
+                      : "No services active during this focus session :("}
+                  </List>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Grid>
+          <Grid item xs={6}>
+            <h1 style={{ color: Colors.turquoise, fontSize: 50 }}>
+              {futureFocusSessions.length}
+            </h1>
+            <h2>Future Focus Sessions</h2>
+            {futureFocusSessions.map((focusSession) => (
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  {formatSessionTimes(
+                    focusSession.startTime,
+                    focusSession.endTime
+                  )}
+                </AccordionSummary>
+                <AccordionDetails>
+                  <div>
+                    <b>Focus Session ID: &nbsp;</b>
+                    {focusSession.id}
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Grid>
         </Grid>
-        <Grid item xs={6}>
-          <h1 style={{ color: Colors.turquoise, fontSize: 50 }}>
-            {futureFocusSessions.length}
-          </h1>
-          <h2>Future Focus Sessions</h2>
-          {futureFocusSessions.map((focusSession) => (
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                {formatSessionTimes(
-                  focusSession.startTime,
-                  focusSession.endTime
-                )}
-              </AccordionSummary>
-              <AccordionDetails>
-                <div>
-                  <b>Focus Session ID: &nbsp;</b>
-                  {focusSession.id}
-                </div>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </Grid>
-      </Grid>
-    </DashboardDiv>
-  );
+      </DashboardDiv>
+    );
 }
 
 export default Dashboard;
