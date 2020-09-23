@@ -190,7 +190,7 @@ function storeNotification(id, title, body) {
     .get("services")
     .find({ id })
     .get("messages")
-    .push({ title, body })
+    .push({ title, body, timestamp: new Date().getTime() })
     .write();
 }
 
