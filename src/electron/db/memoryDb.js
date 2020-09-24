@@ -13,11 +13,18 @@ function getMainWindow() {
 
 function storeTimeoutRef(ref) {
   timeoutRefs.push(ref);
-  console.log("stored timeout ref", ref);
 }
 
 function getTimeoutRefs() {
   return timeoutRefs;
+}
+
+function storeIntervallRefs(ref) {
+  intervallRefs.push(ref)
+}
+
+function getIntervallRefs() {
+  return intervallRefs
 }
 
 function getFocus() {
@@ -33,6 +40,8 @@ module.exports = {
   getMainWindow,
   storeTimeoutRef,
   getTimeoutRefs,
+  storeIntervallRefs,
+  getIntervallRefs,
   getFocus,
   setFocus,
 };

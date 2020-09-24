@@ -37,12 +37,13 @@ const focusStart = require("./utils/focusStart");
 const focusEnd = require("./utils/focusEnd");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 const scheduleFocus = require("./utils/scheduleFocus");
-const { storeMainWindow, getMainWindow, getFocus } = require("./db/memoryDb");
+const { storeMainWindow, getMainWindow, getFocus, storeIntervallRef } = require("./db/memoryDb");
 const exportDb = require("./utils/exportDb");
 const servicesManager = require("./services/ServicesManger");
 const eventEmitter = require("./utils/eventEmitter");
 const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
 const handleWindowClose = require("./utils/handleWindowClose");
+const isOverlappingWithFocusSessions = require("./utils/isOverlappingWithFocusSessions");
 
 const isMac = process.platform === "darwin";
 
@@ -143,11 +144,34 @@ ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
 
 ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
   console.log("focus requested from react", startTime, endTime);
+  // if already in focus mode -> can't start again
+  if (getFocus()) {
+    e.reply("error", "/already-focused");
+    console.log("error starting focus session - already in focus");
+    return;
+  }
+  // if there is an overlap with a future focus session -> can't start
+  if (isOverlappingWithFocusSessions(startTime, endTime)) {
+    e.reply("error", "/focus-overlap");
+    console.log(
+      "error starting focus session - overlap with current or future focus session"
+    );
+    return;
+  }
+
   focusStart(startTime, endTime);
 });
 
 ipcMain.on("focus-schedule-request", (e, { startTime, endTime }) => {
   console.log("schedule focus request from react", startTime, endTime);
+
+  if (isOverlappingWithFocusSessions(startTime, endTime)) {
+    e.reply("error", "/focus-overlap");
+    console.log(
+      "error scheduling focus session - overlap with current or future focus session"
+    );
+    return;
+  }
   scheduleFocus(startTime, endTime);
 });
 
@@ -180,6 +204,7 @@ ipcMain.on("notification", (event, { id, title, body }) => {
     // forward notification
     const notification = new Notification({ title, body, silent: true });
     notification.on("click", () => {
+      getMainWindow().restore();
       getMainWindow().show();
       openService(id);
     });
@@ -269,12 +294,13 @@ app.whenReady().then(async () => {
 
   //Update renderer loop
   console.log("update loop start");
-  setInterval(() => {
+  const ref = setInterval(() => {
     getMainWindow().send("update-frontend", {
       services: servicesManager.getServices(),
       currentFocusSession: getCurrentFocusSession(),
     });
   }, 1000);
+  storeIntervallRef(ref)
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {

@@ -4,12 +4,12 @@ const {
   deleteFutureFocusSession,
 } = require("../db/db");
 
-module.exports = (start, end, id=null) => {
+module.exports = (start, end, id = null) => {
   if (!id) {
-    let id = createNewFutureFocusSession(start, end)
+    let id = createNewFutureFocusSession(start, end);
   }
   // if id is provided, don't create the focus session again, just schedule
-  else id = id
+  else id = id;
 
   setTimeout(() => {
     // start focus session (this also creates a new object in the currentFocusSession db key)
