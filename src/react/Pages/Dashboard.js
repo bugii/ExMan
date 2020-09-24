@@ -11,6 +11,7 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Rating from "@material-ui/lab/Rating";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import ServiceMessageSummaryBox from "../components/Summary/ServiceMessageSummaryBox";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -38,7 +39,7 @@ export const LoadingDiv = styled.div`
   background: ${Colors.snow};
 `;
 
-function Dashboard() {
+function Dashboard(props) {
   const [pastFocusSessions, setPastFocusSessions] = useState([]);
   const [futureFocusSessions, setFutureFocusSessions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -129,31 +130,13 @@ function Dashboard() {
                     <b>Focus Session ID: &nbsp;</b>
                     {focusSession.id}
                   </div>
-                  <div>
-                    <b>Services: </b>
-                  </div>
-                  <List>
-                    {focusSession.services.length > 0
-                      ? focusSession.services.map((service) => (
-                          <ListItem key={service.id}>
-                            <ListItemText>
-                              <p style={{ margin: 5 }}>
-                                <b>{service.name}</b>
-                              </p>
-                              {service.messages.length > 0
-                                ? service.messages.map((message) => (
-                                    <div key={message.body}>
-                                      {service.name == "whatsapp"
-                                        ? message.body.slice(0, -9)
-                                        : message.body}
-                                    </div>
-                                  ))
-                                : "none"}
-                            </ListItemText>
-                          </ListItem>
-                        ))
-                      : "No services active during this focus session :("}
-                  </List>
+                  <ServiceMessageSummaryBox formatTime={props.formatTime}
+                                            focusSession={focusSession}
+                                            offeredServices={props.offeredServices}
+                                            setActiveService={props.setActiveService}
+                                            backgroundColor={Colors.snow}
+                                            charLimit={60}
+                  />
                 </AccordionDetails>
               </Accordion>
             ))}

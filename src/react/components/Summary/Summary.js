@@ -5,11 +5,10 @@ import PostFocusPopup from "../Focus/Popups/PostFocusPopup";
 import CloseIcon from "@material-ui/icons/Close";
 import {useHistory} from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
-import Service from "../Navbar/Service";
-import Table from "@material-ui/core/Table";
 import sampleSummaryChart1 from "../../images/sampleSummaryChart1.png";
 import sampleSummaryChart2 from "../../images/sampleSummaryChart2.png";
 import MessagesChart from "./MessagesChart";
+import ServiceMessageSummaryBox from "./ServiceMessageSummaryBox";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -63,12 +62,6 @@ function Summary(props) {
         ipcRenderer.send("get-previous-focus-session");
     }, []);
 
-    const formatTime = (inputTime) => {
-        let time = new Date();
-        time.setTime(inputTime);
-        return time.getHours() + ":" + ("0" + time.getMinutes()).substr(-2);
-    };
-
     return (
         <SummaryDiv>
             {showPostFocusPopup && focusSession ? (
@@ -90,8 +83,8 @@ function Summary(props) {
             {focusSession ? (
                 <div>
                     <p>
-                        from {formatTime(focusSession.startTime)} to{" "}
-                        {formatTime(focusSession.endTime)}
+                        from {props.formatTime(focusSession.startTime)} to{" "}
+                        {props.formatTime(focusSession.endTime)}
                     </p>
                     <ChartsDiv>
                         <MessagesChart/>
@@ -102,43 +95,13 @@ function Summary(props) {
                             style={{maxHeight: 300}}
                         />
                     </ChartsDiv>
-                    <div style={{display: "flex", flexDirection: "column"}}>
-                        <Table>
-                            {focusSession.services.map((service) => (
-                                <tr>
-                                    <td style={{width: 150}}>
-                                        <Service
-                                            key={service.id}
-                                            id={service.id}
-                                            setActiveService={props.setActiveService}
-                                            name={service.name}
-                                            unreadCount={service.unreadCount}
-                                            icon={props.offeredServices[service.name].icon}
-                                            deleteApp={props.deleteApp}
-                                        />
-                                    </td>
-                                    {service.messages.length > 0
-                                        ? service.messages.map((message) => (
-                                            <tr>
-                                                <td>{formatTime(message.timestamp)}</td>
-                                                <td>{message.title}</td>
-                                                <td>
-                                                    {service.name === "whatsapp"
-                                                        ? message.body.slice(0, -9)
-                                                        : message.body}
-                                                </td>
-                                            </tr>
-                                        ))
-                                        : <tr>
-                                            <td>09:35</td>
-                                            <td>Taylor</td>
-                                            <td>This is a test message...</td>
-                                        </tr>
-                                    }
-                                </tr>
-                            ))}
-                        </Table>
-                    </div>
+                    <ServiceMessageSummaryBox formatTime={props.formatTime}
+                                              focusSession={focusSession}
+                                              offeredServices={props.offeredServices}
+                                              setActiveService={props.setActiveService}
+                                              backgroundColor={"white"}
+                                              charLimit={120}
+                    />
                 </div>
             ) : null}
         </SummaryDiv>
