@@ -130,13 +130,31 @@ function Dashboard(props) {
                     <b>Focus Session ID: &nbsp;</b>
                     {focusSession.id}
                   </div>
-                  <ServiceMessageSummaryBox formatTime={props.formatTime}
-                                            focusSession={focusSession}
-                                            offeredServices={props.offeredServices}
-                                            setActiveService={props.setActiveService}
-                                            backgroundColor={Colors.snow}
-                                            charLimit={60}
-                  />
+                  <div>
+                    <b>Services: </b>
+                  </div>
+                  <List>
+                    {focusSession.services.length > 0
+                      ? focusSession.services.map((service) => (
+                          <ListItem key={service.id}>
+                            <ListItemText>
+                              <p style={{ margin: 5 }}>
+                                <b>{service.name}</b>
+                              </p>
+                              {service.messages.length > 0
+                                ? service.messages.map((message) => (
+                                    <div key={message.body}>
+                                      {service.name === "whatsapp"
+                                        ? message.body.slice(0, -9)
+                                        : message.body}
+                                    </div>
+                                  ))
+                                : "none"}
+                            </ListItemText>
+                          </ListItem>
+                        ))
+                      : "No services active during this focus session :("}
+                  </List>
                 </AccordionDetails>
               </Accordion>
             ))}

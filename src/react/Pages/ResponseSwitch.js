@@ -22,7 +22,7 @@ export default function SwitchesSize(props) {
               onChange={() => toggleChecked(service.id)}
             />
           }
-          label={service.id}
+          label={service.name}
         />
       );
     }

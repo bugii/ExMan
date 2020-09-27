@@ -37,7 +37,12 @@ const focusStart = require("./utils/focusStart");
 const focusEnd = require("./utils/focusEnd");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 const scheduleFocus = require("./utils/scheduleFocus");
-const { storeMainWindow, getMainWindow, getFocus, storeIntervallRef } = require("./db/memoryDb");
+const {
+  storeMainWindow,
+  getMainWindow,
+  getFocus,
+  storeIntervallRef,
+} = require("./db/memoryDb");
 const exportDb = require("./utils/exportDb");
 const servicesManager = require("./services/ServicesManger");
 const eventEmitter = require("./utils/eventEmitter");
@@ -300,7 +305,7 @@ app.whenReady().then(async () => {
       currentFocusSession: getCurrentFocusSession(),
     });
   }, 1000);
-  storeIntervallRef(ref)
+  storeIntervallRef(ref);
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {
