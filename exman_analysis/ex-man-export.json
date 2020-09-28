@@ -1,0 +1,1331 @@
+[
+  {
+    "id": "85d39fc5-251e-42e3-b410-9c96c982ce23",
+    "startTime": 1600874109565,
+    "endTime": 1600874173297,
+    "originalEndTime": 1600874349565,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 2,
+        "autoReplied": [
+          { "channel": "D018SBKB15F" },
+          { "channel": "D015HNN3JF9" }
+        ],
+        "messages": 3,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 1,
+        "autoReplied": [],
+        "messages": 1,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "e12e8020-dca7-4348-89b9-5a31c8a233f5",
+    "startTime": 1600878178966,
+    "endTime": 1600878182332,
+    "originalEndTime": 1600880578966,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "baf60e74-4f50-4016-a981-bd8dc7057e01",
+    "startTime": 1600878849565,
+    "endTime": 1600878882166,
+    "originalEndTime": 1600879089565,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 1,
+        "autoReplied": [{ "channel": "D018SBKB15F" }],
+        "messages": 5,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": 4
+  },
+  {
+    "id": "77a2a424-91ab-4af8-aa10-8e60c67814bd",
+    "startTime": 1600879646424,
+    "endTime": 1600879669591,
+    "originalEndTime": 1600882046424,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 1,
+        "autoReplied": [{ "channel": "D018SBKB15F" }],
+        "messages": 6,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "bd2f5d1c-36ee-4a6e-ae09-2280541c4580",
+    "startTime": 1600881048362,
+    "endTime": 1600881102009,
+    "originalEndTime": 1600881288362,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 1,
+        "autoReplied": [{ "channel": "D018SBKB15F" }],
+        "messages": 6,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": 4
+  },
+  {
+    "id": "9fd4a45a-e197-4602-ae94-c33f3d0fc63d",
+    "startTime": 1600883802074,
+    "endTime": 1600884948827,
+    "originalEndTime": 1600886202074,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "ed1b5ac4-18bb-4de7-aff4-05101cb1c49e",
+    "startTime": 1600885689124,
+    "endTime": 1600885694146,
+    "originalEndTime": 1600888089124,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "945b1d5e-40d9-4054-a727-65ad0ee7dc87",
+    "startTime": 1600886807185,
+    "endTime": 1600886810167,
+    "originalEndTime": 1600889207185,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "342dff2e-5460-454f-b213-00f6d05863fd",
+    "startTime": 1600887347440,
+    "endTime": 1600887350963,
+    "originalEndTime": 1600889747440,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "e4b61597-f75a-4ff2-9cee-03b9f6f09c5e",
+    "startTime": 1600887428860,
+    "endTime": 1600887432658,
+    "originalEndTime": 1600889828860,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "cff41740-32a4-484a-a7a6-f705d2ace033",
+    "startTime": 1600887529212,
+    "endTime": 1600887532819,
+    "originalEndTime": 1600889929212,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "c02e5201-bf22-429f-8285-9ba9d175ade1",
+    "startTime": 1600887611748,
+    "endTime": 1600887614542,
+    "originalEndTime": 1600890011748,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "decc50cc-ee8a-44ef-9b73-34855d650e69",
+    "startTime": 1600887738196,
+    "endTime": 1600887743635,
+    "originalEndTime": 1600890138196,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "3b2fe068-6050-4827-af78-76f5e3805d3e",
+    "startTime": 1600887856265,
+    "endTime": 1600887860316,
+    "originalEndTime": 1600890256265,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "5f3a6f1f-98eb-49eb-bbf3-79eb9c348d24",
+    "startTime": 1600887992599,
+    "endTime": 1600887995859,
+    "originalEndTime": 1600890392599,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "f422ca71-7a1f-474f-9edb-f4336069627a",
+    "startTime": 1600888637708,
+    "endTime": 1600888641163,
+    "originalEndTime": 1600891037708,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 2,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "a2b0f1bd-8a60-406a-a45f-db2eca54230e",
+    "startTime": 1601021807501,
+    "endTime": 1601021812085,
+    "originalEndTime": 1601022047501,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 1,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "cbdb4c6b-2433-46bb-9786-dfaa51546b35",
+    "startTime": 1601024884747,
+    "endTime": 1601024888155,
+    "originalEndTime": 1601027284747,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "977fd9e3-0e8f-4a93-a98e-ba83663f0281",
+    "startTime": 1601124274424,
+    "endTime": 1601124277436,
+    "originalEndTime": 1601124514424,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "f32ffe80-0543-460b-9251-44d857276958",
+    "startTime": 1601132289528,
+    "endTime": 1601132292459,
+    "originalEndTime": 1601134689528,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "932dd855-9efd-4fc0-84e8-f94a91ee4f1d",
+    "startTime": 1601132314477,
+    "endTime": 1601132358583,
+    "originalEndTime": 1601134714477,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "c74a6389-5f7b-4d1a-992d-e867a3e49006",
+    "startTime": 1601132395532,
+    "endTime": 1601132610742,
+    "originalEndTime": 1601134795532,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 1,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "51d69737-19d8-4d14-af71-0d2ef75a7ed2",
+    "startTime": 1601132637859,
+    "endTime": 1601132679124,
+    "originalEndTime": 1601132877859,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "59c769de-bbad-473b-8ff1-eeaf7bb04e33",
+    "startTime": 1601229874578,
+    "endTime": 1601229878899,
+    "originalEndTime": 1601232274578,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "dd3c982b-223a-4533-bd3f-b85635267a24",
+    "startTime": 1601233704782,
+    "endTime": 1601233708044,
+    "originalEndTime": 1601236104782,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "bd198335-569b-44fa-a83b-e8450ec6ff38",
+    "startTime": 1601233992161,
+    "endTime": 1601233994800,
+    "originalEndTime": 1601236392161,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "9a181c3b-b581-4279-a970-9d4b6ffacfa8",
+    "startTime": 1601234249150,
+    "endTime": 1601234252012,
+    "originalEndTime": 1601236649150,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "26b6f2fb-4633-4b60-bb57-e6be34ffe3a7",
+    "startTime": 1601235545727,
+    "endTime": 1601235560851,
+    "originalEndTime": 1601237945727,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 4
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 5
+      }
+    ],
+    "brokenFocus": [[1601235551852, 1601235558553]],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "541dbbed-9f37-4b2c-8855-a5bcc6b30c8e",
+    "startTime": 1601235745683,
+    "endTime": 1601235778008,
+    "originalEndTime": 1601238145683,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 3
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 5
+      }
+    ],
+    "brokenFocus": [[1601235750439, 1601235773992]],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "c9372c34-17f4-4674-af78-e5cc36e7c792",
+    "startTime": 1601235829819,
+    "endTime": 1601235836349,
+    "originalEndTime": 1601238229819,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "13b1e04d-9a56-4693-ba62-eae98c302b2a",
+    "startTime": 1601235841223,
+    "endTime": 1601235894751,
+    "originalEndTime": 1601238241223,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "7686380f-5f33-4860-bf31-bda00ec6f7d2",
+    "startTime": 1601235901658,
+    "endTime": 1601235918033,
+    "originalEndTime": 1601238301658,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 10
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 10
+      }
+    ],
+    "brokenFocus": [[1601235905281, 1601235914308]],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "c013be1f-983d-4384-bbbc-b4820e992013",
+    "startTime": 1601236562711,
+    "endTime": 1601236565432,
+    "originalEndTime": 1601238962711,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "6317db8d-c339-460c-a7cc-e8fc35bdb6a4",
+    "startTime": 1601236927807,
+    "endTime": 1601236941355,
+    "originalEndTime": 1601239327807,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 7
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 18
+      }
+    ],
+    "brokenFocus": [[1601236931271, 1601236938991]],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "ba3200e1-9753-488d-91bd-8dacee383314",
+    "startTime": 1601237070971,
+    "endTime": 1601237077748,
+    "originalEndTime": 1601239470971,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "6d6bfee4-bd44-4406-96e5-9b0b8eb23b6d",
+    "startTime": 1601237085579,
+    "endTime": 1601237113318,
+    "originalEndTime": 1601239485579,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "372f9d28-d5cc-419a-9742-59cee52e6ee4",
+    "startTime": 1601237135978,
+    "endTime": 1601237152457,
+    "originalEndTime": 1601239535978,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 5
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 19
+      }
+    ],
+    "brokenFocus": [[1601237140146, 1601237149878]],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "3b2f160c-2c22-44ba-a3c5-d83e70b73341",
+    "startTime": 1601237623164,
+    "endTime": 1601237637648,
+    "originalEndTime": 1601240023164,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 13
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 10
+      }
+    ],
+    "brokenFocus": [[1601237627534, 1601237635358]],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "35319f71-2e6c-4069-870e-abf8b0a791b6",
+    "startTime": 1601240717536,
+    "endTime": 1601240720721,
+    "originalEndTime": 1601243117536,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "87c90f9b-3a02-4ee6-99f3-cacdc0431e56",
+    "startTime": 1601240766258,
+    "endTime": 1601240772810,
+    "originalEndTime": 1601243166258,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "7ceff3c7-2898-4717-9154-cf886afe5d62",
+    "startTime": 1601240800780,
+    "endTime": 1601240804982,
+    "originalEndTime": 1601243200780,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "297dd217-576a-45bc-8003-4cc6a5a8dcb9",
+    "startTime": 1601240811600,
+    "endTime": 1601240823619,
+    "originalEndTime": 1601243211600,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 7
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 14
+      }
+    ],
+    "brokenFocus": [[1601240815337, 1601240821357]],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "2c139759-a650-4624-a0ed-8c0695464c23",
+    "startTime": 1601241495686,
+    "endTime": 1601241511039,
+    "originalEndTime": 1601243895686,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 7
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 9
+      }
+    ],
+    "brokenFocus": [[1601241499192, 1601241507250]],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "61e45ff8-2b20-4090-b316-2eb08bcb1048",
+    "startTime": 1601242390807,
+    "endTime": 1601242394554,
+    "originalEndTime": 1601244790807,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "2f19aedd-ba8a-41b0-a3a0-33af223ea913",
+    "startTime": 1601242587128,
+    "endTime": 1601242600299,
+    "originalEndTime": 1601242827128,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 1
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 4
+      }
+    ],
+    "brokenFocus": [[1601242593775, 1601242597272]],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "40041e6e-ce65-404f-9224-350a7c5f42aa",
+    "startTime": 1601243377688,
+    "endTime": 1601243403156,
+    "originalEndTime": 1601245777688,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 6
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 5
+      }
+    ],
+    "brokenFocus": [[1601243384283, 1601243389953]],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "6e978d9d-80dc-4d63-b49a-69cc73e342a7",
+    "startTime": 1601243744733,
+    "endTime": 1601243752428,
+    "originalEndTime": 1601246144733,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "82855b7f-b273-4008-886b-97b7b50a7f02",
+    "startTime": 1601244572986,
+    "endTime": 1601244576176,
+    "originalEndTime": 1601246972986,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [],
+    "goals": [],
+    "rating": null
+  },
+  {
+    "id": "a3061973-9fb7-4b33-9c43-7b5e4183825a",
+    "startTime": 1601244582465,
+    "endTime": 1601244596542,
+    "originalEndTime": 1601246982465,
+    "services": [
+      {
+        "id": "029e776a-8f37-4263-ae5c-6912395f27a0",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      },
+      {
+        "id": "569d57f7-2bf3-4f8a-b7aa-2994a4c898a1",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 0
+      }
+    ],
+    "brokenFocus": [
+      [1601244587011, 1601244588215],
+      [1601244592899, 1601244594109]
+    ],
+    "goals": [],
+    "rating": null
+  }
+]
