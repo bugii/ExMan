@@ -8,9 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Service from "../Navbar/Service";
 import Table from "@material-ui/core/Table";
 import LineChart from "./LineChart";
-import BarChart from "./BarChart";
-//import sampleSummaryChart1 from "../../images/sampleSummaryChart1.png";
-//import sampleSummaryChart2 from "../../images/sampleSummaryChart2.png";
+import DonutChart from "./DonutChart";
 //import MessagesChart from "./MessagesChart";
 import ServiceMessageSummaryBox from "./ServiceMessageSummaryBox";
 
@@ -92,7 +90,7 @@ function Summary(props) {
           </p>
           <ChartsDiv>
             <LineChart data={focusSession} />
-            <BarChart data={focusSession} />
+            <DonutChart data={focusSession} />
           </ChartsDiv>
           <ServiceMessageSummaryBox
             formatTime={props.formatTime}

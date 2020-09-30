@@ -71,6 +71,7 @@ function createNewFocusSession(startTime, endTime) {
     autoReplied: [],
     messages: [],
     inFocusModeClicks: 0,
+    scheduled: false,
   }));
 
   const id = uuidv4();
@@ -95,6 +96,7 @@ function createNewFutureFocusSession(startTime, endTime) {
       id,
       startTime,
       endTime,
+      scheduled: true,
     })
     .write();
 

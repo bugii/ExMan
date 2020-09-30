@@ -16,7 +16,7 @@ function focusStart(startTime, endTime, id = null) {
   // Only create new focus session if id is not provided: avoids overwriting of focus sessions if
   // the app was closed and reopened again (with a still ongoing focus session)
   if (!id) {
-    createNewFocusSession(startTime, endTime);
+    createNewFocusSession(startTime, endTime, false);
   }
 
   const diffMins = (endTime - startTime) / 1000 / 60;
