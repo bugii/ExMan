@@ -11,7 +11,7 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Rating from "@material-ui/lab/Rating";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import ServiceMessageSummaryBox from "../components/Summary/ServiceMessageSummaryBox";
+//import ServiceMessageSummaryBox from "../components/Summary/ServiceMessageSummaryBox";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;

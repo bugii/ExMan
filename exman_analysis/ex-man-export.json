@@ -1,1 +1,110 @@
-[{"id":"3d3a44b5-4686-4b8c-b3e7-b27a498537f5","startTime":1601458375604,"endTime":1601458612199,"originalEndTime":1601459575604,"services":[{"id":"92591fcf-ae9b-49b7-8fe8-f3264652f749","name":"slack","unreadCount":1,"autoReplied":[],"messages":2,"inFocusModeClicks":1},{"id":"68b77ada-d0bb-4d85-9339-be812581caf0","name":"whatsapp","unreadCount":1,"autoReplied":[],"messages":1,"inFocusModeClicks":2}],"brokenFocus":[[1601458396695,1601458401754]],"goals":["testing the slack app","hope everything works"],"rating":null},{"id":"e568a771-bc0a-41df-a710-4ab616394b36","startTime":1601458742511,"endTime":1601458988694,"originalEndTime":1601459942511,"services":[{"id":"92591fcf-ae9b-49b7-8fe8-f3264652f749","name":"slack","unreadCount":0,"autoReplied":[{"channel":"D018SBKB15F"}],"messages":2,"inFocusModeClicks":2},{"id":"68b77ada-d0bb-4d85-9339-be812581caf0","name":"whatsapp","unreadCount":0,"autoReplied":[],"messages":1,"inFocusModeClicks":1}],"brokenFocus":[[1601458967051,1601458987065]],"goals":["zoom call","langwiielig"],"rating":5},{"id":"31b8eb8d-bf9e-4f87-ac42-626de4dadd8d","startTime":1601460275465,"endTime":1601460325367,"originalEndTime":1601462675465,"services":[{"id":"92591fcf-ae9b-49b7-8fe8-f3264652f749","name":"slack","unreadCount":0,"autoReplied":[],"messages":0,"inFocusModeClicks":2},{"id":"68b77ada-d0bb-4d85-9339-be812581caf0","name":"whatsapp","unreadCount":0,"autoReplied":[],"messages":0,"inFocusModeClicks":2}],"brokenFocus":[[1601460297684,1601460322847]],"goals":["many tests","test if color graphs work"],"rating":null},{"id":"47ca007b-c270-407c-a675-92773ed7dcae","startTime":1601468409272,"endTime":1601468442931,"originalEndTime":1601468649272,"services":[{"id":"92591fcf-ae9b-49b7-8fe8-f3264652f749","name":"slack","unreadCount":0,"autoReplied":[],"messages":0,"inFocusModeClicks":11},{"id":"68b77ada-d0bb-4d85-9339-be812581caf0","name":"whatsapp","unreadCount":0,"autoReplied":[],"messages":0,"inFocusModeClicks":7}],"brokenFocus":[[1601468426642,1601468441087]],"goals":["shalalalalala"],"rating":0}]
+[
+  {
+    "id": "3d3a44b5-4686-4b8c-b3e7-b27a498537f5",
+    "startTime": 1601458375604,
+    "endTime": 1601458612199,
+    "originalEndTime": 1601459575604,
+    "services": [
+      {
+        "id": "92591fcf-ae9b-49b7-8fe8-f3264652f749",
+        "name": "slack",
+        "unreadCount": 1,
+        "autoReplied": [],
+        "messages": 2,
+        "inFocusModeClicks": 1
+      },
+      {
+        "id": "68b77ada-d0bb-4d85-9339-be812581caf0",
+        "name": "whatsapp",
+        "unreadCount": 1,
+        "autoReplied": [],
+        "messages": 1,
+        "inFocusModeClicks": 2
+      }
+    ],
+    "brokenFocus": [[1601458396695, 1601458401754]],
+    "goals": ["testing the slack app", "hope everything works"],
+    "rating": null
+  },
+  {
+    "id": "e568a771-bc0a-41df-a710-4ab616394b36",
+    "startTime": 1601458742511,
+    "endTime": 1601458988694,
+    "originalEndTime": 1601459942511,
+    "services": [
+      {
+        "id": "92591fcf-ae9b-49b7-8fe8-f3264652f749",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [{ "channel": "D018SBKB15F" }],
+        "messages": 2,
+        "inFocusModeClicks": 2
+      },
+      {
+        "id": "68b77ada-d0bb-4d85-9339-be812581caf0",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 1,
+        "inFocusModeClicks": 1
+      }
+    ],
+    "brokenFocus": [[1601458967051, 1601458987065]],
+    "goals": ["zoom call", "langwiielig"],
+    "rating": 5
+  },
+  {
+    "id": "31b8eb8d-bf9e-4f87-ac42-626de4dadd8d",
+    "startTime": 1601460275465,
+    "endTime": 1601460325367,
+    "originalEndTime": 1601462675465,
+    "services": [
+      {
+        "id": "92591fcf-ae9b-49b7-8fe8-f3264652f749",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 2
+      },
+      {
+        "id": "68b77ada-d0bb-4d85-9339-be812581caf0",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 2
+      }
+    ],
+    "brokenFocus": [[1601460297684, 1601460322847]],
+    "goals": ["many tests", "test if color graphs work"],
+    "rating": null
+  },
+  {
+    "id": "47ca007b-c270-407c-a675-92773ed7dcae",
+    "startTime": 1601468409272,
+    "endTime": 1601468442931,
+    "originalEndTime": 1601468649272,
+    "services": [
+      {
+        "id": "92591fcf-ae9b-49b7-8fe8-f3264652f749",
+        "name": "slack",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 11
+      },
+      {
+        "id": "68b77ada-d0bb-4d85-9339-be812581caf0",
+        "name": "whatsapp",
+        "unreadCount": 0,
+        "autoReplied": [],
+        "messages": 0,
+        "inFocusModeClicks": 7
+      }
+    ],
+    "brokenFocus": [[1601468426642, 1601468441087]],
+    "goals": ["shalalalalala"],
+    "rating": 0
+  }
+]

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import styled from "styled-components";
 import moment from "moment";
@@ -18,7 +18,7 @@ function LineChart(props) {
   const timechanger = (timestamp) => {
     let coeff = 1000 * 60 * 5;
     let rounded = new Date(Math.round(timestamp / coeff) * coeff);
-    return rounded.toString();
+    return rounded;
   };
 
   const labelcreator = (focusStart, focusEnd) => {
@@ -31,6 +31,10 @@ function LineChart(props) {
     }
     //console.log(labels);
   };
+
+  const [startTime, setStartTime] = useState(true);
+  const [endTime, setEndTime] = useState(true);
+  const [timedata, setTimedata] = useState([]);
 
   useEffect(() => {
     const focusSession = props.data;
@@ -51,21 +55,55 @@ function LineChart(props) {
     const focusStart = props.data.startTime;
     const focusEnd = props.data.endTime;
     labelcreator(focusStart, focusEnd);
+    setStartTime(focusStart);
+    setEndTime(focusEnd);
+
+    setTimedata(timestampArray);
   }, []);
 
   const data = {
-    labels: [1, 2, 3],
+    labels: timedata,
     datasets: [
       {
         label: "incoming messages for the previous focus session",
-        data: [1, 2, 3],
+        data: timedata,
       },
     ],
   };
 
+  const options = {
+    scales: {
+      xAxes: [
+        {
+          type: "time",
+          ticks: {
+            minRotation: 30,
+            maxRotation: 60,
+            min: startTime,
+            max: endTime,
+          },
+          time: {
+            minUnit: "minute",
+            displayFormats: {
+              second: "YYYY-MM-DD HH:mm:ss",
+              minute: " HH:mm",
+              hour: "YYYY-MM-DD HH",
+              //  day: "YYYY-MM-DD",
+              //  week: "YYYY-MM-DD",
+              //  month: "YYYY-MM",
+              //  quarter: "YYYY [Q]Q",
+              //  year: "YYYY",
+            },
+            tooltipFormat: "HH:mm:ss",
+          },
+        },
+      ],
+    },
+  };
+
   return (
     <CustomLine>
-      <Line data={data} />
+      <Line data={data} options={options} />
     </CustomLine>
   );
 }
