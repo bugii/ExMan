@@ -3,6 +3,7 @@ import styled from "styled-components";
 import TodayIcon from "@material-ui/icons/Today";
 import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Colors from "../Colors";
 import { useHistory } from "react-router-dom";
 
@@ -33,8 +34,8 @@ const MenuIcon = styled.div`
 function MenuBoxes(props) {
   let history = useHistory();
 
-  const openAddingApp = () => {
-    history.push("/add-service");
+  const openDashboard = () => {
+    history.push("/dashboard");
   };
 
   return (
@@ -51,11 +52,11 @@ function MenuBoxes(props) {
         </MenuIcon>
         schedule focus
       </MenuBoxDiv>
-      <MenuBoxDiv onClick={openAddingApp}>
+      <MenuBoxDiv onClick={openDashboard}>
         <MenuIcon>
-          <AddCircleOutlineIcon style={{ fontSize: 150 }} />
+          <EqualizerIcon style={{ fontSize: 150 }} />
         </MenuIcon>
-        add app
+        dashboard
       </MenuBoxDiv>
     </MenuBoxContainer>
   );
