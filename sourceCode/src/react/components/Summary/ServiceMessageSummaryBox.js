@@ -4,12 +4,6 @@ import React, {useState} from "react";
 
 export default function ServiceMessageSummaryBox(props) {
 
-    const [noMessages, setNoMessages] = useState(true);
-
-    const countNewMessages = () => {
-
-    };
-
     const shortenMessage = (msg) => {
         let shortMessage = msg;
         if(shortMessage.length > props.charLimit)
@@ -46,7 +40,23 @@ export default function ServiceMessageSummaryBox(props) {
                                 </td>
                             </tr>
                             ))}
-                        </tr> : ""
+                        </tr> :
+                        <tr style={{backgroundColor: props.backgroundColor, borderRadius: 25}}>
+                            <td style={{width: 150}}>
+                                <Service
+                                    key={service.id}
+                                    id={service.id}
+                                    setActiveService={props.setActiveService}
+                                    name={service.name}
+                                    unreadCount={service.unreadCount}
+                                    icon={props.offeredServices[service.name].icon}
+                                    deleteApp={props.deleteApp}
+                                />
+                            </td>
+                            <td>
+                                No messages received.
+                            </td>
+                        </tr>
                 ))}
             </Table>
         </div>

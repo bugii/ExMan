@@ -22,6 +22,7 @@ const {
   getCurrentFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
+  deleteFutureFocusSession,
   updateAutoresponse,
   getAllFutureFocusSessions,
   setEndTime,
@@ -229,6 +230,11 @@ ipcMain.on("get-previous-focus-session", (e, args) => {
 
 ipcMain.on("get-all-past-focus-sessions", (e, args) => {
   e.reply("get-all-past-focus-sessions", getAllFocusSessions());
+});
+
+ipcMain.on("cancel-future-focus-session", (e, sessionId) => {
+  console.log("delete future session, id: ", sessionId);
+  deleteFutureFocusSession(sessionId);
 });
 
 ipcMain.on("updateAutoResponse", (e, message) => {

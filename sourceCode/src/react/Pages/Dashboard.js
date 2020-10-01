@@ -11,7 +11,8 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Grid from "@material-ui/core/Grid";
 import Rating from "@material-ui/lab/Rating";
 import CircularProgress from "@material-ui/core/CircularProgress";
-//import ServiceMessageSummaryBox from "../components/Summary/ServiceMessageSummaryBox";
+import ServiceMessageSummaryBox from "../components/Summary/ServiceMessageSummaryBox";
+import Button from "@material-ui/core/Button";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -82,6 +83,11 @@ function Dashboard(props) {
     );
   };
 
+  const cancelFutureSession = (sessionId) => {
+    console.log("Cancelling session: ", sessionId);
+    ipcRenderer.send("cancel-future-focus-session", sessionId);
+  };
+
   if (isLoading) {
     return (
       <LoadingDiv>
@@ -126,35 +132,12 @@ function Dashboard(props) {
                   />
                 </AccordionSummary>
                 <AccordionDetails style={{ flexDirection: "column" }}>
-                  <div style={{ marginBottom: 10 }}>
-                    <b>Focus Session ID: &nbsp;</b>
-                    {focusSession.id}
-                  </div>
-                  <div>
-                    <b>Services: </b>
-                  </div>
-                  <List>
-                    {focusSession.services.length > 0
-                      ? focusSession.services.map((service) => (
-                          <ListItem key={service.id}>
-                            <ListItemText>
-                              <p style={{ margin: 5 }}>
-                                <b>{service.name}</b>
-                              </p>
-                              {service.messages.length > 0
-                                ? service.messages.map((message) => (
-                                    <div key={message.body}>
-                                      {service.name === "whatsapp"
-                                        ? message.body.slice(0, -9)
-                                        : message.body}
-                                    </div>
-                                  ))
-                                : "none"}
-                            </ListItemText>
-                          </ListItem>
-                        ))
-                      : "No services active during this focus session :("}
-                  </List>
+                  <ServiceMessageSummaryBox formatTime={props.formatTime}
+                                            focusSession={focusSession}
+                                            offeredServices={props.offeredServices}
+                                            setActiveService={props.setActiveService}
+                                            backgroundColor={Colors.snow}
+                                            charLimit={60}/>
                 </AccordionDetails>
               </Accordion>
             ))}
@@ -176,11 +159,10 @@ function Dashboard(props) {
                     focusSession.endTime
                   )}
                 </AccordionSummary>
-                <AccordionDetails>
-                  <div>
-                    <b>Focus Session ID: &nbsp;</b>
-                    {focusSession.id}
-                  </div>
+                <AccordionDetails style={{justifyContent: "center"}}>
+                  <Button variant= "contained" onClick={() => cancelFutureSession(focusSession.id)} >
+                    Cancel Session
+                  </Button>
                 </AccordionDetails>
               </Accordion>
             ))}
