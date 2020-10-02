@@ -18,6 +18,9 @@ import ErrorWrongFocusDuration from "./components/Error/ErrorWrongFocusDuration"
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
+const log = window.require("electron-log");
+
+console.log = log.log;
 
 function App() {
   const [services, setServices] = useState([]);
