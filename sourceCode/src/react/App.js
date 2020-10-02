@@ -89,6 +89,15 @@ function App() {
       history.push("/services");
       setActiveService(id);
     });
+
+    ipcRenderer.on("notification", (e, { id, title, body }) => {
+      const n = new Notification(title, {
+        body,
+      });
+      n.onclick = () => {
+        ipcRenderer.send("notification-clicked", id);
+      };
+    });
   }, []);
 
   return (

@@ -3,12 +3,13 @@ const {
   app,
   BrowserWindow,
   ipcMain,
-  Notification,
   webContents,
   shell,
   systemPreferences,
   Menu,
 } = require("electron");
+
+const log = require("electron-log");
 
 const {
   hasScreenCapturePermission,
@@ -55,6 +56,7 @@ const isWrongFocusDuration = require("./utils/isWrongFocusDuration");
 
 const isMac = process.platform === "darwin";
 
+log.info("starting app");
 // Initialize db
 db_init();
 servicesManager.init();
@@ -223,22 +225,24 @@ ipcMain.on("previous-session-update", (e, { rating }) => {
 
 ipcMain.on("notification", (event, { id, title, body }) => {
   if (!getFocus()) {
-    console.log("forward notification", id);
+    log.info("forward notification", id);
     // forward notification
-    const notification = new Notification({ title, body, silent: true });
-    notification.on("click", async () => {
-      await getMainWindow().restore();
-      await getMainWindow().show();
-      openService(id);
-    });
-    notification.show();
+    // try to send it to renderer and use html notifcation api there
+    getMainWindow().send("notification", { id, title, body });
     // Also store the notification in archive
     storeNotificationInArchive(id);
   } else {
-    console.log("block notification", id);
+    log.info("block notification", id);
     // if there is a focus session ongoing, store the notification
     storeNotification(id, title, body);
   }
+});
+
+ipcMain.on("notification-clicked", (e, id) => {
+  log.info("clicked on notification", id);
+  getMainWindow().restore();
+  getMainWindow().show();
+  openService(id);
 });
 
 ipcMain.on("get-previous-focus-session", (e, args) => {
@@ -294,6 +298,7 @@ async function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       webviewTag: true,
+      enableRemoteModule: true,
     },
   });
 
