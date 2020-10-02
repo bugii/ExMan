@@ -43,6 +43,7 @@ const {
   getMainWindow,
   getFocus,
   storeIntervallRef,
+  storeTimeoutRef,
 } = require("./db/memoryDb");
 const exportDb = require("./utils/exportDb");
 const servicesManager = require("./services/ServicesManger");
@@ -225,9 +226,9 @@ ipcMain.on("notification", (event, { id, title, body }) => {
     console.log("forward notification", id);
     // forward notification
     const notification = new Notification({ title, body, silent: true });
-    notification.on("click", () => {
-      getMainWindow().restore();
-      getMainWindow().show();
+    notification.on("click", async () => {
+      await getMainWindow().restore();
+      await getMainWindow().show();
       openService(id);
     });
     notification.show();
@@ -293,7 +294,6 @@ async function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       webviewTag: true,
-      //   webSecurity: isDev ? false : true,
     },
   });
 
@@ -303,7 +303,7 @@ async function createWindow() {
   await mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
-      : `file://${path.join(__dirname, "../../build/index.html")}`
+      : `file://${path.join(__dirname, "../../../build/index.html")}`
   );
   if (isDev) mainWindow.webContents.openDevTools({ mode: "detach" });
   storeMainWindow(mainWindow);
@@ -332,13 +332,14 @@ app.whenReady().then(async () => {
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {
-    setTimeout(async () => {
+    const ref = setTimeout(async () => {
       await systemPreferences.askForMediaAccess("microphone");
       await systemPreferences.askForMediaAccess("camera");
       if (!hasPromptedForPermission()) {
         hasScreenCapturePermission();
       }
     }, 5000);
+    storeTimeoutRef(ref);
   }
 
   getMainWindow().on("close", (e) => {

@@ -7,7 +7,11 @@
     "buildResources": "rescources"
   },
   "extends": null,
-  "files": ["./build/**/*", "./src/electron/**/*", "rescources/icon.png"],
+  "files": [
+    "./build/**/*",
+    "./sourceCode/src/electron/**/*",
+    "rescources/icon.png"
+  ],
   "mac": {
     "entitlements": "resources/entitlements.mac.plist",
     "extendInfo": {

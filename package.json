@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "author": "ExMan Group",
   "description": "Expectation Management in digital Communication",
-  "main": "src/electron/electron.js",
+  "main": "sourceCode/src/electron/electron.js",
   "homepage": ".",
   "scripts": {
     "electron-run": "electron .",
