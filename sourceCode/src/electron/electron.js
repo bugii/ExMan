@@ -50,6 +50,7 @@ const eventEmitter = require("./utils/eventEmitter");
 const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
 const handleWindowClose = require("./utils/handleWindowClose");
 const isOverlappingWithFocusSessions = require("./utils/isOverlappingWithFocusSessions");
+const isWrongFocusDuration = require("./utils/isWrongFocusDuration");
 
 const isMac = process.platform === "darwin";
 
@@ -164,6 +165,13 @@ ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
     );
     return;
   }
+  if (isWrongFocusDuration(startTime, endTime)) {
+    e.reply("error", "/wrong-duration");
+    console.log(
+      "error wrong focus duration - either negative value or over 10h"
+    );
+    return;
+  }
 
   focusStart(startTime, endTime);
 });
@@ -178,6 +186,14 @@ ipcMain.on("focus-schedule-request", (e, { startTime, endTime }) => {
     );
     return;
   }
+  if (isWrongFocusDuration(startTime, endTime)) {
+    e.reply("error", "/wrong-duration");
+    console.log(
+      "error wrong focus duration - either negative value or over 10h"
+    );
+    return;
+  }
+
   scheduleFocus(startTime, endTime);
 });
 
