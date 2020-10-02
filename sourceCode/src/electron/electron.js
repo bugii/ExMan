@@ -235,6 +235,7 @@ ipcMain.on("get-all-past-focus-sessions", (e, args) => {
 ipcMain.on("cancel-future-focus-session", (e, sessionId) => {
   console.log("delete future session, id: ", sessionId);
   deleteFutureFocusSession(sessionId);
+  e.reply("get-all-future-focus-sessions", getAllFutureFocusSessions());
 });
 
 ipcMain.on("updateAutoResponse", (e, message) => {
