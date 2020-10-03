@@ -15,6 +15,7 @@ import ErrorNotAuthed from "./components/Error/ErrorNotAuthed";
 import ErrorAlreadyInFocus from "./components/Error/ErrorAlreadyInFocus";
 import ErrorFocusOverlap from "./components/Error/ErrorFocusOverlap";
 import ErrorWrongFocusDuration from "./components/Error/ErrorWrongFocusDuration";
+import RandomProductivityPopup from "./components/Main/RandomProductivityPopup";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -26,6 +27,7 @@ function App() {
   const [services, setServices] = useState([]);
   const [activeService, setActiveService] = useState(null);
   const [currentFocusSession, setCurrentFocusSession] = useState(null);
+  const [showRandomPopUp, setShowRandomPopUp] = useState(false);
 
   let history = useHistory();
   let location = useLocation();
@@ -101,6 +103,10 @@ function App() {
         ipcRenderer.send("notification-clicked", id);
       };
     });
+
+    ipcRenderer.on("random-popup-survey", () => {
+      setShowRandomPopUp(true);
+    });
   }, []);
 
   return (
@@ -121,6 +127,11 @@ function App() {
           currentPath={location.pathname}
         />
       ) : null}
+
+      <RandomProductivityPopup
+        open={showRandomPopUp}
+        close={() => setShowRandomPopUp(false)}
+      />
 
       <div className="main-content">
         <Route path="/" exact>

@@ -29,6 +29,10 @@ function init() {
     db.set("messagesOutOfFocus", {}).write();
   }
 
+  if (!db.has("randomSurveyResults").value()) {
+    db.set("randomSurveyResults", []).write();
+  }
+
   // set default auto-response message, if not present
   if (!db.has("settings").value()) {
     db.set("settings", {
@@ -220,6 +224,16 @@ function setUnreadChats(id, number) {
     .write();
 }
 
+function storeRandomSurveyResults({ productivity, stress }) {
+  db.get("randomSurveyResults")
+    .push({
+      timestamp: new Date().getTime(),
+      productivity,
+      stress,
+    })
+    .write();
+}
+
 module.exports = {
   init,
   getDb,
@@ -245,4 +259,5 @@ module.exports = {
   setUnreadChats,
   storeBreakFocusClicks,
   updateBreakFocusPerService,
+  storeRandomSurveyResults,
 };

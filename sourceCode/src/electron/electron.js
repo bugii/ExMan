@@ -33,6 +33,7 @@ const {
   storeNotificationInArchive,
   storeBreakFocusClicks,
   updateBreakFocusPerService,
+  storeRandomSurveyResults,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
@@ -53,6 +54,7 @@ const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
 const handleWindowClose = require("./utils/handleWindowClose");
 const isOverlappingWithFocusSessions = require("./utils/isOverlappingWithFocusSessions");
 const isWrongFocusDuration = require("./utils/isWrongFocusDuration");
+const scheduleRandomPopup = require("./utils/scheduleRandomPopup");
 
 const isMac = process.platform === "darwin";
 
@@ -225,6 +227,14 @@ ipcMain.on("previous-session-update", (e, { rating }) => {
   // update goals with which were accomplished
 });
 
+ipcMain.on("random-popup-submission", (e, { productivity, stress }) => {
+  console.log(
+    `random popup survey submission, productivity: ${productivity}, stress: ${stress}`
+  );
+  storeRandomSurveyResults({ productivity, stress });
+  scheduleRandomPopup();
+});
+
 ipcMain.on("notification", (event, { id, title, body }) => {
   if (!getFocus()) {
     console.log("forward notification", id);
@@ -321,6 +331,8 @@ async function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
   await createWindow();
+
+  scheduleRandomPopup();
 
   getMainWindow().send("update-frontend", {
     services: servicesManager.getServices(),

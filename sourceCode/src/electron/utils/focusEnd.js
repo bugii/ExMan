@@ -1,4 +1,3 @@
-const { webContents } = require("electron");
 const { endCurrentFocusSession } = require("../db/db");
 const {
   getIntervallRefs,
@@ -8,6 +7,7 @@ const {
 } = require("../db/memoryDb");
 
 const serviceManager = require("../services/ServicesManger");
+const bringToFront = require("./bringToFront");
 
 function focusEnd() {
   console.log("focus end");
@@ -21,6 +21,7 @@ function focusEnd() {
 
   // End all 'global' (not the one of each service) timeouts (in case of an early termination of the focus session)
   getTimeoutRefs().forEach((timeoutRef) => clearTimeout(timeoutRef));
+  getIntervallRefs().forEach((intervallRef) => clearInterval(intervallRef));
 
   // remove current focus session from db
   endCurrentFocusSession();
@@ -28,6 +29,8 @@ function focusEnd() {
   getMainWindow().webContents.send("focus-end-successful");
 
   setFocus(false);
+
+  bringToFront();
 }
 
 module.exports = focusEnd;
