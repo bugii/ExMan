@@ -7,10 +7,6 @@ ipcRenderer.on("id", (e, id) => {
   window.serviceId = id;
 });
 
-console.log(remote.session.defaultSession);
-window.defaultSession = remote.session.defaultSession;
-console.log(localStorage);
-
 function getToken() {
   var security_objects = JSON.parse(localStorage.getItem("localConfig_v2"))[
     "teams"

@@ -6,7 +6,8 @@ const { setUnreadChats } = require("../db/db");
 
 module.exports = class TeamsService extends Service {
   constructor(id, autoResponse, checkIfAllAuthed) {
-    console.log("creating slack service");
+    // clear session storage
+    console.log("creating teams service");
     super(id, "teams", autoResponse, checkIfAllAuthed);
   }
 

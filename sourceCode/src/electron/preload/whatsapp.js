@@ -5,11 +5,14 @@ console.log("in preload");
 ipcRenderer.on("id", (e, id) => {
   console.log("id", id);
   window.serviceId = id;
+  const interval = setInterval(() => {
+    const titleEl = document.querySelector(".window-title");
+    if (titleEl && titleEl.innerHTML.includes("Google Chrome 49+")) {
+      // reloading
+      window.location.reload();
+    } else clearInterval(interval);
+  }, 1000);
 });
-
-console.log(remote.session.defaultSession);
-window.defaultSession = remote.session.defaultSession;
-console.log(localStorage);
 
 class newNotification extends window.Notification {
   constructor(title, opt) {
@@ -26,20 +29,6 @@ class newNotification extends window.Notification {
 }
 
 window.Notification = newNotification;
-
-var ses = remote.session.defaultSession; //Gets the default session
-ses.clearStorageData({
-  //Clears the specified storages in the session
-  storages: ["serviceworkers"],
-});
-
-const interval = setInterval(() => {
-  const titleEl = document.querySelector(".window-title");
-  if (titleEl && titleEl.innerHTML.includes("Google Chrome 49+")) {
-    // reloading
-    window.location.reload();
-  } else clearInterval(interval);
-}, 1000);
 
 window.getUnreadChats = () => {
   // Taken from Franz

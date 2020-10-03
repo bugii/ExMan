@@ -5,17 +5,17 @@ console.log("in preload");
 ipcRenderer.on("id", (e, id) => {
   console.log("id", id);
   window.serviceId = id;
-});
-
-console.log(remote.session.defaultSession);
-window.defaultSession = remote.session.defaultSession;
-console.log(localStorage);
-
-var ses = remote.session.defaultSession; //Gets the default session
-// ses.flushStorageData(); //Writes any unwritten DOMStorage data to disk
-ses.clearStorageData({
-  //Clears the specified storages in the session
-  storages: ["appcache", "serviceworkers", "cachestorage", "websql", "indexdb"],
+  const ses = remote.session.fromPartition(`persist:${id}`);
+  ses.clearStorageData({
+    //Clears the specified storages in the session
+    storages: [
+      "appcache",
+      "serviceworkers",
+      "cachestorage",
+      "websql",
+      "indexdb",
+    ],
+  });
 });
 
 function getTokens() {

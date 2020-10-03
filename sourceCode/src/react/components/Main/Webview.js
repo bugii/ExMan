@@ -41,6 +41,7 @@ function Webview(props) {
         ref={webviewRef}
         src={props.url}
         useragent={props.useragent}
+        partition={`persist:${props.id}`}
         allowpopups="true"
         disablewebsecurity="true"
         preload={`file://${remote.app.dirname}/preload/${props.name}.js`}

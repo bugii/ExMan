@@ -215,9 +215,11 @@ module.exports = class SlackService extends Service {
   }
 
   async getCookies() {
-    const cookies = await session.defaultSession.cookies.get({
-      url: "https://slack.com",
-    });
+    const cookies = await session
+      .fromPartition(`persist:${this.id}`)
+      .cookies.get({
+        url: "https://slack.com",
+      });
 
     let stringCookie = "";
 
