@@ -140,7 +140,6 @@ class ServicesManager {
     this.services.forEach((service) => {
       unreadCount += service.unreadCount;
     });
-    console.log(getFocus());
     if (unreadCount !== 0 && !getFocus()) {
       app.dock.setBadge(unreadCount.toString());
       getMainWindow().setOverlayIcon(
