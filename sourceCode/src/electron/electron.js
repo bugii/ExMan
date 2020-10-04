@@ -346,6 +346,7 @@ app.whenReady().then(async () => {
       services: servicesManager.getServices(),
       currentFocusSession: getCurrentFocusSession(),
     });
+    servicesManager.updateUnreadMessages();
   }, 1000);
   storeIntervallRef(ref);
 

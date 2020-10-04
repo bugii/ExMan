@@ -13,10 +13,10 @@ const scheduleFocus = require("../utils/scheduleFocus");
 let checked = false;
 
 module.exports = () => {
+  console.log("all services authed");
+
   if (checked) return;
   checked = true;
-
-  console.log("all services authed");
 
   // check if there is a currentFocus Session in the db and we have not started it yet -> start automatically
   const currentFocusSession = getCurrentFocusSession();

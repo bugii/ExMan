@@ -21,7 +21,6 @@ function focusEnd() {
 
   // End all 'global' (not the one of each service) timeouts (in case of an early termination of the focus session)
   getTimeoutRefs().forEach((timeoutRef) => clearTimeout(timeoutRef));
-  getIntervallRefs().forEach((intervallRef) => clearInterval(intervallRef));
 
   // remove current focus session from db
   endCurrentFocusSession();

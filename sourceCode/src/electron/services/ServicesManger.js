@@ -1,3 +1,4 @@
+const { app } = require("electron");
 const SlackService = require("./SlackService");
 const WhatsappService = require("./WhatsappService");
 const { v4: uuidv4 } = require("uuid");
@@ -6,9 +7,11 @@ const {
   deleteService: deleteServiceDb,
   getServices: getServicesDb,
 } = require("../db/db");
+const path = require("path");
 
 const eventEmitter = require("../utils/eventEmitter");
 const TeamsService = require("./TeamsService");
+const { getMainWindow, getFocus } = require("../db/memoryDb");
 
 // This is a singleton object that is used to manage (create, delete, etc) all services in memory
 
@@ -129,6 +132,27 @@ class ServicesManager {
       this.allAuthed = true;
       // only trigger the event if we are actually coming from the state where not all services were authed
       eventEmitter.emit("all-services-authed");
+    }
+  }
+
+  updateUnreadMessages() {
+    let unreadCount = 0;
+    this.services.forEach((service) => {
+      unreadCount += service.unreadCount;
+    });
+    console.log(getFocus());
+    if (unreadCount !== 0 && !getFocus()) {
+      app.dock.setBadge(unreadCount.toString());
+      getMainWindow().setOverlayIcon(
+        path.join(
+          __dirname,
+          `../assets/taskbar/win/taskbar-${Math.min(unreadCount, 10)}.png`
+        ),
+        `${Math.min(unreadCount, 10)} unread messages`
+      );
+    } else {
+      app.dock.setBadge("");
+      getMainWindow().setOverlayIcon(null, "no notifications");
     }
   }
 }
