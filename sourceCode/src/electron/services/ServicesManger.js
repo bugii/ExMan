@@ -13,6 +13,9 @@ const eventEmitter = require("../utils/eventEmitter");
 const TeamsService = require("./TeamsService");
 const { getMainWindow, getFocus } = require("../db/memoryDb");
 
+const isMac = process.platform === "darwin";
+const isWindows = process.platform === "win32";
+
 // This is a singleton object that is used to manage (create, delete, etc) all services in memory
 
 class ServicesManager {
@@ -141,17 +144,25 @@ class ServicesManager {
       unreadCount += service.unreadCount;
     });
     if (unreadCount !== 0 && !getFocus()) {
-      app.dock.setBadge(unreadCount.toString());
-      getMainWindow().setOverlayIcon(
-        path.join(
-          __dirname,
-          `../assets/taskbar/win/taskbar-${Math.min(unreadCount, 10)}.png`
-        ),
-        `${Math.min(unreadCount, 10)} unread messages`
-      );
+      if (isMac) {
+        app.dock.setBadge(unreadCount.toString());
+      }
+      if (isWindows) {
+        getMainWindow().setOverlayIcon(
+          path.join(
+            __dirname,
+            `../assets/taskbar/win/taskbar-${Math.min(unreadCount, 10)}.png`
+          ),
+          `${Math.min(unreadCount, 10)} unread messages`
+        );
+      }
     } else {
-      app.dock.setBadge("");
-      getMainWindow().setOverlayIcon(null, "no notifications");
+      if (isMac) {
+        app.dock.setBadge("");
+      }
+      if (isWindows) {
+        getMainWindow().setOverlayIcon(null, "no notifications");
+      }
     }
   }
 }
