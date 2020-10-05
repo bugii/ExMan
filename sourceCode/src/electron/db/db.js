@@ -202,10 +202,11 @@ function storeNotification(id, title, body) {
 
 function storeNotificationInArchive(id) {
   const hasMessages = db.get("messagesOutOfFocus").has(id).value();
+  const serviceName = db.get("services").find({ id }).get("name").value();
 
   if (!hasMessages) {
     db.get("messagesOutOfFocus")
-      .assign({ [id]: { messages: [] } })
+      .assign({ [id]: { name: serviceName, messages: [] } })
       .write();
   }
 
@@ -234,6 +235,14 @@ function storeRandomSurveyResults({ productivity, stress }) {
     .write();
 }
 
+function getOutOfFocusMessages() {
+  return db.get("messagesOutOfFocus").value();
+}
+
+function getRandomSurveyResults() {
+  return db.get("randomSurveyResults").value();
+}
+
 module.exports = {
   init,
   getDb,
@@ -260,4 +269,6 @@ module.exports = {
   storeBreakFocusClicks,
   updateBreakFocusPerService,
   storeRandomSurveyResults,
+  getOutOfFocusMessages,
+  getRandomSurveyResults,
 };

@@ -2,11 +2,18 @@ const fs = require("fs");
 const { dialog, app } = require("electron");
 const path = require("path");
 
-const { getAllFocusSessions } = require("../db/db");
+const {
+  getAllFocusSessions,
+  getOutOfFocusMessages,
+  getRandomSurveyResults,
+} = require("../db/db");
 const { getMainWindow } = require("../db/memoryDb");
 
 module.exports = async () => {
-  const output = [];
+  const outOfFocusMessages = getOutOfFocusMessages();
+  const randomSurveyResults = getRandomSurveyResults();
+
+  const output = { focusSessions: [], outOfFocusMessages, randomSurveyResults };
 
   const focusSessions = getAllFocusSessions();
 
@@ -27,7 +34,7 @@ module.exports = async () => {
       });
     });
 
-    output.push(anonymizedVersion);
+    output["focusSessions"].push(anonymizedVersion);
   });
 
   const res = await dialog.showSaveDialog(getMainWindow(), {
