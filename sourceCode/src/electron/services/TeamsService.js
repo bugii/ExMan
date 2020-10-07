@@ -162,7 +162,15 @@ module.exports = class TeamsService extends Service {
             .get("autoReplied")
             .value();
 
-          if (username !== "") {
+          const focusStart = getDb()
+            .get("currentFocusSession")
+            .get("startTime")
+            .value();
+
+          const focusDate = new Date(focusStart);
+          const timestampDate = new Date(timestamp);
+
+          if (username !== "" && timestampDate > focusDate) {
             console.log("is focus", this.isInFocusSession());
             if (this.isInFocusSession()) {
               // Currently in focus session

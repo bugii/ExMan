@@ -40,7 +40,6 @@ function BarChart(props) {
 
   //const [startTime, setStartTime] = useState(true);
   //const [endTime, setEndTime] = useState(true);
-  const [timedata, setTimedata] = useState([]);
   const [label, setlabel] = useState([]);
   const [frequency, setfrequency] = useState([]);
 
@@ -68,7 +67,6 @@ function BarChart(props) {
         return d;
       })
     );
-    setTimedata(timestampArray.sort());
     setfrequency(dataCreator(timestampArray.sort(), bins));
     console.log(`frequency: ${dataCreator(timestampArray.sort(), bins)}`);
     console.log(`timestamparray: ${timestampArray}`);
