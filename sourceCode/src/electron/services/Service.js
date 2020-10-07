@@ -1,6 +1,6 @@
 const { toggleAutoResponseAvailablity } = require("../db/db");
 
-const { webContents } = require("electron");
+const { webContents, session } = require("electron");
 const { getFocus } = require("../db/memoryDb");
 
 // This class is just here so that other services can extend this class
@@ -119,5 +119,19 @@ module.exports = class Service {
 
   sendMessage(channel, message) {
     console.log("please overwrite sendMessage", this.name);
+  }
+
+  clearSession() {
+    console.log(`cleaning ${this.name} session`);
+    const ses = session.fromPartition(`persist:${this.id}`);
+    ses.clearStorageData({
+      storages: [
+        "appcache",
+        "serviceworkers",
+        "cachestorage",
+        "websql",
+        "indexdb",
+      ],
+    });
   }
 };

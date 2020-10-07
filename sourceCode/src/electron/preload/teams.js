@@ -5,17 +5,6 @@ console.log("in preload");
 ipcRenderer.on("id", (e, id) => {
   console.log("id", id);
   window.serviceId = id;
-  const ses = remote.session.fromPartition(`persist:${id}`);
-  ses.clearStorageData({
-    //Clears the specified storages in the session
-    storages: [
-      "appcache",
-      "serviceworkers",
-      "cachestorage",
-      "websql",
-      "indexdb",
-    ],
-  });
 });
 
 function getTokens() {

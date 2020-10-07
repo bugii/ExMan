@@ -133,6 +133,7 @@ ipcMain.on("update-frontend-sync", (e) => {
 
 ipcMain.on("refresh-service", (e, webContentsId) => {
   console.log(`refreshing ${webContentsId}`);
+  servicesManager.clearSessions();
   webContents.fromId(webContentsId).reload();
 });
 
@@ -333,6 +334,7 @@ app.whenReady().then(async () => {
   await createWindow();
 
   scheduleRandomPopup();
+  servicesManager.clearSessions();
 
   getMainWindow().send("update-frontend", {
     services: servicesManager.getServices(),

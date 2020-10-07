@@ -166,6 +166,12 @@ class ServicesManager {
       }
     }
   }
+
+  clearSessions() {
+    this.services.forEach((service) => {
+      service.clearSession();
+    });
+  }
 }
 
 const servicesManagerInstance = new ServicesManager();
