@@ -12,7 +12,7 @@ module.exports = class SlackService extends Service {
   unReadLoop() {
     console.log("unread loop start", this.name);
 
-    const ref = setInterval(async () => {
+    this.unreadLoopRef = setInterval(async () => {
       const unreadChats = await webContents
         .fromId(this.webContentsId)
         .executeJavaScript("window.getUnreadChats()");
@@ -21,35 +21,28 @@ module.exports = class SlackService extends Service {
       // set in db
       setUnreadChats(this.id, unreadChats);
     }, 1000);
-
-    this.intervallRefs.push(ref);
   }
 
   authLoop() {
     console.log("auth loop start", this.name);
 
-    const ref = setInterval(async () => {
+    this.authLoopRef = setInterval(async () => {
       try {
         await this.getToken();
         this.setAuthed(true);
       } catch (e) {
-        console.log(e);
         this.setAuthed(false);
       }
     }, 1000);
-
-    this.intervallRefs.push(ref);
   }
 
   messagesLoop() {
     console.log("messages loop start", this.name);
 
-    const ref = setInterval(() => {
+    this.messagesLoopRef = setInterval(() => {
       const startTime = new Date().getTime() / 1000 - 10;
       this.getMessages(startTime);
     }, 10001);
-
-    this.intervallRefs.push(ref);
   }
 
   async setDnd(diffMins) {

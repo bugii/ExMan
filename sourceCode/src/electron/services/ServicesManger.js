@@ -78,8 +78,6 @@ class ServicesManager {
         autoResponse: autoResponse,
       });
     }
-
-    console.log("added", s);
   }
 
   getServices() {
@@ -113,6 +111,9 @@ class ServicesManager {
       if (service.id === id) {
         // End the focus for that service (and also get rid of all the ongoing loops)
         await service.focusEnd();
+        await service.endAuthLoop();
+        await service.endUnreadLoop();
+        await service.endMessagesLoop();
       } else {
         updated_services.push(service);
       }

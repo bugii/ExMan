@@ -12,7 +12,7 @@ module.exports = class WhatsappService extends Service {
   unReadLoop() {
     console.log("unread loop start", this.name);
 
-    const ref = setInterval(async () => {
+    this.unreadLoopRef = setInterval(async () => {
       const unreadChats = await webContents
         .fromId(this.webContentsId)
         .executeJavaScript("window.getUnreadChats()");
@@ -21,22 +21,18 @@ module.exports = class WhatsappService extends Service {
       // set in db
       setUnreadChats(this.id, unreadChats);
     }, 1000);
-
-    this.intervallRefs.push(ref);
   }
 
   authLoop() {
     console.log("auth loop start", this.name);
 
-    const ref = setInterval(async () => {
+    this.authLoopRef = setInterval(async () => {
       const isAuth = await webContents
         .fromId(this.webContentsId)
         .executeJavaScript("window.isAuth()");
 
       this.setAuthed(isAuth);
     }, 1000);
-
-    this.intervallRefs.push(ref);
   }
 
   messagesLoop() {}

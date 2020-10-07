@@ -9,10 +9,13 @@ const { getFocus } = require("../db/memoryDb");
 module.exports = class Service {
   webContentsId = null;
   intervallRefs = [];
+  authLoopRef = null;
+  unreadLoopRef = null;
+  messagesLoopRef = null;
   ready = false;
   authed = false;
   unreadCount = 0;
-  loopStarted = false;
+  authLoopStarted = false;
 
   constructor(id, name, autoResponse, checkIfAllAuthed) {
     this.id = id;
@@ -26,8 +29,21 @@ module.exports = class Service {
   }
 
   setAuthed(bool) {
+    const old = this.authed;
     this.authed = bool;
     this.checkIfAllAuthed();
+
+    if (bool && old !== bool) {
+      // service coming from not authed state to authed state -> start other loops
+      this.unReadLoop();
+      this.messagesLoop();
+    } else if (bool) {
+      // just do nothing, service still authed
+    } else {
+      // service not authed anymore
+      this.endUnreadLoop();
+      this.endMessagesLoop();
+    }
   }
 
   toggleAutoResponseAvailablity() {
@@ -42,20 +58,28 @@ module.exports = class Service {
   }
 
   startLoop() {
-    if (!this.loopStarted) {
-      this.loopStarted = true;
-      this.unReadLoop();
+    if (!this.authLoopStarted) {
+      this.authLoopStarted = true;
       this.authLoop();
-      this.messagesLoop();
     }
   }
 
-  endLoop() {
-    this.loopStarted = false;
-    // Clear all the intervals
-    this.intervallRefs.forEach((intervallRef) => {
-      clearInterval(intervallRef);
-    });
+  // endLoop() {
+  //   // this.loopStarted = false;
+  //   // Clear all the intervals
+  //   this.intervallRefs.forEach((intervallRef) => {
+  //     clearInterval(intervallRef);
+  //   });
+  // }
+
+  endAuthLoop() {
+    clearInterval(this.authLoopRef);
+  }
+  endUnreadLoop() {
+    clearInterval(this.unreadLoopRef);
+  }
+  endMessagesLoop() {
+    clearInterval(this.messagesLoopRef);
   }
 
   focusStart(diffMins) {
@@ -67,7 +91,6 @@ module.exports = class Service {
   async focusEnd() {
     webContents.fromId(this.webContentsId).setAudioMuted(false);
     await this.setOnline();
-    this.endLoop();
   }
 
   unReadLoop() {
