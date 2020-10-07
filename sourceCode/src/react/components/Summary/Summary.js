@@ -5,7 +5,7 @@ import PostFocusPopup from "../Focus/Popups/PostFocusPopup";
 import CloseIcon from "@material-ui/icons/Close";
 import { useHistory } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
-import LineChart from "./LineChart";
+import BarChart from "./BarChart";
 import DonutChart from "./DonutChart";
 //import MessagesChart from "./MessagesChart";
 import ServiceMessageSummaryBox from "./ServiceMessageSummaryBox";
@@ -87,7 +87,7 @@ function Summary(props) {
             {props.formatTime(focusSession.endTime)}
           </p>
           <ChartsDiv>
-            <LineChart data={focusSession} />
+            <BarChart data={focusSession} />
             <DonutChart data={focusSession} />
           </ChartsDiv>
           <ServiceMessageSummaryBox
