@@ -25,7 +25,7 @@
     "electron-log": "^4.2.4",
     "lowdb": "^1.0.0",
     "mac-screen-capture-permissions": "^1.1.0",
-    "moment": "^2.29.0",
+    "moment": "^2.29.1",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.10.0",
@@ -33,12 +33,12 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
     "styled-components": "^5.2.0",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "components": "^0.1.0",
     "concurrently": "^5.3.0",
-    "electron": "^9.3.1",
+    "electron": "^9.3.2",
     "electron-builder": "^22.8.1",
     "hooks": "^0.3.2",
     "react-app-rewired": "^2.1.6",

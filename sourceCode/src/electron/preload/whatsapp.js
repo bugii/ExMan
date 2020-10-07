@@ -5,7 +5,19 @@ console.log("in preload");
 ipcRenderer.on("id", (e, id) => {
   console.log("id", id);
   window.serviceId = id;
+
   const interval = setInterval(() => {
+    const ses = remote.session.fromPartition(`persist:${id}`);
+    ses.clearStorageData({
+      //Clears the specified storages in the session
+      storages: [
+        "appcache",
+        "serviceworkers",
+        "cachestorage",
+        "websql",
+        "indexdb",
+      ],
+    });
     const titleEl = document.querySelector(".window-title");
     if (titleEl && titleEl.innerHTML.includes("Google Chrome 49+")) {
       // reloading
