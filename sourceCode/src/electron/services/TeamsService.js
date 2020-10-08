@@ -147,7 +147,9 @@ module.exports = class TeamsService extends Service {
           const single_channel = channel.id;
           const content = channel.lastMessage.content;
           const username = channel.lastMessage.imdisplayname;
-          const timestamp = channel.lastMessage.originalarrivaltime;
+          const timestamp = new Date(
+            channel.lastMessage.originalarrivaltime
+          ).getTime();
 
           // display needed data in console
           console.log(single_channel);
@@ -180,7 +182,11 @@ module.exports = class TeamsService extends Service {
                 .get("services")
                 .find({ id: this.id })
                 .get("messages")
-                .push({ title: username, body: content, timestamp })
+                .push({
+                  title: username,
+                  body: content,
+                  timestamp: timestampDate.getTime(),
+                })
                 .write();
 
               if (
