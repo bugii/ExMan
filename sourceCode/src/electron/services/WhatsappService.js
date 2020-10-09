@@ -1,4 +1,4 @@
-const { webContents } = require("electron");
+const { webContents, session } = require("electron");
 
 const Service = require("../services/Service");
 const { setUnreadChats } = require("../db/db");
@@ -44,4 +44,12 @@ module.exports = class WhatsappService extends Service {
   getMessages(startTime) {}
 
   sendMessage(channel, message) {}
+
+  clearSession() {
+    console.log(`cleaning ${this.name} session`);
+    const ses = session.fromPartition(`persist:${this.id}`);
+    ses.clearStorageData({
+      storages: ["appcache", "cachestorage", "websql", "indexdb"],
+    });
+  }
 };
