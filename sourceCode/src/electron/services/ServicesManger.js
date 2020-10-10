@@ -12,6 +12,7 @@ const path = require("path");
 const eventEmitter = require("../utils/eventEmitter");
 const TeamsService = require("./TeamsService");
 const { getMainWindow, getFocus } = require("../db/memoryDb");
+const TelegramService = require("./TelegramService");
 
 const isMac = process.platform === "darwin";
 const isWindows = process.platform === "win32";
@@ -64,6 +65,15 @@ class ServicesManager {
           autoResponse,
           this.checkIfAllAuthed.bind(this)
         );
+        break;
+
+      case "telegram":
+        s = new TelegramService(
+          uuid,
+          autoResponse,
+          this.checkIfAllAuthed.bind(this)
+        );
+        break;
 
       default:
         break;
