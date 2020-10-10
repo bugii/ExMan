@@ -1,4 +1,4 @@
-const { app } = require("electron");
+const { app, webContents } = require("electron");
 const SlackService = require("./SlackService");
 const WhatsappService = require("./WhatsappService");
 const { v4: uuidv4 } = require("uuid");
@@ -181,6 +181,12 @@ class ServicesManager {
     this.services.forEach((service) => {
       service.clearSession();
     });
+  }
+
+  refreshService(id) {
+    const service = this.getService(id);
+    service.clearSession();
+    webContents.fromId(service.webContentsId).reload();
   }
 }
 

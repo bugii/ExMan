@@ -45,8 +45,8 @@ function App() {
     setServices(services);
   };
 
-  const refreshApp = (webContentsId) => {
-    ipcRenderer.send("refresh-service", webContentsId);
+  const refreshApp = (id) => {
+    ipcRenderer.send("refresh-service", id);
   };
 
   const returnToFocus = () => {

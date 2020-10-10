@@ -131,10 +131,9 @@ ipcMain.on("update-frontend-sync", (e) => {
   e.returnValue = { services, currentFocusSession };
 });
 
-ipcMain.on("refresh-service", (e, webContentsId) => {
-  console.log(`refreshing ${webContentsId}`);
-  servicesManager.clearSessions();
-  webContents.fromId(webContentsId).reload();
+ipcMain.on("refresh-service", (e, id) => {
+  console.log(`refreshing ${id}`);
+  servicesManager.refreshService(id);
 });
 
 ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {

@@ -42,7 +42,6 @@ function Service(props) {
     new MenuItem({
       label: "Delete Service",
       click() {
-        console.log(`Deleting ${props.id}`);
         props.deleteApp(props.id);
       },
     })
@@ -51,8 +50,7 @@ function Service(props) {
     new MenuItem({
       label: "Refresh",
       click() {
-        console.log(`refreshing ${props.id}`);
-        props.refreshApp(props.webContentsId);
+        props.refreshApp(props.id);
       },
     })
   );

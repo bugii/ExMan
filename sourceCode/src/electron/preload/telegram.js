@@ -39,6 +39,7 @@ window.getUnreadChats = () => {
       }
     }
   }
+  return count;
 };
 
 window.isAuth = () => {
