@@ -29,6 +29,12 @@ function RandomProductivityPopup(props) {
       productivity,
       wasMinimized: props.wasMinimized,
     });
+    setRating(0);
+    props.close();
+  };
+
+  const onClose = () => {
+    setRating(0);
     props.close();
   };
 
@@ -41,7 +47,7 @@ function RandomProductivityPopup(props) {
       <DialogTitle id="simple-dialog-title">Radom survey</DialogTitle>
       <RandomPopup>
         <div style={{ position: "absolute", top: 0, right: 0 }}>
-          <IconButton onClick={props.close}>
+          <IconButton onClick={onClose}>
             <CloseIcon fontSize="large" />
           </IconButton>
         </div>

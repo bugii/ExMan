@@ -3,7 +3,7 @@ const bringToFront = require("./bringToFront");
 
 // method used to schedule a random popup (occurs randomly between 45min and 90min of usage)
 module.exports = scheduleRandomPopup = () => {
-  const timeUntilPopup = randomIntFromInterval(45, 90);
+  const timeUntilPopup = randomIntFromInterval(1, 1);
   console.log("next random popup in ", timeUntilPopup, "minutes");
 
   const ref = setTimeout(() => {
