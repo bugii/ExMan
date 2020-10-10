@@ -225,12 +225,11 @@ function setUnreadChats(id, number) {
     .write();
 }
 
-function storeRandomSurveyResults({ productivity, stress }) {
+function storeRandomSurveyResults({ productivity }) {
   db.get("randomSurveyResults")
     .push({
       timestamp: new Date().getTime(),
       productivity,
-      stress,
     })
     .write();
 }

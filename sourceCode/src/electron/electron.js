@@ -227,11 +227,12 @@ ipcMain.on("previous-session-update", (e, { rating }) => {
   // update goals with which were accomplished
 });
 
-ipcMain.on("random-popup-submission", (e, { productivity, stress }) => {
-  console.log(
-    `random popup survey submission, productivity: ${productivity}, stress: ${stress}`
-  );
-  storeRandomSurveyResults({ productivity, stress });
+ipcMain.on("random-popup-submission", (e, { productivity, wasMinimized }) => {
+  console.log(`random popup survey submission, productivity: ${productivity}`);
+  storeRandomSurveyResults({ productivity });
+  if (wasMinimized) {
+    getMainWindow().minimize();
+  }
   scheduleRandomPopup();
 });
 

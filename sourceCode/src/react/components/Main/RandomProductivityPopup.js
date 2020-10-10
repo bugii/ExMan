@@ -23,12 +23,11 @@ export const RandomPopup = styled.div`
 
 function RandomProductivityPopup(props) {
   const [productivity, setRating] = useState(0);
-  const [stress, setStress] = useState(0);
 
   const handleSubmit = () => {
     ipcRenderer.send("random-popup-submission", {
       productivity,
-      stress,
+      wasMinimized: props.wasMinimized,
     });
     props.close();
   };
@@ -52,14 +51,6 @@ function RandomProductivityPopup(props) {
           value={productivity}
           onChange={(event, newValue) => {
             setRating(newValue);
-          }}
-        />
-        <p>How stressed do you feel currently?</p>
-        <Rating
-          name="stress"
-          value={stress}
-          onChange={(event, newValue) => {
-            setStress(newValue);
           }}
         />
         <Button

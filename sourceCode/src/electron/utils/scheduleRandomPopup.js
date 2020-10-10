@@ -9,8 +9,9 @@ module.exports = scheduleRandomPopup = () => {
   const ref = setTimeout(() => {
     // only open popup if not in focus at that time
     if (!getFocus()) {
-      getMainWindow().send("random-popup-survey");
-      bringToFront();
+      const wasRestored = bringToFront();
+      console.log("showing random productivity survey popup");
+      getMainWindow().send("random-popup-survey", wasRestored);
     } else {
       // don't show popup if in focus, but reschedule the popup
       console.log("rescheduling random popup because currently in focus");

@@ -28,6 +28,7 @@ function App() {
   const [activeService, setActiveService] = useState(null);
   const [currentFocusSession, setCurrentFocusSession] = useState(null);
   const [showRandomPopUp, setShowRandomPopUp] = useState(false);
+  const [wasMinimized, setWasMinimized] = useState(false);
 
   let history = useHistory();
   let location = useLocation();
@@ -104,7 +105,13 @@ function App() {
       };
     });
 
-    ipcRenderer.on("random-popup-survey", () => {
+    ipcRenderer.on("random-popup-survey", (e, wasMinimized) => {
+      if (wasMinimized) {
+        console.log(
+          "window was minimized, bring to front for random popup survey. Minimize again after answering"
+        );
+      }
+      setWasMinimized(wasMinimized);
       setShowRandomPopUp(true);
     });
   }, []);
@@ -131,6 +138,7 @@ function App() {
       <RandomProductivityPopup
         open={showRandomPopUp}
         close={() => setShowRandomPopUp(false)}
+        wasMinimized={wasMinimized}
       />
 
       <div className="main-content">
