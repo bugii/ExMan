@@ -5,6 +5,9 @@
   "description": "Expectation Management in digital Communication",
   "main": "sourceCode/src/electron/electron.js",
   "homepage": ".",
+  "repository": {
+    "url": "https://github.com/bugii/ExMan/"
+  },
   "scripts": {
     "electron-run": "electron .",
     "react-start": "react-app-rewired start",
