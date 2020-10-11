@@ -55,6 +55,7 @@ const handleWindowClose = require("./utils/handleWindowClose");
 const isOverlappingWithFocusSessions = require("./utils/isOverlappingWithFocusSessions");
 const isWrongFocusDuration = require("./utils/isWrongFocusDuration");
 const scheduleRandomPopup = require("./utils/scheduleRandomPopup");
+const updater = require("./utils/updater");
 
 const isMac = process.platform === "darwin";
 
@@ -363,6 +364,8 @@ app.whenReady().then(async () => {
     }, 5000);
     storeTimeoutRef(ref);
   }
+
+  setTimeout(updater, 10000);
 
   getMainWindow().on("close", (e) => {
     console.log(

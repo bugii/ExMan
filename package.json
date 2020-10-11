@@ -1,6 +1,6 @@
 {
   "name": "exman",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "author": "ExMan Group",
   "description": "Expectation Management in digital Communication",
   "main": "sourceCode/src/electron/electron.js",
@@ -9,8 +9,8 @@
     "electron-run": "electron .",
     "react-start": "react-app-rewired start",
     "react-build": "react-app-rewired build",
-    "electron-build": "electron-builder",
-    "release": "npm run react-build && electron-builder --publish=always",
+    "electron-build": "electron-builder -mwl",
+    "release": "npm run react-build && electron-build --publish=OnTagOrDraft",
     "build": "npm run react-build && npm run electron-build",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
   },
@@ -23,6 +23,7 @@
     "cross-env": "^7.0.2",
     "electron-is-dev": "^1.2.0",
     "electron-log": "^4.2.4",
+    "electron-updater": "^4.3.5",
     "lowdb": "^1.0.0",
     "mac-screen-capture-permissions": "^1.1.0",
     "node-sass": "^4.14.1",

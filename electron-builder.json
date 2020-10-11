@@ -13,6 +13,7 @@
     "rescources/icon.png"
   ],
   "mac": {
+    "identity": null,
     "entitlements": "resources/entitlements.mac.plist",
     "extendInfo": {
       "NSCameraUsageDescription": "This app requires camera access for video chats",
