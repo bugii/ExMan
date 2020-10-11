@@ -75,7 +75,6 @@ function createNewFocusSession(startTime, endTime) {
     autoReplied: [],
     messages: [],
     inFocusModeClicks: 0,
-    scheduled: false,
   }));
 
   const id = uuidv4();
@@ -89,6 +88,7 @@ function createNewFocusSession(startTime, endTime) {
     brokenFocus: [],
     goals: [],
     rating: null,
+    scheduled: false,
   }).write();
 }
 

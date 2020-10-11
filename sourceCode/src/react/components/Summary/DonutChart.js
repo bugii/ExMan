@@ -6,7 +6,13 @@ import Colors from "../Colors";
 export const CustomBar = styled.div`
   padding: 2rem;
   width: 60%;
-  display: flex;
+`;
+
+export const AdditionalText = styled.div`
+  margin-top: 5px;
+  text-align: center;
+  color: ${Colors.navy};
+  font-weight: 900;
 `;
 
 function DonutChart(props) {
@@ -79,7 +85,7 @@ function DonutChart(props) {
         text={text_inside}
       />
       <br />
-      <p>{text_inside}</p>
+      <AdditionalText>Frequency of focus breaks: {text_inside}</AdditionalText>
     </CustomBar>
   );
 }
