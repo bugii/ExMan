@@ -7,6 +7,9 @@ const {
   shell,
   systemPreferences,
   Menu,
+  Tray,
+  NativeImage,
+  nativeImage,
 } = require("electron");
 
 const log = require("electron-log");
@@ -335,8 +338,25 @@ async function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+
+let tray = null;
+
 app.whenReady().then(async () => {
   await createWindow();
+  const trayImage = nativeImage
+    .createFromPath(path.join(__dirname, "assets/icon.png"))
+    .resize({ width: 16, height: 16 });
+  tray = new Tray(trayImage);
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "Focus 40min",
+      click: () => {
+        const start = new Date().getTime();
+        focusStart(start, start + 40 * 60 * 1000);
+      },
+    },
+  ]);
+  tray.setContextMenu(contextMenu);
 
   scheduleRandomPopup();
   servicesManager.clearSessions();
