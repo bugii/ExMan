@@ -1,5 +1,10 @@
 const { webContents, session } = require("electron");
-const { getDb, getAutoresponse, setUnreadChats } = require("../db/db");
+const {
+  getDb,
+  getAutoresponse,
+  setUnreadChats,
+  storeNotificationInArchive,
+} = require("../db/db");
 const axios = require("axios");
 const Service = require("../services/Service");
 
@@ -164,6 +169,8 @@ module.exports = class SlackService extends Service {
                     .push({ channel })
                     .write();
                 }
+              } else {
+                storeNotificationInArchive(this.id);
               }
             }
           });
@@ -253,5 +260,11 @@ module.exports = class SlackService extends Service {
       });
 
     return username;
+  }
+
+  handleNotification(isFoucs, title, body) {
+    console.log(this.name, "notification received, doing nothing with it");
+    // don't do anything
+    return;
   }
 };

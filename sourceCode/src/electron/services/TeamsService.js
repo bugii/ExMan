@@ -1,5 +1,10 @@
 const { webContents } = require("electron");
-const { getDb, getAutoresponse, getCurrentFocusSession } = require("../db/db");
+const {
+  getDb,
+  getAutoresponse,
+  getCurrentFocusSession,
+  storeNotificationInArchive,
+} = require("../db/db");
 const axios = require("axios");
 const Service = require("../services/Service");
 const { setUnreadChats } = require("../db/db");
@@ -172,11 +177,10 @@ module.exports = class TeamsService extends Service {
           const focusDate = new Date(focusStart);
           const timestampDate = new Date(timestamp);
 
-          if (username !== "" && timestampDate > focusDate) {
-            console.log("is focus", this.isInFocusSession());
-            if (this.isInFocusSession()) {
+          if (username !== "") {
+            if (this.isInFocusSession() && timestampDate > focusDate) {
               // Currently in focus session
-              // store messages in local db (required because notification is not sent in dnd, thus also not stored)
+              // store messages in local db
               getDb()
                 .get("currentFocusSession")
                 .get("services")
@@ -206,6 +210,9 @@ module.exports = class TeamsService extends Service {
                   .push({ channel: single_channel })
                   .write();
               }
+            } else {
+              // not in focus session, still store to archive
+              storeNotificationInArchive(this.id);
             }
           }
         });
@@ -260,5 +267,11 @@ module.exports = class TeamsService extends Service {
       console.log("false");
       return false;
     }
+  }
+
+  handleNotification(isFoucs, title, body) {
+    console.log(this.name, "notification received, doing nothing with it");
+    // don't do anything
+    return;
   }
 };

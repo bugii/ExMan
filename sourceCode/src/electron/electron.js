@@ -56,6 +56,10 @@ const isOverlappingWithFocusSessions = require("./utils/isOverlappingWithFocusSe
 const isWrongFocusDuration = require("./utils/isWrongFocusDuration");
 const scheduleRandomPopup = require("./utils/scheduleRandomPopup");
 const updater = require("./utils/updater");
+const {
+  getServicesComplete,
+  getService,
+} = require("./services/ServicesManger");
 
 const isMac = process.platform === "darwin";
 
@@ -244,11 +248,11 @@ ipcMain.on("notification", (event, { id, title, body }) => {
     // try to send it to renderer and use html notifcation api there
     getMainWindow().send("notification", { id, title, body });
     // Also store the notification in archive
-    storeNotificationInArchive(id);
+    servicesManager.getService(id).handleNotification(false, title, body);
   } else {
     console.log("block notification", id);
     // if there is a focus session ongoing, store the notification
-    storeNotification(id, title, body);
+    servicesManager.getService(id).handleNotification(true, title, body);
   }
 });
 

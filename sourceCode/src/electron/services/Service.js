@@ -1,4 +1,8 @@
-const { toggleAutoResponseAvailablity } = require("../db/db");
+const {
+  toggleAutoResponseAvailablity,
+  storeNotificationInArchive,
+  storeNotification,
+} = require("../db/db");
 
 const { webContents, session } = require("electron");
 const { getFocus } = require("../db/memoryDb");
@@ -119,6 +123,15 @@ module.exports = class Service {
 
   sendMessage(channel, message) {
     console.log("please overwrite sendMessage", this.name);
+  }
+
+  handleNotification(isFoucs, title, body) {
+    // by default, store notifications in db. Overwrite this function for services where we store messages in database (such as teams/slack)
+    if (isFoucs) {
+      storeNotification(this.id, title, body);
+    } else {
+      storeNotificationInArchive(this.id);
+    }
   }
 
   clearSession() {
