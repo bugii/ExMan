@@ -28,6 +28,7 @@ export const PreFocusDiv = styled.div`
 function FocusGoalsPopup(props) {
   const [todo, setTodo] = useState("");
   const [todoList, setTodoList] = useState(props.goals);
+  const [completedList, setCompletedList] = useState(props.completedGoals);
 
   const onEnterPress = (event) => {
     if (event.key === "Enter") {
@@ -39,21 +40,39 @@ function FocusGoalsPopup(props) {
   };
 
   const addTodos = () => {
-    //var item = document.getElementById("item").value;
     setTodoList(todoList.concat(todo));
     console.log("Add Todo: ", todo);
     setTodo("");
   };
 
-  const deleteTodos = (index) => {
+  const deleteTodos = (index, task) => {
     todoList.splice(index, 1);
+    if (completedList.indexOf(task) !== -1)
+      completedList.splice(completedList.indexOf(task), 1);
   };
 
   const handleSubmit = () => {
     ipcRenderer.send("focus-goals-request", {
       goals: todoList,
+      completedGoals: completedList
     });
+    console.log("focus-goals-request: ", todoList);
+    console.log("completed goals: ", completedList);
     props.close();
+  };
+
+
+  const handleToggle = (value) => () => {
+    const currentIndex = completedList.indexOf(value);
+    const newChecked = [...completedList];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setCompletedList(newChecked);
   };
 
   useEffect(() => {
@@ -105,8 +124,10 @@ function FocusGoalsPopup(props) {
           </div>
           <TodoList
             todoList={todoList}
+            completedList={completedList}
             deleteTodos={deleteTodos}
             handleChange={handleChange}
+            handleToggle={handleToggle}
             hideDelete={false}
           />
         </div>

@@ -61,6 +61,7 @@ function Focus(props) {
         goals={
           props.currentFocusSession.goals ? props.currentFocusSession.goals : []
         }
+        completedGoals={props.currentFocusSession.completedGoals ? props.currentFocusSession.completedGoals : []}
         close={() => setShowFocusGoalsPopup(false)}
       />
       {showBreakFocusPopup ? (

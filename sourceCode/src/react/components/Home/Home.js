@@ -5,7 +5,6 @@ import MenuBoxes from "./MenuBoxes";
 import NewFocusSession from "../Focus/NewFocusSession";
 import ScheduleFocusSession from "../Focus/ScheduleFocusSession";
 import Button from "@material-ui/core/Button";
-import MessagesChart from "../Summary/MessagesChart";
 
 export const HomeDiv = styled.div`
   position: absolute;
@@ -74,8 +73,6 @@ function Home(props) {
         closeDialog={closeScheduleSessionDialog}
       />
       <p> Currently added {props.nrOfServices} service/s </p>
-        {chart ? <MessagesChart/> : null}
-        <Button onClick={() => setChart(true)}> Chart </Button>
     </HomeDiv>
   );
 }
