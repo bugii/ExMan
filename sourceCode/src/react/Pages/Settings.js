@@ -4,6 +4,7 @@ import Colors from "../components/Colors";
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import ResponseSwitch from "./ResponseSwitch";
+import { useEffect } from "react";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -31,9 +32,45 @@ export const Settingsbox = styled.div`
 function Settings(props) {
   let history = useHistory();
   let [autoReply, setAutoReply] = useState("");
+  const [shortFocus, setShortFocus] = useState(null);
+  const [mediumFocus, setMediumFocus] = useState(null);
+  const [longFocus, setLongFocus] = useState(null);
+
+  useEffect(() => {
+    ipcRenderer.on("get-settings", (e, settings) => {
+      setShortFocus(settings.shortFocusDuration);
+      setMediumFocus(settings.mediumFocusDuration);
+      setLongFocus(settings.longFocusDuration);
+    });
+    ipcRenderer.send("get-settings");
+  }, []);
 
   const handleChange = (e) => {
     setAutoReply(e.target.value);
+  };
+
+  const handleShortFocus = (val) => {
+    setShortFocus(val);
+    ipcRenderer.send("updateDefaultDuration", {
+      type: "short",
+      value: parseInt(val),
+    });
+  };
+
+  const handleMediumFocus = (val) => {
+    setMediumFocus(val);
+    ipcRenderer.send("updateDefaultDuration", {
+      type: "medium",
+      value: parseInt(val),
+    });
+  };
+
+  const handleLongFocus = (val) => {
+    setLongFocus(val);
+    ipcRenderer.send("updateDefaultDuration", {
+      type: "long",
+      value: parseInt(val),
+    });
   };
 
   const autoResponse = (e) => {
@@ -69,6 +106,30 @@ function Settings(props) {
         <h4>Auto-responding platforms</h4>
         <p> Choose which communication platform should do an auto response</p>
         <ResponseSwitch services={props.services} />
+      </Settingsbox>
+      <Settingsbox>
+        <h4>Default focus times</h4>
+        <div>
+          <span style={{ "padding-right": "1rem" }}>Short focus</span>
+          <input
+            value={shortFocus}
+            onChange={(e) => handleShortFocus(e.target.value)}
+          />
+        </div>
+        <div>
+          <span style={{ "padding-right": "1rem" }}>Medium focus</span>
+          <input
+            value={mediumFocus}
+            onChange={(e) => handleMediumFocus(e.target.value)}
+          />
+        </div>
+        <div>
+          <span style={{ "padding-right": "1rem" }}>Long focus</span>
+          <input
+            value={longFocus}
+            onChange={(e) => handleLongFocus(e.target.value)}
+          />
+        </div>
       </Settingsbox>
     </SettingsDiv>
   );

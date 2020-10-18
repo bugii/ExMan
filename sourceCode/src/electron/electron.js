@@ -7,9 +7,6 @@ const {
   shell,
   systemPreferences,
   Menu,
-  Tray,
-  NativeImage,
-  nativeImage,
 } = require("electron");
 
 const log = require("electron-log");
@@ -32,11 +29,11 @@ const {
   setEndTime,
   setFocusGoals,
   setRating,
-  storeNotification,
-  storeNotificationInArchive,
   storeBreakFocusClicks,
   updateBreakFocusPerService,
   storeRandomSurveyResults,
+  storeDefaultFocusSession,
+  getSettings,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
@@ -63,6 +60,7 @@ const {
   getServicesComplete,
   getService,
 } = require("./services/ServicesManger");
+const createTray = require("./utils/createTray");
 
 const isMac = process.platform === "darwin";
 
@@ -306,6 +304,14 @@ ipcMain.on("get-all-future-focus-sessions", (e, args) => {
   e.reply("get-all-future-focus-sessions", getAllFutureFocusSessions());
 });
 
+ipcMain.on("updateDefaultDuration", (e, { type, value }) => {
+  storeDefaultFocusSession(type, value);
+});
+
+ipcMain.on("get-settings", (e) => {
+  e.reply("get-settings", getSettings());
+});
+
 const openService = (id) => {
   // If a new notification comes in, open the corresponding service in the frontend
   getMainWindow().webContents.send("open-service", id);
@@ -339,24 +345,9 @@ async function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 
-let tray = null;
-
 app.whenReady().then(async () => {
   await createWindow();
-  const trayImage = nativeImage
-    .createFromPath(path.join(__dirname, "assets/icon.png"))
-    .resize({ width: 16, height: 16 });
-  tray = new Tray(trayImage);
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: "Focus 40min",
-      click: () => {
-        const start = new Date().getTime();
-        focusStart(start, start + 40 * 60 * 1000);
-      },
-    },
-  ]);
-  tray.setContextMenu(contextMenu);
+  createTray();
 
   scheduleRandomPopup();
   servicesManager.clearSessions();

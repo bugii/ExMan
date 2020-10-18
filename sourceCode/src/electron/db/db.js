@@ -38,6 +38,9 @@ function init() {
     db.set("settings", {
       autoReply:
         "Currently, I am working in focus mode. I will answer you as soon as possible.",
+      shortFocusDuration: 15,
+      mediumFocusDuration: 25,
+      longFocusDuration: 40,
     }).write();
   }
 
@@ -242,6 +245,28 @@ function getRandomSurveyResults() {
   return db.get("randomSurveyResults").value();
 }
 
+function storeDefaultFocusSession(type, value) {
+  switch (type) {
+    case "short":
+      db.get("settings").assign({ shortFocusDuration: value }).write();
+      break;
+    case "medium":
+      db.get("settings").assign({ mediumFocusDuration: value }).write();
+      break;
+
+    case "long":
+      db.get("settings").assign({ longFocusDuration: value }).write();
+      break;
+
+    default:
+      break;
+  }
+}
+
+function getSettings() {
+  return db.get("settings").value();
+}
+
 module.exports = {
   init,
   getDb,
@@ -270,4 +295,6 @@ module.exports = {
   storeRandomSurveyResults,
   getOutOfFocusMessages,
   getRandomSurveyResults,
+  storeDefaultFocusSession,
+  getSettings,
 };
