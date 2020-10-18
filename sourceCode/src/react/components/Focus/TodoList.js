@@ -20,25 +20,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TodoList(props) {
     const classes = useStyles();
-    const [checked, setChecked] = React.useState([0]);
-
-    const handleToggle = (value) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-
-        setChecked(newChecked);
-    };
 
     const handleDelete = (task) => {
         const currentIndex = props.todoList.indexOf(task);
         console.log("Delete ", currentIndex, ": ", task);
-        props.deleteTodos(currentIndex);
+        props.deleteTodos(currentIndex, task);
     };
 
     return (
@@ -52,11 +38,11 @@ export default function TodoList(props) {
                                 <ListItemIcon>
                                     <Checkbox
                                         edge="start"
-                                        checked={checked.indexOf(task) !== -1}
+                                        checked={props.completedList.indexOf(task) !== -1}
                                         tabIndex={-1}
                                         disableRipple
                                         inputProps={{'aria-labelledby': labelId}}
-                                        onClick={handleToggle(task)}
+                                        onClick={props.handleToggle(task)}
                                     />
                                 </ListItemIcon>
                                 <ListItemText id={labelId} primary={task}/>
@@ -69,7 +55,7 @@ export default function TodoList(props) {
                             </ListItem>
                         );
                     }
-                )) : <p>No goals added yet. ;)</p>}
+                )) : <p>No goals added yet.)</p>}
         </List>
     );
 }

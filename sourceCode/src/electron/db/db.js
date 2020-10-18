@@ -90,6 +90,7 @@ function createNewFocusSession(startTime, endTime) {
     services,
     brokenFocus: [],
     goals: [],
+    completedGoals: [],
     rating: null,
     scheduled: false,
   }).write();
@@ -152,6 +153,10 @@ function setEndTime(timestamp) {
 
 function setFocusGoals(goals) {
   db.get("currentFocusSession").assign({ goals }).write();
+}
+
+function setCompletedGoals(completedGoals) {
+  db.get("currentFocusSession").assign({completedGoals}).write();
 }
 
 function setRating(rating) {
@@ -285,6 +290,7 @@ module.exports = {
   getAllFutureFocusSessions,
   setEndTime,
   setFocusGoals,
+  setCompletedGoals,
   setRating,
   toggleAutoResponseAvailablity,
   storeNotification,

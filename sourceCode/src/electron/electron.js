@@ -28,6 +28,7 @@ const {
   getAllFutureFocusSessions,
   setEndTime,
   setFocusGoals,
+  setCompletedGoals,
   setRating,
   storeBreakFocusClicks,
   updateBreakFocusPerService,
@@ -210,9 +211,10 @@ ipcMain.on("focus-schedule-request", (e, { startTime, endTime }) => {
   scheduleFocus(startTime, endTime);
 });
 
-ipcMain.on("focus-goals-request", (e, { goals }) => {
+ipcMain.on("focus-goals-request", (e, { goals, completedGoals }) => {
   console.log("focus goal request from react", goals);
   setFocusGoals(goals);
+  setCompletedGoals(completedGoals);
   // if focus goals were set successfully, update the react app
   e.reply("current-focus-request", getCurrentFocusSession());
 });
