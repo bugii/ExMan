@@ -4,6 +4,7 @@ const {
   getIntervallRefs,
   getFocusEndRef,
 } = require("../db/memoryDb");
+const { storeAppEnd } = require("../db/db");
 
 module.exports = () => {
   // Remove the 'global' timeouts / intervalls
@@ -21,4 +22,6 @@ module.exports = () => {
     service.endUnreadLoop();
     service.endMessagesLoop();
   });
+
+  storeAppEnd();
 };

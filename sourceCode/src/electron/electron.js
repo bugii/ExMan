@@ -34,6 +34,13 @@ const {
   storeRandomSurveyResults,
   storeDefaultFocusSession,
   getSettings,
+  storeAppStart,
+  storeActiveWindowInArchive,
+  storeActiveWindowInCurrentFocus,
+  storeServiceInteractionStartInCurrentFocus,
+  storeServiceInteractionEndInCurrentFocus,
+  storeServiceInteractionStartInArchive,
+  storeServiceInteractionEndInArchive,
 } = require("./db/db");
 
 const focusStart = require("./utils/focusStart");
@@ -61,6 +68,7 @@ const {
   getService,
 } = require("./services/ServicesManger");
 const createTray = require("./utils/createTray");
+const activeWin = require("active-win");
 
 const isMac = process.platform === "darwin";
 
@@ -69,6 +77,8 @@ console.log = log.log;
 console.log("starting app");
 // Initialize db
 db_init();
+storeAppStart();
+
 servicesManager.init();
 
 let mainMenu;
@@ -296,10 +306,6 @@ ipcMain.on("breakFocus", (e, breakFocusEnd) => {
   storeBreakFocusClicks(breakFocusEnd);
 });
 
-ipcMain.on("updateBreakFocusService", (e, id) => {
-  updateBreakFocusPerService(id);
-});
-
 ipcMain.on("get-all-future-focus-sessions", (e, args) => {
   e.reply("get-all-future-focus-sessions", getAllFutureFocusSessions());
 });
@@ -310,6 +316,42 @@ ipcMain.on("updateDefaultDuration", (e, { type, value }) => {
 
 ipcMain.on("get-settings", (e) => {
   e.reply("get-settings", getSettings());
+});
+
+let lastId = null;
+
+ipcMain.on("route-changed", (e, location) => {
+  console.log("Location changed", location);
+
+  if (location.pathname.includes("/services")) {
+    // navigated to service route
+    const splitArray = location.pathname.split("/");
+    const id = splitArray[splitArray.length - 1];
+    if (getFocus()) {
+      storeServiceInteractionStartInCurrentFocus(id);
+      if (lastId !== null) {
+        storeServiceInteractionEndInCurrentFocus(lastId);
+      }
+    } else {
+      storeServiceInteractionStartInArchive(id);
+      if (lastId !== null) {
+        storeServiceInteractionEndInArchive(lastId);
+      }
+    }
+    lastId = id;
+  } else {
+    // navigated to non-service page
+    if (getFocus()) {
+      if (lastId !== null) {
+        storeServiceInteractionEndInCurrentFocus(lastId);
+      }
+    } else {
+      if (lastId !== null) {
+        storeServiceInteractionEndInArchive(lastId);
+      }
+    }
+    lastId = null;
+  }
 });
 
 const openService = (id) => {
@@ -359,7 +401,7 @@ app.whenReady().then(async () => {
 
   //Update renderer loop
   console.log("update loop start");
-  const ref = setInterval(() => {
+  const ref = setInterval(async () => {
     getMainWindow().send("update-frontend", {
       services: servicesManager.getServices(),
       currentFocusSession: getCurrentFocusSession(),
@@ -381,6 +423,21 @@ app.whenReady().then(async () => {
   }
 
   setTimeout(updater, 10000);
+  const windowTrackerIntervall = setInterval(async () => {
+    const activeWindow = await activeWin();
+    if (getFocus()) {
+      storeActiveWindowInCurrentFocus({
+        name: activeWindow.owner.name,
+        title: activeWindow.title,
+      });
+    } else {
+      storeActiveWindowInArchive({
+        name: activeWindow.owner.name,
+        title: activeWindow.title,
+      });
+    }
+  }, 10000);
+  storeIntervallRef(windowTrackerIntervall);
 
   getMainWindow().on("close", (e) => {
     console.log(

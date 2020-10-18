@@ -27,8 +27,8 @@ function ErrorNotAuthed(props) {
 
   return (
     <ErrorDiv>
-      <BackButton onClick={() => history.push("/services")}>
-        back to services
+      <BackButton onClick={() => history.push("/home")}>
+        back to home
       </BackButton>
       <h1>Error</h1>
       <p>

@@ -44,6 +44,18 @@ function init() {
     }).write();
   }
 
+  if (!db.has("appUsage").value()) {
+    db.set("appUsage", []).write();
+  }
+
+  if (!db.has("activeWindows").value()) {
+    db.set("activeWindows", []).write();
+  }
+
+  if (!db.has("interactions").value()) {
+    db.set("interactions", {}).write();
+  }
+
   return db;
 }
 
@@ -77,7 +89,7 @@ function createNewFocusSession(startTime, endTime) {
     unreadCount: 0,
     autoReplied: [],
     messages: [],
-    inFocusModeClicks: 0,
+    interactions: [],
   }));
 
   const id = uuidv4();
@@ -92,6 +104,7 @@ function createNewFocusSession(startTime, endTime) {
     goals: [],
     rating: null,
     scheduled: false,
+    activeWindows: [],
   }).write();
 }
 
@@ -267,6 +280,82 @@ function getSettings() {
   return db.get("settings").value();
 }
 
+function storeAppStart() {
+  db.get("appUsage").push([new Date().getTime()]).write();
+}
+
+function storeAppEnd() {
+  db.get("appUsage").last().push(new Date().getTime()).write();
+}
+
+function storeActiveWindowInCurrentFocus({ name, title }) {
+  // get the last entry and check if anything has changed.. if not -> don't add another entry
+  const lastWindow = db.get("activeWindows").last().value();
+
+  if (lastWindow.name !== name || lastWindow.title !== title) {
+    db.get("currentFocusSession")
+      .get("activeWindows")
+      .push({ timestamp: new Date().getTime(), name, title })
+      .write();
+  }
+}
+
+function storeActiveWindowInArchive({ name, title }) {
+  // get the last entry and check if anything has changed.. if not -> don't add another entry
+  const lastWindow = db.get("activeWindows").last().value();
+
+  if (lastWindow.name !== name || lastWindow.title !== title) {
+    db.get("activeWindows")
+      .push({ timestamp: new Date().getTime(), name, title })
+      .write();
+  }
+}
+
+function storeServiceInteractionStartInCurrentFocus(id) {
+  db.get("currentFocusSession")
+    .get("services")
+    .find({ id })
+    .get("interactions")
+    .push([new Date().getTime()])
+    .write();
+}
+
+function storeServiceInteractionEndInCurrentFocus(id) {
+  db.get("currentFocusSession")
+    .get("services")
+    .find({ id })
+    .get("interactions")
+    .last()
+    .push(new Date().getTime())
+    .write();
+}
+
+function storeServiceInteractionStartInArchive(id) {
+  const hasInteractions = db.get("interactions").has(id).value();
+  const serviceName = db.get("services").find({ id }).get("name").value();
+
+  if (!hasInteractions) {
+    db.get("interactions")
+      .assign({ [id]: { name: serviceName, interactions: [] } })
+      .write();
+  }
+
+  db.get("interactions")
+    .get(id)
+    .get("interactions")
+    .push([new Date().getTime()])
+    .write();
+}
+
+function storeServiceInteractionEndInArchive(id) {
+  db.get("interactions")
+    .get(id)
+    .get("interactions")
+    .last()
+    .push(new Date().getTime())
+    .write();
+}
+
 module.exports = {
   init,
   getDb,
@@ -297,4 +386,12 @@ module.exports = {
   getRandomSurveyResults,
   storeDefaultFocusSession,
   getSettings,
+  storeAppStart,
+  storeAppEnd,
+  storeActiveWindowInCurrentFocus,
+  storeActiveWindowInArchive,
+  storeServiceInteractionStartInCurrentFocus,
+  storeServiceInteractionEndInCurrentFocus,
+  storeServiceInteractionStartInArchive,
+  storeServiceInteractionEndInArchive,
 };

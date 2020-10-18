@@ -92,7 +92,7 @@ function App() {
     });
 
     ipcRenderer.on("open-service", (e, id) => {
-      history.push("/services");
+      history.push(`/services/${id}`);
       setActiveService(id);
     });
 
@@ -115,6 +115,10 @@ function App() {
       setShowRandomPopUp(true);
     });
   }, []);
+
+  useEffect(() => {
+    ipcRenderer.send("route-changed", location);
+  }, [location]);
 
   return (
     <div className="app">
@@ -146,7 +150,7 @@ function App() {
           <Home nrOfServices={services.length} />
         </Route>
 
-        {/* For the services we don't use the exact prop -> this way it is always rendered. If you just want to show the services and not Home for example -> use history.push("/services") or any other route that has no other matches */}
+        {/* For the services we don't use the exact prop -> this way it is always rendered. If you just want to show the services and not Home for example -> use history.push("/services/${id}") */}
         <Route path="/">
           {services.map((service) => (
             <Webview
