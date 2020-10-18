@@ -37,7 +37,7 @@ function init() {
   if (!db.has("settings").value()) {
     db.set("settings", {
       autoReply:
-        "Currently, I am working in focus mode. I will answer you as soon as possible.",
+        "Currently, I am working in focus mode. I will answer you earliest in ${time}.",
       shortFocusDuration: 15,
       mediumFocusDuration: 25,
       longFocusDuration: 40,
