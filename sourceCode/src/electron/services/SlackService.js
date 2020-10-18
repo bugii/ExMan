@@ -128,7 +128,7 @@ module.exports = class SlackService extends Service {
                   .get("services")
                   .find({ id: this.id })
                   .get("messages")
-                  .push({ title: username, body: m.text, timestamp: m.ts })
+                  .push({ title: username, body: m.text, timestamp: parseInt(m.ts) *1000 })
                   .write();
 
                 const repliedList = getDb()
