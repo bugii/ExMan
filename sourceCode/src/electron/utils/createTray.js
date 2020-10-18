@@ -12,7 +12,14 @@ module.exports = () => {
   tray = new Tray(trayImage);
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: "Start short focus session",
+      label: "Start open focus",
+      click: () => {
+        const start = new Date().getTime();
+        focusStart(start);
+      },
+    },
+    {
+      label: "Start short focus",
       click: () => {
         const start = new Date().getTime();
         const settings = getSettings();
@@ -20,7 +27,7 @@ module.exports = () => {
       },
     },
     {
-      label: "Start medium focus session",
+      label: "Start medium focus",
       click: () => {
         const start = new Date().getTime();
         const settings = getSettings();
@@ -28,7 +35,7 @@ module.exports = () => {
       },
     },
     {
-      label: "Start long focus session",
+      label: "Start long focus",
       click: () => {
         const start = new Date().getTime();
         const settings = getSettings();

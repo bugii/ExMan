@@ -1,9 +1,9 @@
 const { endCurrentFocusSession } = require("../db/db");
 const {
-  getIntervallRefs,
   getTimeoutRefs,
   getMainWindow,
   setFocus,
+  getFocusEndRef,
 } = require("../db/memoryDb");
 
 const serviceManager = require("../services/ServicesManger");
@@ -20,7 +20,7 @@ function focusEnd() {
   });
 
   // End all 'global' (not the one of each service) timeouts (in case of an early termination of the focus session)
-  getTimeoutRefs().forEach((timeoutRef) => clearTimeout(timeoutRef));
+  clearTimeout(getFocusEndRef());
 
   // remove current focus session from db
   endCurrentFocusSession();

@@ -86,10 +86,10 @@ module.exports = class Service {
     clearInterval(this.messagesLoopRef);
   }
 
-  focusStart(diffMins) {
+  focusStart() {
     console.log("starting focus in", this.name);
     webContents.fromId(this.webContentsId).setAudioMuted(true);
-    this.setDnd(diffMins);
+    this.setDnd();
   }
 
   async focusEnd() {

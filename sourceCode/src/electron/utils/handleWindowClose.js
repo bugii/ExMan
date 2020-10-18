@@ -1,11 +1,16 @@
 const servicesManager = require("../services/ServicesManger");
-const { getTimeoutRefs, getIntervallRefs } = require("../db/memoryDb");
+const {
+  getTimeoutRefs,
+  getIntervallRefs,
+  getFocusEndRef,
+} = require("../db/memoryDb");
 
 module.exports = () => {
   // Remove the 'global' timeouts / intervalls
   getTimeoutRefs().forEach((ref) => {
     clearTimeout(ref);
   });
+  clearTimeout(getFocusEndRef());
   getIntervallRefs().forEach((ref) => {
     clearInterval(ref);
   });

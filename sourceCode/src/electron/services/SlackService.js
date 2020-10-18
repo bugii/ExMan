@@ -1,7 +1,6 @@
 const { webContents, session } = require("electron");
 const {
   getDb,
-  getAutoresponse,
   setUnreadChats,
   storeNotificationInArchive,
 } = require("../db/db");
@@ -51,7 +50,7 @@ module.exports = class SlackService extends Service {
     }, 10001);
   }
 
-  async setDnd(diffMins) {
+  async setDnd() {
     const token = await this.getToken();
     let cookies = await this.getCookies();
 
@@ -59,7 +58,7 @@ module.exports = class SlackService extends Service {
     await axios.get("https://slack.com/api/dnd.setSnooze", {
       params: {
         token,
-        num_minutes: diffMins,
+        // num_minutes: diffMins,
       },
       headers: {
         Cookie: cookies,
@@ -134,7 +133,11 @@ module.exports = class SlackService extends Service {
                   .get("services")
                   .find({ id: this.id })
                   .get("messages")
-                  .push({ title: username, body: m.text, timestamp: parseInt(m.ts) *1000 })
+                  .push({
+                    title: username,
+                    body: m.text,
+                    timestamp: parseInt(m.ts) * 1000,
+                  })
                   .write();
 
                 const repliedList = getDb()

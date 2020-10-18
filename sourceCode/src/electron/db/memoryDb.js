@@ -1,5 +1,6 @@
 const timeoutRefs = [];
 const intervallRefs = [];
+let focusEndRef = null;
 let mainWindow = null;
 let isFocus = false;
 
@@ -27,6 +28,14 @@ function getIntervallRefs() {
   return intervallRefs;
 }
 
+function storeFocusEndRef(ref) {
+  focusEndRef = ref;
+}
+
+function getFocusEndRef() {
+  return focusEndRef;
+}
+
 function getFocus() {
   return isFocus;
 }
@@ -42,6 +51,8 @@ module.exports = {
   getTimeoutRefs,
   storeIntervallRef,
   getIntervallRefs,
+  storeFocusEndRef,
+  getFocusEndRef,
   getFocus,
   setFocus,
 };

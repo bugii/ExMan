@@ -57,7 +57,7 @@ function Countdown(props) {
     <CountdownContainer>
       <OutterCircle>
         <InnerCircle>
-          <TimeNumber> {minutesLeft} </TimeNumber>
+          <TimeNumber> {props.isOpen ? "∞" : minutesLeft} </TimeNumber>
           <TimeText> minutes left </TimeText>
         </InnerCircle>
       </OutterCircle>

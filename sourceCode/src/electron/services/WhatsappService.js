@@ -37,7 +37,7 @@ module.exports = class WhatsappService extends Service {
 
   messagesLoop() {}
 
-  setDnd(diffMins) {}
+  setDnd() {}
 
   setOnline() {}
 

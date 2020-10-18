@@ -37,7 +37,7 @@ module.exports = class TelegramService extends Service {
 
   messagesLoop() {}
 
-  setDnd(diffMins) {}
+  setDnd() {}
 
   setOnline() {}
 

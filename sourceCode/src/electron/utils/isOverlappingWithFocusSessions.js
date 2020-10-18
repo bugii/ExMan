@@ -4,11 +4,17 @@ const {
 } = require("../db/db");
 
 module.exports = (startA, endA) => {
+  // if the request is for an open ended focus session, just allow (not really possible to test overlapping)
+  if (!endA) return false;
+
   // Get start & end time of current focus session (if exists)
   const currentFocusSession = getCurrentFocusSession();
   if (currentFocusSession) {
     startB = currentFocusSession.startTime;
     endB = currentFocusSession.endTime;
+
+    // if the current focus session is open ended -> allow scheduling (not really possible to test overlapping)
+    if (!endB) return false;
 
     if (isOverlapping(startA, endA, startB, endB)) {
       console.log("overlapping with current focus session");

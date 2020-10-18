@@ -23,7 +23,10 @@ module.exports = () => {
   const futureFocusSessions = getAllFutureFocusSessions();
   if (currentFocusSession && !getFocus()) {
     // still going?
-    if (currentFocusSession.endTime > new Date().getTime()) {
+    if (
+      !currentFocusSession.endTime ||
+      currentFocusSession.endTime > new Date().getTime()
+    ) {
       console.log("current focus session found, starting..");
       focusStart(
         currentFocusSession.startTime,

@@ -1,9 +1,9 @@
 const { createNewFocusSession } = require("../db/db");
 const focusEnd = require("./focusEnd");
-const { storeTimeoutRef, getMainWindow, setFocus } = require("../db/memoryDb");
+const { getMainWindow, setFocus, storeFocusEndRef } = require("../db/memoryDb");
 const serviceManager = require("../services/ServicesManger");
 
-function focusStart(startTime, endTime, id = null) {
+function focusStart(startTime, endTime = null, id = null) {
   // not all services authed -> can't start focus session
   if (!serviceManager.allAuthed) {
     getMainWindow().webContents.send("error", "/not-authed");
@@ -19,13 +19,10 @@ function focusStart(startTime, endTime, id = null) {
     createNewFocusSession(startTime, endTime, false);
   }
 
-  const diffMins = (endTime - startTime) / 1000 / 60;
-  console.log("diff mins", diffMins);
-
   const services = serviceManager.getServicesComplete();
   services.forEach((service) => {
     // Call each individual focusStart method for each service
-    service.focusStart(diffMins);
+    service.focusStart();
   });
 
   // if focus start successful, update the react app
@@ -36,12 +33,14 @@ function focusStart(startTime, endTime, id = null) {
 
   setFocus(true);
 
-  // schedule automatic focus end
-  const focusEndTimeoutRef = setTimeout(() => {
-    focusEnd();
-  }, endTime - new Date().getTime());
+  // schedule automatic focus end if endTime is specified
+  if (endTime) {
+    const focusEndTimeoutRef = setTimeout(() => {
+      focusEnd();
+    }, endTime - new Date().getTime());
 
-  storeTimeoutRef(focusEndTimeoutRef);
+    storeFocusEndRef(focusEndTimeoutRef);
+  }
 }
 
 module.exports = focusStart;

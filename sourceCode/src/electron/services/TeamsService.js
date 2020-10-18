@@ -1,10 +1,5 @@
 const { webContents } = require("electron");
-const {
-  getDb,
-  getAutoresponse,
-  getCurrentFocusSession,
-  storeNotificationInArchive,
-} = require("../db/db");
+const { getDb, storeNotificationInArchive } = require("../db/db");
 const axios = require("axios");
 const Service = require("../services/Service");
 const { setUnreadChats } = require("../db/db");
@@ -60,7 +55,7 @@ module.exports = class TeamsService extends Service {
     }, 10000);
   }
 
-  async setDnd(diffMins) {
+  async setDnd() {
     const tokens = await this.getToken();
 
     try {
