@@ -7,6 +7,7 @@ const {
 } = require("../db/db");
 const axios = require("axios");
 const Service = require("../services/Service");
+const fillAutoresponseTemplate = require("../utils/fillAutoresponseTemplate");
 
 module.exports = class SlackService extends Service {
   constructor(id, autoResponse, checkIfAllAuthed) {
@@ -183,7 +184,7 @@ module.exports = class SlackService extends Service {
     const cookies = await this.getCookies();
 
     var data = JSON.stringify({
-      text: getAutoresponse(),
+      text: fillAutoresponseTemplate(),
       channel: channel,
     });
 

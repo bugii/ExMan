@@ -30,7 +30,6 @@ export const Settingsbox = styled.div`
 `;
 
 function Settings(props) {
-  let history = useHistory();
   let [autoReply, setAutoReply] = useState("");
   const [shortFocus, setShortFocus] = useState(null);
   const [mediumFocus, setMediumFocus] = useState(null);
@@ -41,6 +40,7 @@ function Settings(props) {
       setShortFocus(settings.shortFocusDuration);
       setMediumFocus(settings.mediumFocusDuration);
       setLongFocus(settings.longFocusDuration);
+      setAutoReply(settings.autoReply);
     });
     ipcRenderer.send("get-settings");
   }, []);
@@ -73,11 +73,9 @@ function Settings(props) {
     });
   };
 
-  const autoResponse = (e) => {
+  const handleAutoResponseUpdate = (e) => {
     // send ipc message to main process to start session there too (db etc)
     ipcRenderer.send("updateAutoResponse", autoReply);
-    console.log("Response update successful");
-    history.push("/");
   };
 
   return (
@@ -96,7 +94,7 @@ function Settings(props) {
             style={{ marginTop: "10px" }}
             variant="contained"
             color="primary"
-            onClick={autoResponse}
+            onClick={handleAutoResponseUpdate}
           >
             {" save auto-response"}
           </Button>

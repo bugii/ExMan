@@ -8,6 +8,7 @@ const {
 const axios = require("axios");
 const Service = require("../services/Service");
 const { setUnreadChats } = require("../db/db");
+const fillAutoresponseTemplate = require("../utils/fillAutoresponseTemplate");
 
 module.exports = class TeamsService extends Service {
   constructor(id, autoResponse, checkIfAllAuthed) {
@@ -233,7 +234,7 @@ module.exports = class TeamsService extends Service {
       await axios.post(
         url,
         {
-          content: getAutoresponse(),
+          content: fillAutoresponseTemplate(),
           messagetype: "Text",
         },
         {

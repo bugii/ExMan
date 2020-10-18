@@ -46,18 +46,18 @@ const TimeText = styled.text`
 `;
 
 function Countdown(props) {
-  const [secondsLeft, setSecondsLeft] = useState(props.focusLength);
+  const [minutesLeft, setMinutesLeft] = useState(props.focusLength);
   useEffect(() => {
     setInterval(() => {
-      setSecondsLeft((s) => s - 1);
-    }, 1000);
+      setMinutesLeft((s) => s - 1);
+    }, 1000 * 60);
   }, []);
 
   return (
     <CountdownContainer>
       <OutterCircle>
         <InnerCircle>
-          <TimeNumber> {Math.round(secondsLeft / 60)} </TimeNumber>
+          <TimeNumber> {minutesLeft} </TimeNumber>
           <TimeText> minutes left </TimeText>
         </InnerCircle>
       </OutterCircle>

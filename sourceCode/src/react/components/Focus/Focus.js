@@ -39,7 +39,9 @@ const FocusMenuButtons = styled.div`
 `;
 
 function Focus(props) {
-  const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(props.currentFocusSession.goals.length <= 0);
+  const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(
+    props.currentFocusSession.goals.length <= 0
+  );
 
   const [showBreakFocusPopup, setShowBreakFocusPopup] = useState(false);
 
@@ -49,7 +51,7 @@ function Focus(props) {
   };
 
   const focusTime = props.currentFocusSession.endTime
-    ? (props.currentFocusSession.endTime - new Date()) / 1000
+    ? Math.ceil((props.currentFocusSession.endTime - new Date()) / 1000 / 60)
     : -1;
 
   return (
