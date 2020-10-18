@@ -13,7 +13,7 @@
     "electron-run": "electron .",
     "react-start": "react-app-rewired start",
     "react-build": "react-app-rewired build",
-    "electron-build": "electron-builder -mwl",
+    "electron-build": "electron-builder",
     "release": "npm run react-build && electron-builder -mwl --publish=onTagOrDraft",
     "build": "npm run react-build && npm run electron-build",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
