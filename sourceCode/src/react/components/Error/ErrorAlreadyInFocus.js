@@ -27,8 +27,8 @@ function ErrorNotAuthed(props) {
 
   return (
     <ErrorDiv>
-      <BackButton onClick={() => history.push("/focus")}>
-        back to focus
+      <BackButton onClick={() => history.push("/")}>
+        back to home
       </BackButton>
       <h1>Error</h1>
       <p>You are currently already in a focus session.</p>

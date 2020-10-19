@@ -13,6 +13,7 @@ import Rating from "@material-ui/lab/Rating";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ServiceMessageSummaryBox from "../components/Summary/ServiceMessageSummaryBox";
 import Button from "@material-ui/core/Button";
+import GoalsChart from "../components/Summary/OverviewCharts/GoalsChart"
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -101,7 +102,7 @@ function Dashboard(props) {
     return (
       <DashboardDiv>
         <h1 style={{ textAlign: "center", color: Colors.navy }}>DASHBOARD</h1>
-
+        <GoalsChart data={pastFocusSessions}/>
         <Grid
           container
           justify="center"
