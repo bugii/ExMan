@@ -53,14 +53,17 @@ function Navbar(props) {
       </div>
 
       <div>
-        <AddCircleOutlineIcon
-          onClick={() => history.push("/add-service")}
-          style={{
-            color: Colors.snow,
-            fontSize: 50,
-            margin: "0.5rem 1rem",
-          }}
-        />
+        {!props.currentFocusSession ? (
+          <AddCircleOutlineIcon
+            onClick={() => history.push("/add-service")}
+            style={{
+              color: Colors.snow,
+              fontSize: 50,
+              margin: "0.5rem 1rem",
+            }}
+          />
+        ) : null}
+
         <EqualizerIcon
           onClick={() => history.push("/dashboard")}
           style={{

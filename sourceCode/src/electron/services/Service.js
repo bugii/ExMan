@@ -130,7 +130,7 @@ module.exports = class Service {
     if (isFoucs) {
       storeNotification(this.id, title, body);
     } else {
-      storeNotificationInArchive(this.id);
+      storeNotificationInArchive(this.id, title);
     }
   }
 
