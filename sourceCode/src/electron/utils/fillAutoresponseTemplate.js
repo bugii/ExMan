@@ -6,9 +6,12 @@ module.exports = () => {
 
   // get time left in focus session from database
   const currentFocusSession = getCurrentFocusSession();
-  const timeLeft = Math.ceil(
-    (currentFocusSession.originalEndTime - new Date().getTime()) / 1000 / 60
-  );
+  let timeLeft = "unknown";
+  if (currentFocusSession.originalEndTime) {
+    timeLeft = Math.ceil(
+      (currentFocusSession.originalEndTime - new Date().getTime()) / 1000 / 60
+    );
+  }
 
   // replace ${time} string with number of minutes
   autoReply = autoReply.replace("${time}", `${timeLeft} minutes`);
