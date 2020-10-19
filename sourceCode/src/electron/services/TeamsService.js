@@ -10,6 +10,7 @@ module.exports = class TeamsService extends Service {
     // clear session storage
     console.log("creating teams service");
     super(id, "teams", autoResponse, checkIfAllAuthed);
+    this.syncToken = null;
   }
 
   unReadLoop() {
@@ -43,15 +44,7 @@ module.exports = class TeamsService extends Service {
     console.log("messages loop start", this.name);
 
     this.messagesLoopRef = setInterval(() => {
-      const currentTeamsSession = getDb()
-        .get("currentFocusSession")
-        .get("services")
-        .find({ id: this.id })
-        .value();
-
-      this.getMessages(
-        currentTeamsSession ? currentTeamsSession["syncToken"] : null
-      );
+      this.getMessages(this.syncToken);
     }, 10000);
   }
 
@@ -102,6 +95,7 @@ module.exports = class TeamsService extends Service {
 
     // No synctoken provided => first request of focus session
     if (!syncTokenParam) {
+      console.log("first message loop, teams");
       try {
         const res = await axios.get(
           "https://emea.ng.msg.teams.microsoft.com/v1/users/ME/conversations/",
@@ -116,12 +110,7 @@ module.exports = class TeamsService extends Service {
         const syncToken = res.data["_metadata"]["syncState"];
 
         // save syncToken to db for next request
-        getDb()
-          .get("currentFocusSession")
-          .get("services")
-          .find({ id: this.id })
-          .assign({ syncToken })
-          .write();
+        this.syncToken = syncToken;
       } catch (error) {
         console.log(error);
       }
@@ -137,12 +126,7 @@ module.exports = class TeamsService extends Service {
         // get new syncToken
         const syncToken = new_res.data["_metadata"]["syncState"];
         // update syncToken to db for next request
-        getDb()
-          .get("currentFocusSession")
-          .get("services")
-          .find({ id: this.id })
-          .assign({ syncToken })
-          .write();
+        this.syncToken = syncToken;
 
         new_res.data.conversations.forEach((channel) => {
           const single_channel = channel.id;
@@ -158,57 +142,61 @@ module.exports = class TeamsService extends Service {
           console.log(username);
           console.log(timestamp);
 
-          const autoReplied = getDb()
-            .get("currentFocusSession")
-            .get("services")
-            .find({ id: this.id })
-            .get("autoReplied")
-            .value();
-
-          const focusStart = getDb()
-            .get("currentFocusSession")
-            .get("startTime")
-            .value();
-
-          const focusDate = new Date(focusStart);
-          const timestampDate = new Date(timestamp);
-
           if (username !== "") {
-            if (this.isInFocusSession() && timestampDate > focusDate) {
+            if (this.isInFocusSession()) {
               // Currently in focus session
-              // store messages in local db
-              getDb()
+
+              const autoReplied = getDb()
                 .get("currentFocusSession")
                 .get("services")
                 .find({ id: this.id })
-                .get("messages")
-                .push({
-                  title: username,
-                  body: content,
-                  timestamp: timestampDate.getTime(),
-                })
-                .write();
+                .get("autoReplied")
+                .value();
 
-              if (
-                single_channel.includes("@unq.gbl.spaces") &&
-                !this.isReplied(autoReplied, single_channel) &&
-                this.autoResponse
-              ) {
-                //do an auto-reply
-                this.sendMessage(single_channel);
+              const focusStart = getDb()
+                .get("currentFocusSession")
+                .get("startTime")
+                .value();
 
-                // store auto-replied single_channel in db
+              const focusDate = new Date(focusStart);
+              const timestampDate = new Date(timestamp);
+
+              if (timestampDate > focusDate) {
+                // safety measure to not store any old messages (luthi encountered this for some reason)
+                // store messages in local db
                 getDb()
                   .get("currentFocusSession")
                   .get("services")
                   .find({ id: this.id })
-                  .get("autoReplied")
-                  .push({ channel: single_channel })
+                  .get("messages")
+                  .push({
+                    title: username,
+                    body: content,
+                    timestamp: timestampDate.getTime(),
+                  })
                   .write();
+
+                if (
+                  single_channel.includes("@unq.gbl.spaces") &&
+                  !this.isReplied(autoReplied, single_channel) &&
+                  this.autoResponse
+                ) {
+                  //do an auto-reply
+                  this.sendMessage(single_channel);
+
+                  // store auto-replied single_channel in db
+                  getDb()
+                    .get("currentFocusSession")
+                    .get("services")
+                    .find({ id: this.id })
+                    .get("autoReplied")
+                    .push({ channel: single_channel })
+                    .write();
+                }
               }
             } else {
               // not in focus session, still store to archive
-              storeNotificationInArchive(this.id);
+              storeNotificationInArchive(this.id, username);
             }
           }
         });

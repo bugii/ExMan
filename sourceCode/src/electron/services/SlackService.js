@@ -174,7 +174,7 @@ module.exports = class SlackService extends Service {
                     .write();
                 }
               } else {
-                storeNotificationInArchive(this.id);
+                storeNotificationInArchive(this.id, username);
               }
             }
           });

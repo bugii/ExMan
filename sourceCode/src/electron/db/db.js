@@ -25,8 +25,8 @@ function init() {
     db.set("futureFocusSessions", []).write();
   }
 
-  if (!db.has("messagesOutOfFocus").value()) {
-    db.set("messagesOutOfFocus", {}).write();
+  if (!db.has("outOfFocusMessages").value()) {
+    db.set("outOfFocusMessages", {}).write();
   }
 
   if (!db.has("randomSurveyResults").value()) {
@@ -48,12 +48,12 @@ function init() {
     db.set("appUsage", []).write();
   }
 
-  if (!db.has("activeWindows").value()) {
-    db.set("activeWindows", []).write();
+  if (!db.has("outOfFocusActiveWindows").value()) {
+    db.set("outOfFocusActiveWindows", []).write();
   }
 
-  if (!db.has("interactions").value()) {
-    db.set("interactions", {}).write();
+  if (!db.has("outOfFocusInteractions").value()) {
+    db.set("outOfFocusInteractions", {}).write();
   }
 
   return db;
@@ -169,7 +169,7 @@ function setFocusGoals(goals) {
 }
 
 function setCompletedGoals(completedGoals) {
-  db.get("currentFocusSession").assign({completedGoals}).write();
+  db.get("currentFocusSession").assign({ completedGoals }).write();
 }
 
 function setRating(rating) {
@@ -221,20 +221,20 @@ function storeNotification(id, title, body) {
     .write();
 }
 
-function storeNotificationInArchive(id) {
-  const hasMessages = db.get("messagesOutOfFocus").has(id).value();
+function storeNotificationInArchive(id, title) {
+  const hasMessages = db.get("outOfFocusMessages").has(id).value();
   const serviceName = db.get("services").find({ id }).get("name").value();
 
   if (!hasMessages) {
-    db.get("messagesOutOfFocus")
+    db.get("outOfFocusMessages")
       .assign({ [id]: { name: serviceName, messages: [] } })
       .write();
   }
 
-  db.get("messagesOutOfFocus")
+  db.get("outOfFocusMessages")
     .get(id)
     .get("messages")
-    .push(new Date().getTime())
+    .push({ timestamp: new Date().getTime(), title })
     .write();
 }
 
@@ -256,7 +256,7 @@ function storeRandomSurveyResults({ productivity }) {
 }
 
 function getOutOfFocusMessages() {
-  return db.get("messagesOutOfFocus").value();
+  return db.get("outOfFocusMessages").value();
 }
 
 function getRandomSurveyResults() {
@@ -295,7 +295,19 @@ function storeAppEnd() {
 
 function storeActiveWindowInCurrentFocus({ name, title }) {
   // get the last entry and check if anything has changed.. if not -> don't add another entry
-  const lastWindow = db.get("activeWindows").last().value();
+  const lastWindow = db
+    .get("currentFocusSession")
+    .get("activeWindows")
+    .last()
+    .value();
+
+  if (!lastWindow) {
+    db.get("currentFocusSession")
+      .get("activeWindows")
+      .push({ timestamp: new Date().getTime(), name, title })
+      .write();
+    return;
+  }
 
   if (lastWindow.name !== name || lastWindow.title !== title) {
     db.get("currentFocusSession")
@@ -307,10 +319,17 @@ function storeActiveWindowInCurrentFocus({ name, title }) {
 
 function storeActiveWindowInArchive({ name, title }) {
   // get the last entry and check if anything has changed.. if not -> don't add another entry
-  const lastWindow = db.get("activeWindows").last().value();
+  const lastWindow = db.get("outOfFocusActiveWindows").last().value();
+
+  if (!lastWindow) {
+    db.get("outOfFocusActiveWindows")
+      .push({ timestamp: new Date().getTime(), name, title })
+      .write();
+    return;
+  }
 
   if (lastWindow.name !== name || lastWindow.title !== title) {
-    db.get("activeWindows")
+    db.get("outOfFocusActiveWindows")
       .push({ timestamp: new Date().getTime(), name, title })
       .write();
   }
@@ -336,16 +355,16 @@ function storeServiceInteractionEndInCurrentFocus(id) {
 }
 
 function storeServiceInteractionStartInArchive(id) {
-  const hasInteractions = db.get("interactions").has(id).value();
+  const hasInteractions = db.get("outOfFocusInteractions").has(id).value();
   const serviceName = db.get("services").find({ id }).get("name").value();
 
   if (!hasInteractions) {
-    db.get("interactions")
+    db.get("outOfFocusInteractions")
       .assign({ [id]: { name: serviceName, interactions: [] } })
       .write();
   }
 
-  db.get("interactions")
+  db.get("outOfFocusInteractions")
     .get(id)
     .get("interactions")
     .push([new Date().getTime()])
@@ -353,7 +372,7 @@ function storeServiceInteractionStartInArchive(id) {
 }
 
 function storeServiceInteractionEndInArchive(id) {
-  db.get("interactions")
+  db.get("outOfFocusInteractions")
     .get(id)
     .get("interactions")
     .last()

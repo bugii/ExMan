@@ -323,8 +323,6 @@ ipcMain.on("get-settings", (e) => {
 let lastId = null;
 
 ipcMain.on("route-changed", (e, location) => {
-  console.log("Location changed", location);
-
   if (location.pathname.includes("/services")) {
     // navigated to service route
     const splitArray = location.pathname.split("/");
@@ -445,6 +443,15 @@ app.whenReady().then(async () => {
     console.log(
       "close window, deleting all the timeouts and intervalls in memory"
     );
+    if (getFocus()) {
+      if (lastId !== null) {
+        storeServiceInteractionEndInCurrentFocus(lastId);
+      }
+    } else {
+      if (lastId !== null) {
+        storeServiceInteractionEndInArchive(lastId);
+      }
+    }
     handleWindowClose();
   });
 

@@ -6,14 +6,34 @@ const {
   getAllFocusSessions,
   getOutOfFocusMessages,
   getRandomSurveyResults,
+  getDb,
+  getSettings,
 } = require("../db/db");
 const { getMainWindow } = require("../db/memoryDb");
 
 module.exports = async () => {
   const outOfFocusMessages = getOutOfFocusMessages();
   const randomSurveyResults = getRandomSurveyResults();
+  const outOfFocusInteractions = getDb().get("outOfFocusInteractions").value();
+  const outOfFocusActiveWindows = getDb()
+    .get("outOfFocusActiveWindows")
+    .value();
+  const appUsage = getDb().get("appUsage").value();
+  const settings = getSettings();
 
-  const output = { focusSessions: [], outOfFocusMessages, randomSurveyResults };
+  const hashedOutOfFocusMessages = hashOutOfFocusMessageTitles(
+    outOfFocusMessages
+  );
+
+  const output = {
+    focusSessions: [],
+    outOfFocusMessages: hashedOutOfFocusMessages,
+    randomSurveyResults,
+    outOfFocusInteractions,
+    outOfFocusActiveWindows,
+    appUsage,
+    settings,
+  };
 
   const focusSessions = getAllFocusSessions();
 
@@ -24,13 +44,15 @@ module.exports = async () => {
     };
 
     focusSession.services.forEach((service) => {
+      const hashedMessages = hashInFocusMessageTitles(service.messages);
+
       anonymizedVersion["services"].push({
         id: service.id,
         name: service.name,
         unreadCount: service.unreadCount,
         autoReplied: service.autoReplied,
-        messages: service.messages.length,
-        inFocusModeClicks: service.inFocusModeClicks,
+        messages: hashedMessages,
+        interactions: service.interactions,
       });
     });
 
@@ -53,4 +75,39 @@ module.exports = async () => {
       }
     });
   }
+};
+
+const hashCode = (s) =>
+  s.split("").reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
+
+const hashInFocusMessageTitles = (messages) => {
+  const hashedMessages = [];
+  messages.forEach((message) => {
+    const sender = message.title;
+    // hash the sender
+    const hashedSender = hashCode(sender);
+    hashedMessages.push({ timestamp: message.timestamp, title: hashedSender });
+  });
+  return hashedMessages;
+};
+
+const hashOutOfFocusMessageTitles = (servicesMessages) => {
+  const hashedMessages = {};
+  for (service in servicesMessages) {
+    hashedMessages[service] = {
+      name: servicesMessages[service].name,
+      messages: [],
+    };
+
+    servicesMessages[service]["messages"].forEach((message) => {
+      const sender = message.title;
+      const hashedSender = hashCode(sender);
+
+      hashedMessages[service]["messages"].push({
+        timestamp: message.timestamp,
+        title: hashedSender,
+      });
+    });
+  }
+  return hashedMessages;
 };
