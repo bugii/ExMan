@@ -9,12 +9,17 @@
   "extends": null,
   "files": ["./build/**/*", "./sourceCode/src/electron/**/*"],
   "mac": {
+    "hardenedRuntime": true,
+    "category": "public.app-category.productivity",
+    "gatekeeperAssess": false,
     "entitlements": "resources/entitlements.mac.plist",
+    "entitlementsInherit": "resources/entitlements.mac.plist",
     "extendInfo": {
       "NSCameraUsageDescription": "This app requires camera access for video chats",
       "NSMicrophoneUsageDescription": "This app requires microphone access for voice chats"
     }
   },
   "win": {},
-  "linux": {}
+  "linux": {},
+  "afterSign": "scripts/notarize.js"
 }
