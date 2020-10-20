@@ -172,6 +172,10 @@ function setCompletedGoals(completedGoals) {
   db.get("currentFocusSession").assign({ completedGoals }).write();
 }
 
+function setCompletedGoalsAfterSession(completedGoals) {
+  db.get("pastFocusSessions").last().assign({ completedGoals }).write();
+}
+
 function setRating(rating) {
   db.get("pastFocusSessions").last().assign({ rating }).write();
 }
@@ -399,6 +403,7 @@ module.exports = {
   setEndTime,
   setFocusGoals,
   setCompletedGoals,
+  setCompletedGoalsAfterSession,
   setRating,
   toggleAutoResponseAvailablity,
   storeNotification,
