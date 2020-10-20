@@ -11,6 +11,7 @@ module.exports = class TeamsService extends Service {
     console.log("creating teams service");
     super(id, "teams", autoResponse, checkIfAllAuthed);
     this.syncToken = null;
+    this.username = null;
   }
 
   unReadLoop() {
@@ -32,9 +33,26 @@ module.exports = class TeamsService extends Service {
 
     this.authLoopRef = setInterval(async () => {
       try {
-        await this.getToken();
+        const tokens = await this.getToken();
+        const teamsResponse = {
+          method: "get",
+          url: "https://emea.ng.msg.teams.microsoft.com/v1/users/ME/properties",
+          headers: {
+            Authentication: `skypetoken=${tokens[1]}`,
+          },
+        };
+
+        if (this.username === null) {
+          const response = await axios(teamsResponse);
+
+          const teamsObject = JSON.parse(response.data["userDetails"]);
+          this.username = teamsObject["name"];
+          console.log("from authloop", this.username);
+        }
+
         this.setAuthed(true);
       } catch (e) {
+        console.log(e);
         this.setAuthed(false);
       }
     }, 1000);
@@ -128,7 +146,7 @@ module.exports = class TeamsService extends Service {
         // update syncToken to db for next request
         this.syncToken = syncToken;
 
-        new_res.data.conversations.forEach((channel) => {
+        new_res.data.conversations.forEach(async (channel) => {
           const single_channel = channel.id;
           const content = channel.lastMessage.content;
           const username = channel.lastMessage.imdisplayname;
@@ -144,26 +162,7 @@ module.exports = class TeamsService extends Service {
 
           const timestampDate = new Date(timestamp);
 
-          const teamsResponse = {
-            method: "get",
-            url: "https://emea.ng.msg.teams.microsoft.com/v1/users/ME/properties",
-            headers: {
-              Authentication:
-                `skypetoken=${tokens[1]}`,
-            },
-          };
-
-          axios(teamsUsername)
-            .then(function (response) {
-              console.log(JSON.stringify(response.data));
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-          
-          console.log(teamsResponse.data["userDetails"]);
-          
-          if (username !== "") {
+          if (username !== "" && username !== this.username) {
             if (this.isInFocusSession()) {
               // Currently in focus session
 
