@@ -40,7 +40,7 @@ function ScheduleFocusSession(props) {
   };
 
   return (
-    <Dialog aria-labelledby="simple-dialog-title" open={props.open}>
+    <Dialog aria-labelledby="simple-dialog-title" open={props.open} onClose={props.closeDialog}>
       <DialogTitle id="simple-dialog-title">Schedule Focus Session</DialogTitle>
       <FormContainer noValidate>
         <TextField
