@@ -20,6 +20,8 @@
     }
   },
   "win": {},
-  "linux": {},
+  "linux": {
+    "category": "Utility"
+  },
   "afterSign": "scripts/notarize.js"
 }
