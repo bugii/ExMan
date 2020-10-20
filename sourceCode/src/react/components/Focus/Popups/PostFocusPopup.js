@@ -35,6 +35,7 @@ function PostFocusPopup(props) {
     };
 
     const handleSubmit = () => {
+        console.log("Completed on submit: ", completedList);
         ipcRenderer.send("previous-session-update", {
             goals: todoList,
             completedGoals: completedList,
@@ -45,15 +46,13 @@ function PostFocusPopup(props) {
 
     const handleToggle = (value) => () => {
         const currentIndex = completedList.indexOf(value);
-        const newChecked = [...completedList];
 
         if (currentIndex === -1) {
-            newChecked.push(value);
+            completedList.push(value);
         } else {
-            newChecked.splice(currentIndex, 1);
+            completedList.splice(currentIndex, 1);
         }
-
-        setCompletedList(newChecked);
+        console.log("Completed after toggle: ", completedList);
     };
 
 
