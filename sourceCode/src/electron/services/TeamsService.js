@@ -142,6 +142,27 @@ module.exports = class TeamsService extends Service {
           console.log(username);
           console.log(timestamp);
 
+          const timestampDate = new Date(timestamp);
+
+          const teamsResponse = {
+            method: "get",
+            url: "https://emea.ng.msg.teams.microsoft.com/v1/users/ME/properties",
+            headers: {
+              Authentication:
+                `skypetoken=${tokens[1]}`,
+            },
+          };
+
+          axios(teamsUsername)
+            .then(function (response) {
+              console.log(JSON.stringify(response.data));
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          
+          console.log(teamsResponse.data["userDetails"]);
+          
           if (username !== "") {
             if (this.isInFocusSession()) {
               // Currently in focus session
@@ -159,7 +180,6 @@ module.exports = class TeamsService extends Service {
                 .value();
 
               const focusDate = new Date(focusStart);
-              const timestampDate = new Date(timestamp);
 
               if (timestampDate > focusDate) {
                 // safety measure to not store any old messages (luthi encountered this for some reason)
@@ -195,8 +215,10 @@ module.exports = class TeamsService extends Service {
                 }
               }
             } else {
-              // not in focus session, still store to archive
-              storeNotificationInArchive(this.id, username);
+              if (new Date().getTime() - 20000 < timestampDate.getTime()) {
+                // not in focus session, still store to archive
+                storeNotificationInArchive(this.id, username);
+              }
             }
           }
         });
