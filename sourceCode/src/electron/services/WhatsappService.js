@@ -44,12 +44,4 @@ module.exports = class WhatsappService extends Service {
   getMessages(startTime) {}
 
   sendMessage(channel, message) {}
-
-  clearSession() {
-    console.log(`cleaning ${this.name} session`);
-    const ses = session.fromPartition(`persist:${this.id}`);
-    ses.clearStorageData({
-      storages: ["appcache", "cachestorage", "websql", "indexdb"],
-    });
-  }
 };
