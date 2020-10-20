@@ -86,6 +86,7 @@ function FocusGoalsPopup(props) {
       aria-labelledby="simple-dialog-title"
       open={props.open}
       maxWidth={"lg"}
+      onClose={props.close}
     >
       <DialogTitle id="simple-dialog-title">Focus Goals</DialogTitle>
       <PreFocusDiv>
