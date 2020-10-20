@@ -1,16 +1,14 @@
-const { endCurrentFocusSession } = require("../db/db");
-const {
-  getTimeoutRefs,
-  getMainWindow,
-  setFocus,
-  getFocusEndRef,
-} = require("../db/memoryDb");
+const { endCurrentFocusSession, setEndTime } = require("../db/db");
+const { getMainWindow, setFocus, getFocusEndRef } = require("../db/memoryDb");
 
 const serviceManager = require("../services/ServicesManger");
 const bringToFront = require("./bringToFront");
 
 function focusEnd() {
   console.log("focus end");
+  // manually set the endTime of the focus session to the current time. This results in endTime != originalEndTime -> we can see which sessions were aborted manually
+  setEndTime(new Date().getTime());
+
   //get ongoing focus sessions
   const services = serviceManager.getServicesComplete();
 
