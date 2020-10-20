@@ -67,6 +67,7 @@ function Summary(props) {
       {showPostFocusPopup && focusSession ? (
         <PostFocusPopup
           goals={focusSession.goals ? focusSession.goals : []}
+          completedGoals={focusSession.completedGoals ? focusSession.completedGoals : []}
           open={showPostFocusPopup}
           close={() => setshowPostFocusPopup(false)}
         />

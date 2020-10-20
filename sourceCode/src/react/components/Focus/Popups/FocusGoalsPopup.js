@@ -126,7 +126,6 @@ function FocusGoalsPopup(props) {
             todoList={todoList}
             completedList={completedList}
             deleteTodos={deleteTodos}
-            handleChange={handleChange}
             handleToggle={handleToggle}
             hideDelete={false}
           />

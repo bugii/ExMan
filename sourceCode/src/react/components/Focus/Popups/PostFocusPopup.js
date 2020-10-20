@@ -25,25 +25,37 @@ export const PostFocusDiv = styled.div`
 function PostFocusPopup(props) {
 
     const [rating, setRating] = useState(0);
-    const [todoList, ] = useState(props.goals ? props.goals : []);
+    const [todoList, ] = useState(props.goals);
+    const [completedList, setCompletedList] = useState(props.completedGoals);
 
-    const deleteTodos = (index) => {
+    const deleteTodos = (index, task) => {
         todoList.splice(index, 1);
+        if (completedList.indexOf(task) !== -1)
+            completedList.splice(completedList.indexOf(task), 1);
     };
 
     const handleSubmit = () => {
-        /*let list = {todoList : false};
-        console.log("TodoList before checkboxes: ", list);
-        todoList.map((item) => {
-            if (checked.contains(item))
-                list[item] = true;
-        });*/
         ipcRenderer.send("previous-session-update", {
             goals: todoList,
+            completedGoals: completedList,
             rating: rating,
         });
         props.close();
     };
+
+    const handleToggle = (value) => () => {
+        const currentIndex = completedList.indexOf(value);
+        const newChecked = [...completedList];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setCompletedList(newChecked);
+    };
+
 
     return (
         <Dialog
@@ -67,7 +79,11 @@ function PostFocusPopup(props) {
                     }}
                 />
                 <p>Did you accomplish your goals? Mark them off here.</p>
-                <TodoList todoList={todoList} deleteTodos={deleteTodos} hideDelete={true} />
+                <TodoList todoList={todoList}
+                          completedList={completedList}
+                          deleteTodos={deleteTodos}
+                          handleToggle={handleToggle}
+                          hideDelete={true} />
                 <Button
                     style={{
                         backgroundColor: Colors.navy,
