@@ -238,11 +238,12 @@ ipcMain.on("focus-end-request", (e) => {
   e.reply("focus-end-successful");
 });
 
-ipcMain.on("previous-session-update", (e, { rating }) => {
+ipcMain.on("previous-session-update", (e, { rating, completedGoals }) => {
   console.log("previous session update");
   // submit rating value to focus session
   setRating(rating);
   // update goals with which were accomplished
+  setCompletedGoals(completedGoals);
 });
 
 ipcMain.on("random-popup-submission", (e, { productivity, wasMinimized }) => {
