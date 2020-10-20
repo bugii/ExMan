@@ -61,6 +61,7 @@ export default function ServiceMessageSummaryBox(props) {
                   unreadCount={service.unreadCount}
                   icon={props.offeredServices[service.name].icon}
                   deleteApp={props.deleteApp}
+                  showBubble={false}
                 />
               </td>
               <td>No messages received.</td>
