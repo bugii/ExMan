@@ -144,6 +144,25 @@ module.exports = class TeamsService extends Service {
 
           const timestampDate = new Date(timestamp);
 
+          const teamsResponse = {
+            method: "get",
+            url: "https://emea.ng.msg.teams.microsoft.com/v1/users/ME/properties",
+            headers: {
+              Authentication:
+                `skypetoken=${tokens[1]}`,
+            },
+          };
+
+          axios(teamsUsername)
+            .then(function (response) {
+              console.log(JSON.stringify(response.data));
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          
+          console.log(teamsResponse.data["userDetails"]);
+          
           if (username !== "") {
             if (this.isInFocusSession()) {
               // Currently in focus session

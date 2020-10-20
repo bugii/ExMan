@@ -43,8 +43,8 @@ export const RatingDiv = styled.div`
 export const Custom = styled.div`
   background-color:${Colors.navy};
   padding:3rem;
+  margin-top: 40px;
 `;
-
 
 
 function GoalsChart(props) {
