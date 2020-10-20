@@ -4,16 +4,11 @@
     "provider": "github"
   },
   "directories": {
-    "buildResources": "rescources"
+    "buildResources": "resources"
   },
   "extends": null,
-  "files": [
-    "./build/**/*",
-    "./sourceCode/src/electron/**/*",
-    "rescources/icon.png"
-  ],
+  "files": ["./build/**/*", "./sourceCode/src/electron/**/*"],
   "mac": {
-    "identity": null,
     "entitlements": "resources/entitlements.mac.plist",
     "extendInfo": {
       "NSCameraUsageDescription": "This app requires camera access for video chats",
