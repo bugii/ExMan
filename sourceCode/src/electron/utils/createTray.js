@@ -2,6 +2,7 @@ const { getSettings } = require("../db/db");
 const { Tray, nativeImage, Menu } = require("electron");
 const path = require("path");
 const focusStart = require("./focusStart");
+const focusEnd = require("./focusEnd");
 
 let tray = null;
 
@@ -40,6 +41,12 @@ module.exports = () => {
         const start = new Date().getTime();
         const settings = getSettings();
         focusStart(start, start + settings.longFocusDuration * 60 * 1000);
+      },
+    },
+    {
+      label: "End focus",
+      click: () => {
+        focusEnd();
       },
     },
   ]);

@@ -10,42 +10,41 @@ export const Circle = styled.div`
   display: inline;
   background-color: ${Colors.turquoise};
   border-radius: 50%;
-  text-align:center;
-  color:white;
-  font-weight:bold;
+  text-align: center;
+  color: white;
+  font-weight: bold;
 `;
 
 export const Goals = styled.div`
-  background-color:white;
-  padding:3rem;
-  float:left;
-  margin:auto;
-  width:40%;
-  text-align:center;
+  background-color: white;
+  padding: 3rem;
+  float: left;
+  margin: auto;
+  width: 40%;
+  text-align: center;
 `;
 
 export const Text = styled.div`
-  background-color:white;
-  margin-top:40px;
-  font-weight:bold;
+  background-color: white;
+  margin-top: 40px;
+  font-weight: bold;
 `;
 
 export const RatingDiv = styled.div`
-  background-color:white;
-  padding:3rem;
-  float:right;
-  margin:auto;
-  width:40%;
-  height:100%;
-  text-align:center;
+  background-color: white;
+  padding: 3rem;
+  float: right;
+  margin: auto;
+  width: 40%;
+  height: 100%;
+  text-align: center;
 `;
 
 export const Custom = styled.div`
-  background-color:${Colors.navy};
-  padding:3rem;
+  background-color: ${Colors.navy};
+  padding: 3rem;
   margin-top: 40px;
 `;
-
 
 function GoalsChart(props) {
   let goalTemp = 0;
@@ -59,7 +58,7 @@ function GoalsChart(props) {
   useEffect(() => {
     const focusSession = props.data;
     const nrFocusSessions = focusSession.length;
-    console.log(focusSession);
+    //console.log(focusSession);
     for (let i = 0; i < focusSession.length; i++) {
       goalTemp += focusSession[i].goals.length;
       achievedgoalTemp += focusSession[i].completedGoals.length;
@@ -67,22 +66,19 @@ function GoalsChart(props) {
         ratingTemp += focusSession[i].rating;
       }
     }
-    
+
     setRating(ratingTemp / nrFocusSessions);
     setgoals(goalTemp);
     setreachedGoals(achievedgoalTemp);
-    
   }, []);
 
   return (
     <Custom>
       <Goals>
         <h3 style={{ marginBottom: "40px" }}> Goals: </h3>
-        <Circle>
-          {reachedGoals/goals} %
-        </Circle>
+        <Circle>{reachedGoals / goals} %</Circle>
         <Text>
-          <p>total goals: { goals }</p>
+          <p>total goals: {goals}</p>
           <p>reached goals: {reachedGoals}</p>
         </Text>
       </Goals>
@@ -92,10 +88,9 @@ function GoalsChart(props) {
           name="read-only"
           value={rating}
           readOnly
-          style={{ marginLeft: 10 }}>
-        </Rating>
+          style={{ marginLeft: 10 }}
+        ></Rating>
       </RatingDiv>
-      
     </Custom>
   );
 }

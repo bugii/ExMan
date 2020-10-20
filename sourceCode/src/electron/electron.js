@@ -231,8 +231,6 @@ ipcMain.on("focus-goals-request", (e, { goals, completedGoals }) => {
 
 ipcMain.on("focus-end-request", (e) => {
   console.log("focus end request from react");
-  // manually set the endTime of the focus session to the current time. This results in endTime != originalEndTime -> we can see which sessions were aborted manually
-  setEndTime(new Date().getTime());
   focusEnd();
   // if focus end successful, update the react app
   e.reply("focus-end-successful");
