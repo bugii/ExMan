@@ -12,7 +12,7 @@ export const CustomBar = styled.div`
 `;
 
 export const Container = styled.div`
-  width: 80%;
+  width: 97.5%;
   padding: 2rem;
   color: black;
   background-color: white;

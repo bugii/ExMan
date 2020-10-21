@@ -48,7 +48,7 @@ function Summary(props) {
           closePostFocusPopup={() => setshowPostFocusPopup(false)}
         />
       ) : null}
-      <h2>Summary</h2>
+      <h1>SUMMARY</h1>
       <div>Here goes the summary, charts, etc</div>
 
       {focusSession ? (

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Colors from "../components/Colors";
 import Button from "@material-ui/core/Button";
-import { useHistory } from "react-router-dom";
 import ResponseSwitch from "./ResponseSwitch";
 import { useEffect } from "react";
 
@@ -22,11 +21,12 @@ export const SettingsDiv = styled.div`
 `;
 
 export const Settingsbox = styled.div`
-  border: 1px solid black;
+  border: 10px solid ${Colors.navy};
   width: 80%;
   padding: 20px;
-  border-radius: 20px;
+  border-radius: 5px;
   margin-bottom: 10px;
+  background-color: ${Colors.turquoise};
 `;
 
 function Settings(props) {
@@ -80,7 +80,7 @@ function Settings(props) {
 
   return (
     <SettingsDiv>
-      <h2>Settings</h2>
+      <h1>SETTINGS</h1>
       <Settingsbox>
         <h4>Customize Auto-response</h4>
         <p>Set your customized auto-response message:</p>
