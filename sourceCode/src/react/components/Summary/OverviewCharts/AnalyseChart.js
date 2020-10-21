@@ -71,6 +71,7 @@ function AnalyseChart(props) {
       if (service_array[i] === "whatsapp") color_array.push(Colors.whatsapp);
       else if (service_array[i] === "slack") color_array.push(Colors.slack);
       else if (service_array[i] === "teams") color_array.push(Colors.teams);
+      else if (service_array[i]=== "telegram") color_array.push(Colors.telegram);
       else color_array.push(randomColor);
     }
     return color_array;
@@ -125,7 +126,7 @@ function AnalyseChart(props) {
     console.log("print", timeinFocus[0], timeinFocus[1]);
     servicesTempArray.push("real Time in Focus");
     servicesTempBreakArray.push(timeinFocus[1]);
-    colorTempArray.push("red");
+    colorTempArray.push(Colors.focus);
     servicesTempBreakArray = toPercent(timeinFocus[0], servicesTempBreakArray);
     setServicesArray(servicesTempArray);
     setServicesBreakArray(servicesTempBreakArray);

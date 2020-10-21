@@ -76,7 +76,7 @@ function GoalsChart(props) {
     <Custom>
       <Goals>
         <h3 style={{ marginBottom: "40px" }}> Goals: </h3>
-        <Circle>{reachedGoals / goals * 100} %</Circle>
+        <Circle>{(reachedGoals / goals * 100).toFixed(2)}%</Circle>
         <Text>
           <p>total goals: {goals}</p>
           <p>reached goals: {reachedGoals}</p>
@@ -87,9 +87,10 @@ function GoalsChart(props) {
         <Rating
           name="read-only"
           value={rating}
+          precision={0.25}
           readOnly
           style={{ marginLeft: 10 }}
-        ></Rating>
+        />
       </RatingDiv>
     </Custom>
   );

@@ -89,7 +89,7 @@ function DonutChart(props) {
     );
     servicesTempArray.push("real Time in Focus");
     servicesTempBreakArray.push(timeinFocus);
-    colorTempArray.push("red");
+    colorTempArray.push(Colors.focus);
     servicesTempBreakArray = toPercent(
       props.data.startTime,
       props.data.endTime,

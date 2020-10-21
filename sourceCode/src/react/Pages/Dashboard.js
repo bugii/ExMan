@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Colors from "../components/Colors";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
@@ -15,7 +12,6 @@ import ServiceMessageSummaryBox from "../components/Summary/ServiceMessageSummar
 import Button from "@material-ui/core/Button";
 import GoalsChart from "../components/Summary/OverviewCharts/GoalsChart";
 import AnalyseChart from "../components/Summary/OverviewCharts/AnalyseChart";
-import ComparisonChart from "../components/Summary/OverviewCharts/ComparisonChart";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -104,6 +100,8 @@ function Dashboard(props) {
     return (
       <DashboardDiv>
         <h1 style={{ textAlign: "center", color: Colors.navy }}>DASHBOARD</h1>
+        <GoalsChart data={pastFocusSessions} />
+        <AnalyseChart data = {pastFocusSessions} />
         <Grid
           container
           justify="center"
@@ -175,8 +173,6 @@ function Dashboard(props) {
             ))}
           </Grid>
         </Grid>
-        <GoalsChart data={pastFocusSessions} />
-        <AnalyseChart data={pastFocusSessions} />
       </DashboardDiv>
     );
 }
