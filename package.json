@@ -1,6 +1,6 @@
 {
   "name": "exman",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "author": "ExMan Group",
   "description": "Expectation Management in digital Communication",
   "main": "sourceCode/src/electron/electron.js",
