@@ -76,7 +76,7 @@ function GoalsChart(props) {
     <Custom>
       <Goals>
         <h3 style={{ marginBottom: "40px" }}> Goals: </h3>
-        <Circle>{reachedGoals / goals} %</Circle>
+        <Circle>{reachedGoals / goals * 100} %</Circle>
         <Text>
           <p>total goals: {goals}</p>
           <p>reached goals: {reachedGoals}</p>
