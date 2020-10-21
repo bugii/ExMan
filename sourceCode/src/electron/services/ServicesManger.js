@@ -13,6 +13,7 @@ const eventEmitter = require("../utils/eventEmitter");
 const TeamsService = require("./TeamsService");
 const { getMainWindow, getFocus } = require("../db/memoryDb");
 const TelegramService = require("./TelegramService");
+const GmailService = require("./GmailService");
 
 const isMac = process.platform === "darwin";
 const isWindows = process.platform === "win32";
@@ -69,6 +70,14 @@ class ServicesManager {
 
       case "telegram":
         s = new TelegramService(
+          uuid,
+          autoResponse,
+          this.checkIfAllAuthed.bind(this)
+        );
+        break;
+
+      case "gmail":
+        s = new GmailService(
           uuid,
           autoResponse,
           this.checkIfAllAuthed.bind(this)
