@@ -5,7 +5,18 @@ import Colors from "../../Colors";
 
 export const CustomBar = styled.div`
   padding: 2rem;
-  width: 60%;
+  text-align: center;
+  width: 100%;
+  background-color: ${Colors.navy};
+  margin-top: 20px;
+`;
+
+export const Container = styled.div`
+  width: 80%;
+  padding: 2rem;
+  color: black;
+  background-color: white;
+  margin: auto;
 `;
 
 export const AdditionalText = styled.div`
@@ -55,10 +66,12 @@ function AnalyseChart(props) {
 
   const colorCreator = (service_array) => {
     let color_array = [];
+    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
     for (let i = 0; i < service_array.length; i++) {
       if (service_array[i] === "whatsapp") color_array.push(Colors.whatsapp);
       else if (service_array[i] === "slack") color_array.push(Colors.slack);
       else if (service_array[i] === "teams") color_array.push(Colors.teams);
+      else color_array.push(randomColor);
     }
     return color_array;
   };
@@ -133,22 +146,26 @@ function AnalyseChart(props) {
 
   return (
     <CustomBar>
-      <Doughnut
-        data={data}
-        options={{
-          legend: { display: true },
-          title: {
-            display: true,
-            text: "broken focus sessions sorted by services",
-          },
-          maintainAspectRatio: false,
-          responsive: true,
-          cutoutPercentage: 60,
-        }}
-        text={text_inside}
-      />
-      <br />
-      <AdditionalText>Frequency of focus breaks: {text_inside}</AdditionalText>
+      <Container>
+        <Doughnut
+          data={data}
+          options={{
+            legend: { display: true },
+            title: {
+              display: true,
+              text: "usage of applications during focus time",
+            },
+            maintainAspectRatio: false,
+            responsive: true,
+            cutoutPercentage: 60,
+          }}
+          text={text_inside}
+        />
+        <br />
+        <AdditionalText>
+          Frequency of focus breaks: {text_inside}
+        </AdditionalText>
+      </Container>
     </CustomBar>
   );
 }
