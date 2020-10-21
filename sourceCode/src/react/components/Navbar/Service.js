@@ -67,7 +67,7 @@ function Service(props) {
 
   return (
     <ServiceDiv>
-      {!props.isAuthed || !props.isReady ? (
+      {props.showBubble && (!props.isAuthed || !props.isReady) ? (
         <MessageCountBubble> ! </MessageCountBubble>
       ) : null}
       {props.unreadCount ? (

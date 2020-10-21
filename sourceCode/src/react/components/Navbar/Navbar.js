@@ -47,6 +47,7 @@ function Navbar(props) {
               currentFocusSession={props.currentFocusSession}
               webContentsId={service.webContentsId}
               refreshApp={props.refreshApp}
+              showBubble={true}
             />
           ))}
         </div>

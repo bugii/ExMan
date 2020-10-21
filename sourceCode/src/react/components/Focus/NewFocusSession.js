@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -21,111 +25,119 @@ export const FormButtons = styled.div`
 `;
 
 function NewFocusSession(props) {
-  let [duration, setDuration] = useState(40);
-  let [settings, setSettings] = useState(null);
+    let [duration, setDuration] = useState(40);
+    let [menuSelect, setMenuSelect] = useState("custom");
+    let [settings, setSettings] = useState(null);
 
-  useEffect(() => {
-    ipcRenderer.on("get-settings", (e, settings) => {
-      setSettings(settings);
-    });
+    useEffect(() => {
+        ipcRenderer.on("get-settings", (e, settings) => {
+            setSettings(settings);
+        });
 
-    ipcRenderer.send("get-settings");
-  }, []);
+        ipcRenderer.send("get-settings");
+    }, []);
 
-  const handleChange = (e) => {
-    setDuration(Number(e.target.value));
-  };
+    const handleDurationChange = (e) => {
+        setDuration(Number(e.target.value));
+    };
 
-  const handleSubmit = (focusDuration = null) => {
-    const start = new Date().getTime();
-    let end;
-    if (!focusDuration) {
-      // open ended
-      end = null;
-    } else {
-      end = start + focusDuration * 1000 * 60;
-    }
+    const handleMenuSelect = (e) => {
+        switch (e.target.value) {
+            case 'short':
+                setMenuSelect("short");
+                setDuration(settings.shortFocusDuration);
+                break;
+            case 'medium':
+                setMenuSelect("medium");
+                setDuration(settings.mediumFocusDuration);
+                break;
+            case 'long':
+                setMenuSelect("long");
+                setDuration(settings.longFocusDuration);
+                break;
+            case 'open':
+                setMenuSelect("open");
+                setDuration(null);
+                break;
+            case 'custom':
+                setMenuSelect("custom");
+                setDuration(40);
+                break;
+            default:
+                setDuration(0);
+        }
+    };
 
-    console.log(start, end);
+    const handleSubmit = (focusDuration = null) => {
+        const start = new Date().getTime();
+        let end;
+        if (!focusDuration) {
+            // open ended
+            end = null;
+        } else {
+            end = start + focusDuration * 1000 * 60;
+        }
 
-    ipcRenderer.send("focus-start-request", {
-      startTime: start,
-      endTime: end,
-    });
+        console.log(start, end);
 
-    props.closeDialog();
-  };
+        ipcRenderer.send("focus-start-request", {
+            startTime: start,
+            endTime: end,
+        });
 
-  return (
-    <Dialog aria-labelledby="simple-dialog-title" open={props.open}>
-      <DialogTitle id="simple-dialog-title">Create Focus Session</DialogTitle>
+        props.closeDialog();
+    };
 
-      {settings ? (
-        <FormContainer noValidate>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <Button
-              style={{ marginTop: "1rem" }}
-              variant="contained"
-              color="primary"
-              onClick={() => handleSubmit()}
-            >
-              Start open Focus
-            </Button>
-            <Button
-              style={{ marginTop: "1rem" }}
-              variant="contained"
-              color="primary"
-              onClick={() => handleSubmit(settings.shortFocusDuration)}
-            >
-              Short Focus
-            </Button>
-            <Button
-              style={{ marginTop: "1rem" }}
-              variant="contained"
-              color="primary"
-              onClick={() => handleSubmit(settings.mediumFocusDuration)}
-            >
-              Medium Focus
-            </Button>
-            <Button
-              style={{ marginTop: "1rem" }}
-              variant="contained"
-              color="primary"
-              onClick={() => handleSubmit(settings.longFocusDuration)}
-            >
-              Long Focus
-            </Button>
-          </div>
-          <TextField
-            id="minutes"
-            label="Custom Length (min)"
-            type="number"
-            onChange={handleChange}
-            defaultValue={duration}
-            style={{ margin: "1rem" }}
-          />
-          <FormButtons>
-            <Button
-              variant="contained"
-              color="0"
-              onClick={props.closeDialog}
-              style={{ margin: "1rem" }}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleSubmit(duration)}
-              style={{ margin: "1rem" }}
-            >
-              Submit
-            </Button>
-          </FormButtons>
-        </FormContainer>
-      ) : null}
-    </Dialog>
-  );
+    return (
+        <Dialog aria-labelledby="simple-dialog-title" open={props.open} onClose={props.closeDialog}>
+            <DialogTitle id="simple-dialog-title">Create Focus Session</DialogTitle>
+
+            {settings ? (
+                <FormContainer noValidate>
+                    <FormControl style={{margin: "1rem", width: "77%"}}>
+                        <InputLabel>Duration</InputLabel>
+                        <Select
+                            value={menuSelect}
+                            onChange={handleMenuSelect}
+                        >
+                            <MenuItem value={"custom"}>Custom</MenuItem>
+                            <MenuItem value={"short"}>Short</MenuItem>
+                            <MenuItem value={"medium"}>Medium</MenuItem>
+                            <MenuItem value={"long"}>Long</MenuItem>
+                            <MenuItem value={"open"}>Open</MenuItem>
+                        </Select>
+                    </FormControl>
+                    {menuSelect === "custom" ?
+                        <TextField
+                            id="minutes"
+                            label="Custom Length (min)"
+                            type="number"
+                            onChange={handleDurationChange}
+                            defaultValue={duration}
+                            style={{margin: "1rem"}}
+                        /> : null}
+                    <FormButtons>
+                        <Button
+                            variant="contained"
+                            color="0"
+                            onClick={props.closeDialog}
+                            style={{margin: "1rem"}}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleSubmit(duration)}
+                            style={{margin: "1rem"}}
+                        >
+                            Submit
+                        </Button>
+                    </FormButtons>
+                </FormContainer>
+            ) : null}
+        </Dialog>
+    );
 }
 
 export default NewFocusSession;

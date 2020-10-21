@@ -64,9 +64,7 @@ function Focus(props) {
         completedGoals={props.currentFocusSession.completedGoals ? props.currentFocusSession.completedGoals : []}
         close={() => setShowFocusGoalsPopup(false)}
       />
-      {showBreakFocusPopup ? (
-        <BreakFocusPopup close={() => setShowBreakFocusPopup(false)} />
-      ) : null}
+      <BreakFocusPopup close={() => setShowBreakFocusPopup(false)} open={showBreakFocusPopup} />
 
       <h1 style={{ color: Colors.navy, fontSize: 80, textAlign: "center" }}>
         STAY FOCUSED!

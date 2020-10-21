@@ -2,7 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import Colors from "../../Colors";
 import Button from "@material-ui/core/Button";
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Dialog from "@material-ui/core/Dialog";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -20,41 +22,46 @@ export const BreakFocusWarning = styled.div`
 `;
 
 function BreakFocusPopup(props) {
-  let history = useHistory();
+    let history = useHistory();
 
-  const minimizeFocus = () => {
-    ipcRenderer.send("breakFocus", false);
-    //navigate back home without ending focus session
-    history.push("/");
-  };
+    const minimizeFocus = () => {
+        ipcRenderer.send("breakFocus", false);
+        //navigate back home without ending focus session
+        history.push("/");
+    };
 
-  const returnToFocus = () => {
-    //navigate back to focus screen
-    props.close();
-    history.push("/focus");
-  };
+    const returnToFocus = () => {
+        //navigate back to focus screen
+        props.close();
+        history.push("/focus");
+    };
 
-  return (
-    <BreakFocusWarning>
-      <h2>Do you really want to break your focus?</h2>
-      <Button
-        style={{
-          backgroundColor: Colors.snow,
-          color: "black",
-          marginRight: "20px",
-        }}
-        onClick={minimizeFocus}
-      >
-        Yes, let me see the messages.
-      </Button>
-      <Button
-        style={{ backgroundColor: Colors.snow, color: "black" }}
-        onClick={returnToFocus}
-      >
-        No, I want to keep focused.
-      </Button>
-    </BreakFocusWarning>
-  );
+    return (
+        <Dialog
+            aria-labelledby="simple-dialog-title"
+            open={props.open}
+            maxWidth={"lg"}
+            onClose={props.close}
+        >
+            <DialogTitle id="simple-dialog-title" style={{color: "white", backgroundColor: Colors.navy}}>Do you really want to break your focus?</DialogTitle>
+            <div style={{display: "flex", flexDirection: "column", alignItems: "center", padding: "1rem", backgroundColor: Colors.navy}}>
+                <Button
+                    variant="contained"
+                    onClick={minimizeFocus}
+                    style={{width: "fit-content", margin: "1rem"}}
+                >
+                    Yes, let me see my messages.
+                </Button>
+                <Button
+                    variant="contained"
+                    onClick={returnToFocus}
+                    style={{width: "fit-content", margin: "1rem"}}
+                >
+                    No, I want to keep focused.
+                </Button>
+            </div>
+        </Dialog>
+    );
 }
 
 export default BreakFocusPopup;

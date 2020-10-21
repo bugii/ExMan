@@ -29,6 +29,7 @@ const {
   setEndTime,
   setFocusGoals,
   setCompletedGoals,
+  setCompletedGoalsAfterSession,
   setRating,
   storeBreakFocusClicks,
   updateBreakFocusPerService,
@@ -241,7 +242,7 @@ ipcMain.on("previous-session-update", (e, { rating, completedGoals }) => {
   // submit rating value to focus session
   setRating(rating);
   // update goals with which were accomplished
-  setCompletedGoals(completedGoals);
+  setCompletedGoalsAfterSession(completedGoals);
 });
 
 ipcMain.on("random-popup-submission", (e, { productivity, wasMinimized }) => {
