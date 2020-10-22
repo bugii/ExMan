@@ -101,9 +101,9 @@ function NewFocusSession(props) {
                             onChange={handleMenuSelect}
                         >
                             <MenuItem value={"custom"}>Custom</MenuItem>
-                            <MenuItem value={"short"}>Short</MenuItem>
-                            <MenuItem value={"medium"}>Medium</MenuItem>
-                            <MenuItem value={"long"}>Long</MenuItem>
+                            <MenuItem value={"short"}>Short ({settings.shortFocusDuration})</MenuItem>
+                            <MenuItem value={"medium"}>Medium ({settings.mediumFocusDuration})</MenuItem>
+                            <MenuItem value={"long"}>Long ({settings.longFocusDuration})</MenuItem>
                             <MenuItem value={"open"}>Open</MenuItem>
                         </Select>
                     </FormControl>
