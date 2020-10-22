@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import TodoList from "../TodoList";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import Switch from "@material-ui/core/Switch";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -27,6 +28,7 @@ function PostFocusPopup(props) {
     const [rating, setRating] = useState(0);
     const [todoList, ] = useState(props.goals);
     const [completedList, setCompletedList] = useState(props.completedGoals);
+    const [chatWorkRelated, setChatWorkRelated] = useState(false);
 
     const deleteTodos = (index, task) => {
         todoList.splice(index, 1);
@@ -39,6 +41,7 @@ function PostFocusPopup(props) {
         ipcRenderer.send("previous-session-update", {
             completedGoals: completedList,
             rating: rating,
+            chatWorkRelated: chatWorkRelated,
         });
         props.close();
     };
@@ -53,6 +56,10 @@ function PostFocusPopup(props) {
         }
     };
 
+    const handleSwitch = (event) => {
+        setChatWorkRelated(event.target.checked);
+        console.log("Chats were work related: ", event.target.checked);
+    };
 
     return (
         <Dialog
@@ -75,6 +82,13 @@ function PostFocusPopup(props) {
                         setRating(newValue);
                     }}
                 />
+
+                <p>Did you need to use your chat applications to accomplish this task?</p>
+                <Switch
+                    checked={chatWorkRelated}
+                    onChange={handleSwitch}
+                />
+
                 <p>Did you accomplish your goals? Mark them off here.</p>
                 <TodoList todoList={todoList}
                           completedList={completedList}

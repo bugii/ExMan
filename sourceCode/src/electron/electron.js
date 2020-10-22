@@ -31,6 +31,7 @@ const {
   setCompletedGoals,
   setCompletedGoalsAfterSession,
   setRating,
+  setChatWorkRelated,
   storeBreakFocusClicks,
   updateBreakFocusPerService,
   storeRandomSurveyResults,
@@ -237,12 +238,14 @@ ipcMain.on("focus-end-request", (e) => {
   e.reply("focus-end-successful");
 });
 
-ipcMain.on("previous-session-update", (e, { rating, completedGoals }) => {
+ipcMain.on("previous-session-update", (e, { rating, completedGoals, chatWorkRelated }) => {
   console.log("previous session update");
   // submit rating value to focus session
   setRating(rating);
   // update goals with which were accomplished
   setCompletedGoalsAfterSession(completedGoals);
+  // set work related chat
+  setChatWorkRelated(chatWorkRelated);
 });
 
 ipcMain.on("random-popup-submission", (e, { productivity, wasMinimized }) => {
