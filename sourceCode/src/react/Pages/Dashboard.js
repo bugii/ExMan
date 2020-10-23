@@ -12,6 +12,7 @@ import ServiceMessageSummaryBox from "../components/Summary/ServiceMessageSummar
 import Button from "@material-ui/core/Button";
 import GoalsChart from "../components/Summary/OverviewCharts/GoalsChart";
 import AnalyseChart from "../components/Summary/OverviewCharts/AnalyseChart";
+import ComparisonChart from "../components/Summary/OverviewCharts/ComparisonChart";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -101,7 +102,7 @@ function Dashboard(props) {
       <DashboardDiv>
         <h1 style={{ textAlign: "center", color: Colors.navy }}>DASHBOARD</h1>
         <GoalsChart data={pastFocusSessions} />
-        <AnalyseChart data = {pastFocusSessions} />
+        <AnalyseChart data={pastFocusSessions} />
         <Grid
           container
           justify="center"
@@ -173,6 +174,7 @@ function Dashboard(props) {
             ))}
           </Grid>
         </Grid>
+        <ComparisonChart data={pastFocusSessions} />
       </DashboardDiv>
     );
 }

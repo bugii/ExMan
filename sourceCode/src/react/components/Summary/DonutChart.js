@@ -78,8 +78,11 @@ function DonutChart(props) {
           }
           colorTempArray.push(randomColor);
         }
-      } else {
+      } else if (focusSession.services[serviceIndex].name === "whatsapp") {
         colorTempArray.push(Colors.teams);
+      } else {
+        let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        colorTempArray.push(randomColor);
       }
     }
     timeinFocus = trueFocus(
