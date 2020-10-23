@@ -38,6 +38,21 @@ const FocusMenuButtons = styled.div`
   justify-content: space-between;
 `;
 
+const IncreaseTimeButton = styled.div`
+  background: ${Colors.navy};
+  color: white;
+  margin-top: 10px;
+  padding: 20px;
+  font-weight: 5px;
+  margin: 15px;
+  border: 4px solid white;
+`;
+
+const IncreaseDiv = styled.div`
+  display: inherit;
+  margin-top: 15px;
+`;
+
 function Focus(props) {
   const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(
     props.currentFocusSession.goals.length <= 0
@@ -54,8 +69,8 @@ function Focus(props) {
     ? Math.ceil((props.currentFocusSession.endTime - new Date()) / 1000 / 60)
     : -1;
 
-  const handleIncreaseEndTimeClick = () => {
-    ipcRenderer.send("focus-end-change-request", 5);
+  const handleIncreaseEndTimeClick = (minutes) => {
+    ipcRenderer.send("focus-end-change-request", minutes);
   };
 
   return (
@@ -77,16 +92,32 @@ function Focus(props) {
         open={showBreakFocusPopup}
       />
 
-      <h1 style={{ color: Colors.navy, fontSize: 80, textAlign: "center" }}>
+      <h1
+        style={{
+          color: Colors.navy,
+          fontSize: 75,
+          textAlign: "center",
+          marginBlockEnd: "15px",
+        }}
+      >
         STAY FOCUSED!
       </h1>
       <Countdown
         focusLength={focusTime}
         isOpen={!props.currentFocusSession.endTime}
       />
-      {props.currentFocusSession.endTime ? (
-        <div onClick={handleIncreaseEndTimeClick}>increase 5min</div>
-      ) : null}
+      <IncreaseDiv>
+        {props.currentFocusSession.endTime ? (
+          <IncreaseTimeButton onClick={() => handleIncreaseEndTimeClick(10)}>
+            <div>increase 10 min</div>
+          </IncreaseTimeButton>
+        ) : null}
+        {props.currentFocusSession.endTime ? (
+          <IncreaseTimeButton onClick={() => handleIncreaseEndTimeClick(15)}>
+            <div>increase 15 min</div>
+          </IncreaseTimeButton>
+        ) : null}
+      </IncreaseDiv>
       <FocusText>We are taking care of your messages for you.</FocusText>
       <FocusMenuButtons>
         <Tooltip title="End focus session" arrow placement="top">

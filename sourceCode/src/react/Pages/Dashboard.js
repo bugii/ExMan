@@ -174,9 +174,10 @@ function Dashboard(props) {
             ))}
           </Grid>
         </Grid>
-        <ComparisonChart data={pastFocusSessions} />
       </DashboardDiv>
     );
 }
+
+//<ComparisonChart data={pastFocusSessions} />;
 
 export default Dashboard;
