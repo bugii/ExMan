@@ -54,6 +54,10 @@ function Focus(props) {
     ? Math.ceil((props.currentFocusSession.endTime - new Date()) / 1000 / 60)
     : -1;
 
+  const handleIncreaseEndTimeClick = () => {
+    ipcRenderer.send("focus-end-change-request", 5);
+  };
+
   return (
     <FocusDiv>
       <FocusGoalsPopup
@@ -61,10 +65,17 @@ function Focus(props) {
         goals={
           props.currentFocusSession.goals ? props.currentFocusSession.goals : []
         }
-        completedGoals={props.currentFocusSession.completedGoals ? props.currentFocusSession.completedGoals : []}
+        completedGoals={
+          props.currentFocusSession.completedGoals
+            ? props.currentFocusSession.completedGoals
+            : []
+        }
         close={() => setShowFocusGoalsPopup(false)}
       />
-      <BreakFocusPopup close={() => setShowBreakFocusPopup(false)} open={showBreakFocusPopup} />
+      <BreakFocusPopup
+        close={() => setShowBreakFocusPopup(false)}
+        open={showBreakFocusPopup}
+      />
 
       <h1 style={{ color: Colors.navy, fontSize: 80, textAlign: "center" }}>
         STAY FOCUSED!
@@ -73,6 +84,9 @@ function Focus(props) {
         focusLength={focusTime}
         isOpen={!props.currentFocusSession.endTime}
       />
+      {props.currentFocusSession.endTime ? (
+        <div onClick={handleIncreaseEndTimeClick}>increase 5min</div>
+      ) : null}
       <FocusText>We are taking care of your messages for you.</FocusText>
       <FocusMenuButtons>
         <Tooltip title="End focus session" arrow placement="top">

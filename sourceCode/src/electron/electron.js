@@ -33,7 +33,6 @@ const {
   setRating,
   setChatWorkRelated,
   storeBreakFocusClicks,
-  updateBreakFocusPerService,
   storeRandomSurveyResults,
   storeDefaultFocusSession,
   getSettings,
@@ -66,13 +65,11 @@ const isOverlappingWithFocusSessions = require("./utils/isOverlappingWithFocusSe
 const isWrongFocusDuration = require("./utils/isWrongFocusDuration");
 const scheduleRandomPopup = require("./utils/scheduleRandomPopup");
 const updater = require("./utils/updater");
-const {
-  getServicesComplete,
-  getService,
-} = require("./services/ServicesManger");
+
 const createTray = require("./utils/createTray");
 const activeWin = require("active-win");
 const updateFrontend = require("./utils/updateFrontend");
+const extendFocusDuration = require("./utils/extendFocusDuration");
 
 const isMac = process.platform === "darwin";
 
@@ -239,20 +236,30 @@ ipcMain.on("focus-goals-request", (e, { goals, completedGoals }) => {
 
 ipcMain.on("focus-end-request", (e) => {
   console.log("focus end request from react");
+  // manually set the endTime of the focus session to the current time. This results in endTime != originalEndTime -> we can see which sessions were aborted manually
+  setEndTime(new Date().getTime());
   focusEnd();
   // if focus end successful, update the react app
   e.reply("focus-end-successful");
 });
 
-ipcMain.on("previous-session-update", (e, { rating, completedGoals, chatWorkRelated }) => {
-  console.log("previous session update");
-  // submit rating value to focus session
-  setRating(rating);
-  // update goals with which were accomplished
-  setCompletedGoalsAfterSession(completedGoals);
-  // set work related chat
-  setChatWorkRelated(chatWorkRelated);
+ipcMain.on("focus-end-change-request", (e, minutes) => {
+  console.log("extending focus duration");
+  extendFocusDuration(minutes);
 });
+
+ipcMain.on(
+  "previous-session-update",
+  (e, { rating, completedGoals, chatWorkRelated }) => {
+    console.log("previous session update");
+    // submit rating value to focus session
+    setRating(rating);
+    // update goals with which were accomplished
+    setCompletedGoalsAfterSession(completedGoals);
+    // set work related chat
+    setChatWorkRelated(chatWorkRelated);
+  }
+);
 
 ipcMain.on("random-popup-submission", (e, { productivity, wasMinimized }) => {
   console.log(`random popup survey submission, productivity: ${productivity}`);
