@@ -44,7 +44,7 @@ function RandomProductivityPopup(props) {
       open={props.open}
       maxWidth={"lg"}
     >
-      <DialogTitle id="simple-dialog-title">Radom survey</DialogTitle>
+      <DialogTitle id="simple-dialog-title">Random survey</DialogTitle>
       <RandomPopup>
         <div style={{ position: "absolute", top: 0, right: 0 }}>
           <IconButton onClick={onClose}>

@@ -105,6 +105,7 @@ function createNewFocusSession(startTime, endTime) {
     completedGoals: [],
     rating: null,
     scheduled: false,
+    chatWorkRelated: false,
     activeWindows: [],
   }).write();
 }
@@ -178,6 +179,10 @@ function setCompletedGoalsAfterSession(completedGoals) {
 
 function setRating(rating) {
   db.get("pastFocusSessions").last().assign({ rating }).write();
+}
+
+function setChatWorkRelated(chatWorkRelated) {
+  db.get("pastFocusSessions").last().assign({ chatWorkRelated }).write();
 }
 
 function storeBreakFocusClicks(breakFocusEnd) {
@@ -405,6 +410,7 @@ module.exports = {
   setCompletedGoals,
   setCompletedGoalsAfterSession,
   setRating,
+  setChatWorkRelated,
   toggleAutoResponseAvailablity,
   storeNotification,
   storeNotificationInArchive,
