@@ -14,6 +14,7 @@ const TeamsService = require("./TeamsService");
 const { getMainWindow, getFocus } = require("../db/memoryDb");
 const TelegramService = require("./TelegramService");
 const GmailService = require("./GmailService");
+const OutlookService = require("./OutlookService");
 
 const isMac = process.platform === "darwin";
 const isWindows = process.platform === "win32";
@@ -84,6 +85,14 @@ class ServicesManager {
         );
         break;
 
+      case "outlook":
+        s = new OutlookService(
+          uuid,
+          autoResponse,
+          this.checkIfAllAuthed.bind(this)
+        );
+        break;
+
       default:
         break;
     }
@@ -97,6 +106,8 @@ class ServicesManager {
         autoResponse: autoResponse,
       });
     }
+
+    return uuid;
   }
 
   getServices() {
@@ -109,7 +120,6 @@ class ServicesManager {
       authed: service.authed,
       unreadCount: service.unreadCount,
       autoResponse: service.autoResponse,
-      loopStarted: service.loopStarted,
     }));
   }
 

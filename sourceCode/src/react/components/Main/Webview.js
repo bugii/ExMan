@@ -23,10 +23,6 @@ function Webview(props) {
           webContentsId: el.getWebContentsId(),
         });
       });
-      el.addEventListener("did-fail-load", () => {
-        console.log("failed loading", props.id);
-        el.reload();
-      });
       el.addEventListener("crashed", () => {
         console.log("crashed", props.id);
         el.reload();
@@ -42,10 +38,7 @@ function Webview(props) {
         src={props.url}
         useragent={props.useragent}
         partition={`persist:${props.id}`}
-        allowpopups="true"
-        disablewebsecurity="true"
         preload={`file://${remote.app.dirname}/preload/${props.name}.js`}
-        webpreferences="allowRemoteContent"
       />
     </div>
   );

@@ -24,29 +24,16 @@ class newNotification extends window.Notification {
 window.Notification = newNotification;
 
 window.getUnreadChats = () => {
-  // Taken from Franz
   let count = 0;
-  const searchElement = document.querySelector(".im_dialogs_search_field");
-  if (searchElement && searchElement.value === "") {
-    const elements = document.querySelectorAll(
-      ".im_dialog_badge:not(.ng-hide):not(.im_dialog_badge_muted)"
+  try {
+    count = parseInt(
+      document.querySelector("div[title*='Inbox']  > span > span").firstChild
+        .innerHTML
     );
-    if (elements) {
-      for (let i = 0; i < elements.length; i += 1) {
-        if (elements[i].innerHTML !== 0) {
-          count += 1;
-        }
-      }
-    }
-  }
+  } catch (e) {}
   return count;
 };
 
 window.isAuth = () => {
-  const el = document.querySelector(".icon-hamburger-wrap");
-
-  if (el) {
-    return true;
-  }
-  return false;
+  return document.getElementById("app") ? true : false;
 };

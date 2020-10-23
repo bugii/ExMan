@@ -71,6 +71,7 @@ const {
 } = require("./services/ServicesManger");
 const createTray = require("./utils/createTray");
 const activeWin = require("active-win");
+const updateFrontend = require("./utils/updateFrontend");
 
 const isMac = process.platform === "darwin";
 
@@ -127,7 +128,14 @@ eventEmitter.on("all-services-authed", allServicesAuthedHandler);
 
 ipcMain.on("add-service", (event, name) => {
   console.log("add service", name);
-  servicesManager.addService({ id: null, name, autoResponse: false });
+  const id = servicesManager.addService({
+    id: null,
+    name,
+    autoResponse: false,
+  });
+
+  updateFrontend();
+  openService(id);
 });
 
 ipcMain.on("delete-service", (event, id) => {
@@ -137,9 +145,7 @@ ipcMain.on("delete-service", (event, id) => {
 
 ipcMain.on("update-frontend", (e) => {
   console.log("update frontend");
-  const services = servicesManager.getServices();
-  const currentFocusSession = getCurrentFocusSession();
-  e.reply("update-frontend", { services, currentFocusSession });
+  updateFrontend();
 });
 
 ipcMain.on("update-frontend-sync", (e) => {
@@ -402,10 +408,7 @@ app.whenReady().then(async () => {
   //Update renderer loop
   console.log("update loop start");
   const ref = setInterval(async () => {
-    getMainWindow().send("update-frontend", {
-      services: servicesManager.getServices(),
-      currentFocusSession: getCurrentFocusSession(),
-    });
+    updateFrontend();
     servicesManager.updateUnreadMessages();
   }, 1000);
   storeIntervallRef(ref);
@@ -425,16 +428,18 @@ app.whenReady().then(async () => {
   setTimeout(updater, 10000);
   const windowTrackerIntervall = setInterval(async () => {
     const activeWindow = await activeWin();
-    if (getFocus()) {
-      storeActiveWindowInCurrentFocus({
-        name: activeWindow.owner.name,
-        title: activeWindow.title,
-      });
-    } else {
-      storeActiveWindowInArchive({
-        name: activeWindow.owner.name,
-        title: activeWindow.title,
-      });
+    if (activeWindow) {
+      if (getFocus()) {
+        storeActiveWindowInCurrentFocus({
+          name: activeWindow.owner.name,
+          title: activeWindow.title,
+        });
+      } else {
+        storeActiveWindowInArchive({
+          name: activeWindow.owner.name,
+          title: activeWindow.title,
+        });
+      }
     }
   }, 10000);
   storeIntervallRef(windowTrackerIntervall);
