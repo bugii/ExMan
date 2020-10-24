@@ -1,4 +1,4 @@
-const { ipcRenderer, remote } = require("electron");
+const { ipcRenderer } = require("electron");
 
 console.log("in preload");
 
@@ -7,17 +7,6 @@ ipcRenderer.on("id", (e, id) => {
   window.serviceId = id;
 
   const interval = setInterval(() => {
-    //   const ses = remote.session.fromPartition(`persist:${id}`);
-    //   ses.clearStorageData({
-    //     //Clears the specified storages in the session
-    //     storages: [
-    //       "appcache",
-    //       "serviceworkers",
-    //       "cachestorage",
-    //       "websql",
-    //       "indexdb",
-    //     ],
-    //   });
     const titleEl = document.querySelector(".window-title");
     if (titleEl && titleEl.innerHTML.includes("Google Chrome 49+")) {
       // reloading
@@ -42,15 +31,30 @@ class newNotification extends window.Notification {
 
 window.Notification = newNotification;
 
+const isMutedIcon = (element) =>
+  element.parentElement.parentElement.querySelectorAll('*[data-icon="muted"]')
+    .length !== 0;
+
+const isPinnedIcon = (element) => element.classList.contains("_1EFSv");
+
 window.getUnreadChats = () => {
   // Taken from Franz
-  let count = 0;
   const elements = document.querySelectorAll(
     ".CxUIE, .unread, ._0LqQ, .m61XR .ZKn2B "
   );
-  elements.forEach(() => {
-    count += 1;
-  });
+
+  let count = 0;
+
+  for (let i = 0; i < elements.length; i += 1) {
+    try {
+      // originalLog(isMutedIcon(elements[i]), isPinnedIcon(elements[i]));
+      if (!isMutedIcon(elements[i]) && !isPinnedIcon(elements[i])) {
+        count += 1;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
   return count;
 };
 

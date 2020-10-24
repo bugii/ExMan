@@ -52,10 +52,7 @@ window.getUnreadChats = () => {
 };
 
 window.isAuth = () => {
-  const el = document.querySelector(".gb_Td.gb_1c.gb_2c");
-
-  if (el) {
-    return true;
-  }
-  return false;
+  return document.getElementById("loading").style.display === "none"
+    ? true
+    : false;
 };

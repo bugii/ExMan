@@ -1,4 +1,4 @@
-const { remote, desktopCapturer, ipcRenderer } = require("electron");
+const { desktopCapturer, ipcRenderer } = require("electron");
 
 console.log("in preload");
 

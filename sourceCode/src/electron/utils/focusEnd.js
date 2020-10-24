@@ -6,8 +6,6 @@ const bringToFront = require("./bringToFront");
 
 function focusEnd() {
   console.log("focus end");
-  // manually set the endTime of the focus session to the current time. This results in endTime != originalEndTime -> we can see which sessions were aborted manually
-  setEndTime(new Date().getTime());
 
   //get ongoing focus sessions
   const services = serviceManager.getServicesComplete();

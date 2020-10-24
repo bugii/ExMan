@@ -46,18 +46,11 @@ const TimeText = styled.text`
 `;
 
 function Countdown(props) {
-  const [minutesLeft, setMinutesLeft] = useState(props.focusLength);
-  useEffect(() => {
-    setInterval(() => {
-      setMinutesLeft((s) => s - 1);
-    }, 1000 * 60);
-  }, []);
-
   return (
     <CountdownContainer>
       <OutterCircle>
         <InnerCircle>
-          <TimeNumber> {props.isOpen ? "∞" : minutesLeft} </TimeNumber>
+          <TimeNumber> {props.isOpen ? "∞" : props.focusLength} </TimeNumber>
           <TimeText> minutes left </TimeText>
         </InnerCircle>
       </OutterCircle>
