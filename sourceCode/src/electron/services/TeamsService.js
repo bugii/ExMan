@@ -47,12 +47,13 @@ module.exports = class TeamsService extends Service {
 
           const teamsObject = JSON.parse(response.data["userDetails"]);
           this.username = teamsObject["name"];
-          console.log("from authloop", this.username);
+          console.log("teams username", this.username);
         }
 
         this.setAuthed(true);
       } catch (e) {
         console.log(e);
+        this.username = null;
         this.setAuthed(false);
       }
     }, 1000);
@@ -62,7 +63,7 @@ module.exports = class TeamsService extends Service {
     console.log("messages loop start", this.name);
 
     this.messagesLoopRef = setInterval(() => {
-      this.getMessages(this.syncToken);
+      this.getMessages();
     }, 10000);
   }
 
@@ -108,11 +109,11 @@ module.exports = class TeamsService extends Service {
     }
   }
 
-  async getMessages(syncTokenParam) {
+  async getMessages() {
     const tokens = await this.getToken();
 
     // No synctoken provided => first request of focus session
-    if (!syncTokenParam) {
+    if (!this.syncToken) {
       console.log("first message loop, teams");
       try {
         const res = await axios.get(
@@ -125,26 +126,22 @@ module.exports = class TeamsService extends Service {
           }
         );
 
-        const syncToken = res.data["_metadata"]["syncState"];
-
-        // save syncToken to db for next request
-        this.syncToken = syncToken;
+        this.syncToken = res.data["_metadata"]["syncState"];
+        console.log("syncToken", this.syncToken);
       } catch (error) {
         console.log(error);
       }
     } else {
+      console.log("message loop with sync token", this.syncToken);
       try {
-        // Synctoken provided => not first request of focus session: use token to get delta of conversations
-        const new_res = await axios.get(syncTokenParam, {
+        const new_res = await axios.get(this.syncToken, {
           headers: {
             Authentication: `skypetoken=${tokens[1]}`,
             "Content-Type": "application/json",
           },
         });
         // get new syncToken
-        const syncToken = new_res.data["_metadata"]["syncState"];
-        // update syncToken to db for next request
-        this.syncToken = syncToken;
+        this.syncToken = new_res.data["_metadata"]["syncState"];
 
         new_res.data.conversations.forEach(async (channel) => {
           const single_channel = channel.id;
@@ -160,66 +157,66 @@ module.exports = class TeamsService extends Service {
           console.log(username);
           console.log(timestamp);
 
-          const timestampDate = new Date(timestamp);
+          // const timestampDate = new Date(timestamp);
 
-          if (username !== "" && username !== this.username) {
-            if (this.isInFocusSession()) {
-              // Currently in focus session
+          //   if (username !== "" && username !== this.username) {
+          //     if (this.isInFocusSession()) {
+          //       // Currently in focus session
 
-              const autoReplied = getDb()
-                .get("currentFocusSession")
-                .get("services")
-                .find({ id: this.id })
-                .get("autoReplied")
-                .value();
+          //       const autoReplied = getDb()
+          //         .get("currentFocusSession")
+          //         .get("services")
+          //         .find({ id: this.id })
+          //         .get("autoReplied")
+          //         .value();
 
-              const focusStart = getDb()
-                .get("currentFocusSession")
-                .get("startTime")
-                .value();
+          //       const focusStart = getDb()
+          //         .get("currentFocusSession")
+          //         .get("startTime")
+          //         .value();
 
-              const focusDate = new Date(focusStart);
+          //       const focusDate = new Date(focusStart);
 
-              if (timestampDate > focusDate) {
-                // safety measure to not store any old messages (luthi encountered this for some reason)
-                // store messages in local db
-                getDb()
-                  .get("currentFocusSession")
-                  .get("services")
-                  .find({ id: this.id })
-                  .get("messages")
-                  .push({
-                    title: username,
-                    body: content,
-                    timestamp: timestampDate.getTime(),
-                  })
-                  .write();
+          //       if (timestampDate > focusDate) {
+          //         // safety measure to not store any old messages (luthi encountered this for some reason)
+          //         // store messages in local db
+          //         getDb()
+          //           .get("currentFocusSession")
+          //           .get("services")
+          //           .find({ id: this.id })
+          //           .get("messages")
+          //           .push({
+          //             title: username,
+          //             body: content,
+          //             timestamp: timestampDate.getTime(),
+          //           })
+          //           .write();
 
-                if (
-                  single_channel.includes("@unq.gbl.spaces") &&
-                  !this.isReplied(autoReplied, single_channel) &&
-                  this.autoResponse
-                ) {
-                  //do an auto-reply
-                  this.sendMessage(single_channel);
+          //         if (
+          //           single_channel.includes("@unq.gbl.spaces") &&
+          //           !this.isReplied(autoReplied, single_channel) &&
+          //           this.autoResponse
+          //         ) {
+          //           //do an auto-reply
+          //           this.sendMessage(single_channel);
 
-                  // store auto-replied single_channel in db
-                  getDb()
-                    .get("currentFocusSession")
-                    .get("services")
-                    .find({ id: this.id })
-                    .get("autoReplied")
-                    .push({ channel: single_channel })
-                    .write();
-                }
-              }
-            } else {
-              if (new Date().getTime() - 20000 < timestampDate.getTime()) {
-                // not in focus session, still store to archive
-                storeNotificationInArchive(this.id, username);
-              }
-            }
-          }
+          //           // store auto-replied single_channel in db
+          //           getDb()
+          //             .get("currentFocusSession")
+          //             .get("services")
+          //             .find({ id: this.id })
+          //             .get("autoReplied")
+          //             .push({ channel: single_channel })
+          //             .write();
+          //         }
+          //       }
+          //     } else {
+          //       if (new Date().getTime() - 20000 < timestampDate.getTime()) {
+          //         // not in focus session, still store to archive
+          //         storeNotificationInArchive(this.id, username);
+          //       }
+          //     }
+          //   }
         });
       } catch (e) {
         console.log(e);
