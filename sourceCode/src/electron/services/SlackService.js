@@ -55,10 +55,10 @@ module.exports = class SlackService extends Service {
     let cookies = await this.getCookies();
 
     // Call Do not Disturb on slack API with token and cookie
-    await axios.get("https://slack.com/api/dnd.setSnooze", {
+    await axios.get("https://slack.com/api/users.setPresence", {
       params: {
         token,
-        // num_minutes: diffMins,
+        presence: "away",
       },
       headers: {
         Cookie: cookies,
@@ -71,9 +71,10 @@ module.exports = class SlackService extends Service {
     let cookies = await this.getCookies();
 
     // End Do not Disturb session on slack API with token and cookie
-    await axios.get("https://slack.com/api/dnd.endSnooze", {
+    await axios.get("https://slack.com/api/users.setPresence", {
       params: {
         token,
+        presence: "auto",
       },
       headers: {
         Cookie: cookies,
@@ -123,22 +124,10 @@ module.exports = class SlackService extends Service {
             if (m.user !== userID) {
               const username = await this.getUsername(m.user);
 
+              console.log("message: ", m.text);
               if (this.isInFocusSession()) {
                 // In focus session
                 // save message in database under currentFocusSession (required because notification is not sent in dnd, thus also not stored)
-                console.log("should save to currentFocusSession");
-
-                getDb()
-                  .get("currentFocusSession")
-                  .get("services")
-                  .find({ id: this.id })
-                  .get("messages")
-                  .push({
-                    title: username,
-                    body: m.text,
-                    timestamp: parseInt(m.ts) * 1000,
-                  })
-                  .write();
 
                 const repliedList = getDb()
                   .get("currentFocusSession")
@@ -147,12 +136,10 @@ module.exports = class SlackService extends Service {
                   .get("autoReplied")
                   .value();
 
-                console.log(repliedList);
                 let alreadyReplied;
 
                 repliedList.forEach((l) => {
                   if (l.channel != channel) {
-                    console.log(m.user);
                     alreadyReplied = false;
                   } else {
                     alreadyReplied = true;
@@ -173,8 +160,6 @@ module.exports = class SlackService extends Service {
                     .push({ channel })
                     .write();
                 }
-              } else {
-                storeNotificationInArchive(this.id, username);
               }
             }
           });
@@ -191,6 +176,7 @@ module.exports = class SlackService extends Service {
       channel: channel,
     });
 
+    console.log("Send auto-response to: ", channel);
     var config = {
       method: "post",
       url: "https://slack.com/api/chat.postMessage",
@@ -264,11 +250,5 @@ module.exports = class SlackService extends Service {
       });
 
     return username;
-  }
-
-  handleNotification(isFoucs, title, body) {
-    console.log(this.name, "notification received, doing nothing with it");
-    // don't do anything
-    return;
   }
 };

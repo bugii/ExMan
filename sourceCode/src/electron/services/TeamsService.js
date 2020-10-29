@@ -21,6 +21,13 @@ module.exports = class TeamsService extends Service {
       const unreadChats = await webContents
         .fromId(this.webContentsId)
         .executeJavaScript("window.getUnreadChats()");
+      // function check for call
+      const checkForcall = await webContents
+        .fromId(this.webContentsId)
+        .executeJavaScript("window.checkForCall()");
+      // if true showcall popup ipcRenderer
+
+      // if false don't show popup
 
       this.unreadCount = unreadChats;
       // set in db
@@ -74,7 +81,7 @@ module.exports = class TeamsService extends Service {
       await axios.put(
         "https://presence.teams.microsoft.com/v1/me/forceavailability/",
         {
-          availability: "DoNotDisturb",
+          availability: "Busy",
         },
         {
           headers: {
@@ -125,14 +132,23 @@ module.exports = class TeamsService extends Service {
             },
           }
         );
-
         this.syncToken = res.data["_metadata"]["syncState"];
+
+        const new_res = await axios.get(this.syncToken, {
+          headers: {
+            Authentication: `skypetoken=${tokens[1]}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        this.syncToken = new_res.data["_metadata"]["syncState"];
+
         console.log("syncToken", this.syncToken);
       } catch (error) {
         console.log(error);
       }
     } else {
-      console.log("message loop with sync token", this.syncToken);
+      //console.log("message loop with sync token", this.syncToken);
       try {
         const new_res = await axios.get(this.syncToken, {
           headers: {
@@ -151,72 +167,37 @@ module.exports = class TeamsService extends Service {
             channel.lastMessage.originalarrivaltime
           ).getTime();
 
-          // display needed data in console
-          console.log(single_channel);
-          console.log(content);
-          console.log(username);
-          console.log(timestamp);
+          if (username !== "" && username !== this.username) {
+            console.log("message:", content);
+            if (this.isInFocusSession()) {
+              // Currently in focus session
 
-          // const timestampDate = new Date(timestamp);
+              const autoReplied = getDb()
+                .get("currentFocusSession")
+                .get("services")
+                .find({ id: this.id })
+                .get("autoReplied")
+                .value();
 
-          //   if (username !== "" && username !== this.username) {
-          //     if (this.isInFocusSession()) {
-          //       // Currently in focus session
+              if (
+                single_channel.includes("@unq.gbl.spaces") &&
+                !this.isReplied(autoReplied, single_channel) &&
+                this.autoResponse
+              ) {
+                //do an auto-reply
+                this.sendMessage(single_channel);
 
-          //       const autoReplied = getDb()
-          //         .get("currentFocusSession")
-          //         .get("services")
-          //         .find({ id: this.id })
-          //         .get("autoReplied")
-          //         .value();
-
-          //       const focusStart = getDb()
-          //         .get("currentFocusSession")
-          //         .get("startTime")
-          //         .value();
-
-          //       const focusDate = new Date(focusStart);
-
-          //       if (timestampDate > focusDate) {
-          //         // safety measure to not store any old messages (luthi encountered this for some reason)
-          //         // store messages in local db
-          //         getDb()
-          //           .get("currentFocusSession")
-          //           .get("services")
-          //           .find({ id: this.id })
-          //           .get("messages")
-          //           .push({
-          //             title: username,
-          //             body: content,
-          //             timestamp: timestampDate.getTime(),
-          //           })
-          //           .write();
-
-          //         if (
-          //           single_channel.includes("@unq.gbl.spaces") &&
-          //           !this.isReplied(autoReplied, single_channel) &&
-          //           this.autoResponse
-          //         ) {
-          //           //do an auto-reply
-          //           this.sendMessage(single_channel);
-
-          //           // store auto-replied single_channel in db
-          //           getDb()
-          //             .get("currentFocusSession")
-          //             .get("services")
-          //             .find({ id: this.id })
-          //             .get("autoReplied")
-          //             .push({ channel: single_channel })
-          //             .write();
-          //         }
-          //       }
-          //     } else {
-          //       if (new Date().getTime() - 20000 < timestampDate.getTime()) {
-          //         // not in focus session, still store to archive
-          //         storeNotificationInArchive(this.id, username);
-          //       }
-          //     }
-          //   }
+                // store auto-replied single_channel in db
+                getDb()
+                  .get("currentFocusSession")
+                  .get("services")
+                  .find({ id: this.id })
+                  .get("autoReplied")
+                  .push({ channel: single_channel })
+                  .write();
+              }
+            }
+          }
         });
       } catch (e) {
         console.log(e);
@@ -226,11 +207,9 @@ module.exports = class TeamsService extends Service {
 
   async sendMessage(channel) {
     const tokens = await this.getToken();
-    console.log("skype token used", tokens[1]);
 
-    console.log(channel);
+    console.log("Send auto-response to:", channel);
     const url = `https://emea.ng.msg.teams.microsoft.com/v1/users/ME/conversations/${channel}/messages`;
-    console.log(url);
     try {
       await axios.post(
         url,
@@ -263,17 +242,10 @@ module.exports = class TeamsService extends Service {
     for (let index = 0; index < Replied.length; index++) {
       const reply = Replied[index];
       if (reply.channel === channel) {
-        console.log("true");
         return true;
       }
-      console.log("false");
+
       return false;
     }
-  }
-
-  handleNotification(isFoucs, title, body) {
-    console.log(this.name, "notification received, doing nothing with it");
-    // don't do anything
-    return;
   }
 };
