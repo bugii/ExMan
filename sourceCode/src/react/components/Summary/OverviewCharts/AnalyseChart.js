@@ -71,7 +71,8 @@ function AnalyseChart(props) {
       if (service_array[i] === "whatsapp") color_array.push(Colors.whatsapp);
       else if (service_array[i] === "slack") color_array.push(Colors.slack);
       else if (service_array[i] === "teams") color_array.push(Colors.teams);
-      else if (service_array[i]=== "telegram") color_array.push(Colors.telegram);
+      else if (service_array[i] === "telegram")
+        color_array.push(Colors.telegram);
       else color_array.push(randomColor);
     }
     return color_array;
@@ -90,7 +91,7 @@ function AnalyseChart(props) {
   useEffect(() => {
     let serviceIndex;
     const serviceObj = {};
-    console.log(serviceObj);
+
     let servicesTempArray;
     let servicesTempBreakArray = [];
     let colorTempArray = [];
@@ -99,7 +100,6 @@ function AnalyseChart(props) {
     const pastSession = props.data;
     brokenFocusvariable = brokenFocus(pastSession);
     setNumOfbreaks(brokenFocusvariable);
-    //console.log(pastSession);
 
     for (serviceIndex in pastSession) {
       for (let z in pastSession[serviceIndex].services) {
@@ -114,16 +114,14 @@ function AnalyseChart(props) {
         } else {
           serviceObj[service] = duration;
         }
-        //console.log(serviceObj);
       }
     }
     servicesTempArray = Object.keys(serviceObj);
-    //console.log(servicesTempArray);
+
     colorTempArray = colorCreator(servicesTempArray);
     servicesTempBreakArray = Object.values(serviceObj);
-    //console.log(servicesTempBreakArray);
+
     timeinFocus = trueFocus(servicesTempBreakArray, pastSession);
-    console.log("print", timeinFocus[0], timeinFocus[1]);
     servicesTempArray.push("real Time in Focus");
     servicesTempBreakArray.push(timeinFocus[1]);
     colorTempArray.push(Colors.focus);

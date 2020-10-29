@@ -55,7 +55,6 @@ function DonutChart(props) {
     let colorTempArray = [];
     let timeinFocus;
     const focusSession = props.data;
-    console.log(focusSession);
     setNumOfbreaks(focusSession.brokenFocus.length);
 
     for (serviceIndex in focusSession.services) {
@@ -64,7 +63,6 @@ function DonutChart(props) {
         focusSession.services[serviceIndex].interactions
       );
       servicesTempArray.push(focusSession.services[serviceIndex].name);
-      console.log(durations);
       servicesTempBreakArray.push(durations);
       if (focusSession.services[serviceIndex].name === "whatsapp") {
         colorTempArray.push(Colors.whatsapp);

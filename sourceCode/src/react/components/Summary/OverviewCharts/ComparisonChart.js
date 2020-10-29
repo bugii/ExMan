@@ -67,13 +67,12 @@ function ComparisonChart(props) {
   useEffect(() => {
     let serviceIndex;
     const serviceObj = {};
-    console.log(serviceObj);
+
     let servicesTempArray;
     let servicesTempBreakArray = [];
     let colorTempArray = [];
     let service_sum;
     const pastSession = props.data;
-    //console.log(pastSession);
 
     for (serviceIndex in pastSession) {
       for (let z in pastSession[serviceIndex].services) {
@@ -88,14 +87,11 @@ function ComparisonChart(props) {
         } else {
           serviceObj[service] = duration;
         }
-        //console.log(serviceObj);
       }
     }
     servicesTempArray = Object.keys(serviceObj);
-    //console.log(servicesTempArray);
     colorTempArray = colorCreator(servicesTempArray);
     servicesTempBreakArray = Object.values(serviceObj);
-    //console.log(servicesTempBreakArray);
     service_sum = arrSum(servicesTempBreakArray);
     servicesTempBreakArray = toPercent(service_sum, servicesTempBreakArray);
     setServicesArray(servicesTempArray);

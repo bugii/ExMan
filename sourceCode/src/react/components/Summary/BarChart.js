@@ -45,7 +45,6 @@ function BarChart(props) {
 
   useEffect(() => {
     const focusSession = props.data;
-    //console.log(focusSession);
     for (serviceIndex in focusSession.services) {
       if (focusSession.services[serviceIndex].messages !== 0) {
         for (messageIndex in focusSession.services[serviceIndex].messages) {
@@ -68,9 +67,6 @@ function BarChart(props) {
       })
     );
     setfrequency(dataCreator(timestampArray.sort(), bins));
-    //console.log(`frequency: ${dataCreator(timestampArray.sort(), bins)}`);
-    //console.log(`timestamparray: ${timestampArray}`);
-    //console.log(`bins: ${bins}`);
   }, []);
 
   const data = {
