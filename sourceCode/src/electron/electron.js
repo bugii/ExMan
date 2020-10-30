@@ -347,6 +347,15 @@ ipcMain.on("updateDefaultDuration", (e, { type, value }) => {
   storeDefaultFocusSession(type, value);
 });
 
+ipcMain.on("callChecker-send", (e, id) => {
+  // display notification
+  getMainWindow().send("notification", {
+    id: id,
+    title: "you got a call",
+    body: " teams call",
+  });
+});
+
 ipcMain.on("get-settings", (e) => {
   e.reply("get-settings", getSettings());
 });

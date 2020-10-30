@@ -58,7 +58,6 @@ function GoalsChart(props) {
   useEffect(() => {
     const focusSession = props.data;
     const nrFocusSessions = focusSession.length;
-    //console.log(focusSession);
     for (let i = 0; i < focusSession.length; i++) {
       goalTemp += focusSession[i].goals.length;
       achievedgoalTemp += focusSession[i].completedGoals.length;
@@ -76,7 +75,7 @@ function GoalsChart(props) {
     <Custom>
       <Goals>
         <h3 style={{ marginBottom: "40px" }}> Goals: </h3>
-        <Circle>{(reachedGoals / goals * 100).toFixed(2)}%</Circle>
+        <Circle>{((reachedGoals / goals) * 100).toFixed(2)}%</Circle>
         <Text>
           <p>total goals: {goals}</p>
           <p>reached goals: {reachedGoals}</p>

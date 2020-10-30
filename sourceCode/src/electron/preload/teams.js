@@ -22,6 +22,31 @@ function getTokens() {
 
 window.getTokens = getTokens;
 
+function checkForCall(state) {
+  const calldiv = document.querySelector(
+    ".toast-message .action-button.call-audio"
+    //".teams-title"
+  );
+  if (calldiv !== null) {
+    if (state === true) return state;
+    else {
+      try {
+        ipcRenderer.send("callChecker-send", { id: window.serviceId });
+      } catch (error) {
+        console.log(error);
+      }
+      return !state;
+    }
+  } else {
+    if (state === false) return state;
+    else {
+      return !state;
+    }
+  }
+}
+
+window.checkForCall = checkForCall;
+
 class newNotification extends window.Notification {
   constructor(title, opt) {
     // By not calling super(), the notification cannot be sent with the HTML Notification API
