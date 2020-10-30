@@ -7,7 +7,11 @@
     "buildResources": "resources"
   },
   "extends": null,
-  "files": ["./build/**/*", "./sourceCode/src/electron/**/*"],
+  "files": [
+    "./build/**/*",
+    "./sourceCode/src/electron/**/*",
+    "./sourceCode/src/express/**/*"
+  ],
   "mac": {
     "hardenedRuntime": true,
     "category": "public.app-category.productivity",

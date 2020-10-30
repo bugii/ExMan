@@ -9,6 +9,16 @@ const {
   Menu,
 } = require("electron");
 
+require("./ipc/autoResponse");
+require("./ipc/calendar");
+require("./ipc/focus");
+require("./ipc/forms");
+require("./ipc/navigation");
+require("./ipc/notifications");
+require("./ipc/services");
+require("./ipc/settings");
+require("./ipc/goals");
+
 require("../express/express");
 
 const log = require("electron-log");
@@ -23,34 +33,14 @@ const isDev = require("electron-is-dev");
 const {
   init: db_init,
   getCurrentFocusSession,
-  getPreviousFocusSession,
-  getAllFocusSessions,
-  deleteFutureFocusSession,
-  updateAutoresponse,
-  getAllFutureFocusSessions,
-  setEndTime,
-  setFocusGoals,
-  setCompletedGoals,
-  setCompletedGoalsAfterSession,
-  setRating,
-  setChatWorkRelated,
-  storeBreakFocusClicks,
-  storeRandomSurveyResults,
-  storeDefaultFocusSession,
-  getSettings,
   storeAppStart,
   storeActiveWindowInArchive,
   storeActiveWindowInCurrentFocus,
-  storeServiceInteractionStartInCurrentFocus,
   storeServiceInteractionEndInCurrentFocus,
-  storeServiceInteractionStartInArchive,
   storeServiceInteractionEndInArchive,
 } = require("./db/db");
-
-const focusStart = require("./utils/focusStart");
-const focusEnd = require("./utils/focusEnd");
 const insertWebviewCss = require("./utils/insertWebviewCss");
-const scheduleFocus = require("./utils/scheduleFocus");
+
 const {
   storeMainWindow,
   getMainWindow,
@@ -58,22 +48,18 @@ const {
   storeIntervallRef,
   storeTimeoutRef,
 } = require("./db/memoryDb");
+
 const exportDb = require("./utils/exportDb");
 const servicesManager = require("./services/ServicesManger");
 const eventEmitter = require("./utils/eventEmitter");
 const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
 const handleWindowClose = require("./utils/handleWindowClose");
-const isOverlappingWithFocusSessions = require("./utils/isOverlappingWithFocusSessions");
-const isWrongFocusDuration = require("./utils/isWrongFocusDuration");
 const scheduleRandomPopup = require("./utils/scheduleRandomPopup");
 const updater = require("./utils/updater");
 
 const createTray = require("./utils/createTray");
 const activeWin = require("active-win");
 const updateFrontend = require("./utils/updateFrontend");
-const extendFocusDuration = require("./utils/extendFocusDuration");
-const { outlookAuthRequest } = require("./auth/outlookOAuth");
-const { googleAuthRequest } = require("./auth/googleOAuth");
 
 const isMac = process.platform === "darwin";
 
@@ -128,33 +114,6 @@ Menu.setApplicationMenu(mainMenu);
 
 eventEmitter.on("all-services-authed", allServicesAuthedHandler);
 
-ipcMain.on("outlook-cal-register-start", (e) => {
-  console.log("start outlook registration");
-  outlookAuthRequest();
-});
-
-ipcMain.on("google-cal-register-start", (e) => {
-  console.log("start google registration");
-  googleAuthRequest();
-});
-
-ipcMain.on("add-service", (event, name) => {
-  console.log("add service", name);
-  const id = servicesManager.addService({
-    id: null,
-    name,
-    autoResponse: false,
-  });
-
-  updateFrontend();
-  openService(id);
-});
-
-ipcMain.on("delete-service", (event, id) => {
-  console.log("delete service", id);
-  servicesManager.deleteService(id);
-});
-
 ipcMain.on("update-frontend", (e) => {
   console.log("update frontend");
   updateFrontend();
@@ -165,11 +124,6 @@ ipcMain.on("update-frontend-sync", (e) => {
   const services = servicesManager.getServices();
   const currentFocusSession = getCurrentFocusSession();
   e.returnValue = { services, currentFocusSession };
-});
-
-ipcMain.on("refresh-service", (e, id) => {
-  console.log(`refreshing ${id}`);
-  servicesManager.refreshService(id);
 });
 
 ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
@@ -192,212 +146,6 @@ ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
   service.setWebcontentsId(webContentsId);
   service.startLoop();
 });
-
-ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
-  console.log("focus requested from react", startTime, endTime);
-  // if already in focus mode -> can't start again
-  if (getFocus()) {
-    e.reply("error", "/already-focused");
-    console.log("error starting focus session - already in focus");
-    return;
-  }
-  // if there is an overlap with a future focus session -> can't start
-  if (isOverlappingWithFocusSessions(startTime, endTime)) {
-    e.reply("error", "/focus-overlap");
-    console.log(
-      "error starting focus session - overlap with current or future focus session"
-    );
-    return;
-  }
-  if (isWrongFocusDuration(startTime, endTime)) {
-    e.reply("error", "/wrong-duration");
-    console.log(
-      "error wrong focus duration - either negative value or over 10h"
-    );
-    return;
-  }
-
-  focusStart(startTime, endTime);
-});
-
-ipcMain.on("focus-schedule-request", (e, { startTime, endTime }) => {
-  console.log("schedule focus request from react", startTime, endTime);
-
-  if (isOverlappingWithFocusSessions(startTime, endTime)) {
-    e.reply("error", "/focus-overlap");
-    console.log(
-      "error scheduling focus session - overlap with current or future focus session"
-    );
-    return;
-  }
-  if (isWrongFocusDuration(startTime, endTime)) {
-    e.reply("error", "/wrong-duration");
-    console.log(
-      "error wrong focus duration - either negative value or over 10h"
-    );
-    return;
-  }
-
-  scheduleFocus(startTime, endTime);
-});
-
-ipcMain.on("focus-goals-request", (e, { goals, completedGoals }) => {
-  console.log("focus goal request from react", goals);
-  setFocusGoals(goals);
-  setCompletedGoals(completedGoals);
-  // if focus goals were set successfully, update the react app
-  e.reply("current-focus-request", getCurrentFocusSession());
-});
-
-ipcMain.on("focus-end-request", (e) => {
-  console.log("focus end request from react");
-  // manually set the endTime of the focus session to the current time. This results in endTime != originalEndTime -> we can see which sessions were aborted manually
-  setEndTime(new Date().getTime());
-  focusEnd();
-  // if focus end successful, update the react app
-  e.reply("focus-end-successful");
-});
-
-ipcMain.on("focus-end-change-request", (e, minutes) => {
-  console.log("extending focus duration");
-  extendFocusDuration(minutes);
-});
-
-ipcMain.on(
-  "previous-session-update",
-  (e, { rating, completedGoals, chatWorkRelated }) => {
-    console.log("previous session update");
-    // submit rating value to focus session
-    setRating(rating);
-    // update goals with which were accomplished
-    setCompletedGoalsAfterSession(completedGoals);
-    // set work related chat
-    setChatWorkRelated(chatWorkRelated);
-  }
-);
-
-ipcMain.on("random-popup-submission", (e, { productivity, wasMinimized }) => {
-  console.log(`random popup survey submission, productivity: ${productivity}`);
-  storeRandomSurveyResults({ productivity });
-  if (wasMinimized) {
-    getMainWindow().minimize();
-  }
-  scheduleRandomPopup();
-});
-
-ipcMain.on("notification", (event, { id, title, body }) => {
-  if (!getFocus()) {
-    console.log("forward notification", id);
-    // forward notification
-    // try to send it to renderer and use html notifcation api there
-    getMainWindow().send("notification", { id, title, body });
-    // Also store the notification in archive
-    servicesManager.getService(id).handleNotification(false, title, body);
-  } else {
-    console.log("block notification", id);
-    // if there is a focus session ongoing, store the notification
-    servicesManager.getService(id).handleNotification(true, title, body);
-  }
-});
-
-ipcMain.on("notification-clicked", (e, id) => {
-  console.log("clicked on notification", id);
-  getMainWindow().restore();
-  getMainWindow().show();
-  openService(id);
-});
-
-ipcMain.on("get-previous-focus-session", (e, args) => {
-  e.reply("get-previous-focus-session", getPreviousFocusSession());
-});
-
-ipcMain.on("get-all-past-focus-sessions", (e, args) => {
-  e.reply("get-all-past-focus-sessions", getAllFocusSessions());
-});
-
-ipcMain.on("cancel-future-focus-session", (e, sessionId) => {
-  console.log("delete future session, id: ", sessionId);
-  deleteFutureFocusSession(sessionId);
-  e.reply("get-all-future-focus-sessions", getAllFutureFocusSessions());
-});
-
-ipcMain.on("updateAutoResponse", (e, message) => {
-  updateAutoresponse(message);
-});
-
-ipcMain.on("toggleAutoResponse", (e, id) => {
-  const service = servicesManager.getService(id);
-  service.toggleAutoResponseAvailablity();
-});
-
-ipcMain.on("getAutoResponseStatus", (e, id) => {
-  const service = servicesManager.getService(id);
-  return service.autoResponse;
-});
-
-ipcMain.on("breakFocus", (e, breakFocusEnd) => {
-  storeBreakFocusClicks(breakFocusEnd);
-});
-
-ipcMain.on("get-all-future-focus-sessions", (e, args) => {
-  e.reply("get-all-future-focus-sessions", getAllFutureFocusSessions());
-});
-
-ipcMain.on("updateDefaultDuration", (e, { type, value }) => {
-  storeDefaultFocusSession(type, value);
-});
-
-ipcMain.on("callChecker-send", (e, id) => {
-  // display notification
-  getMainWindow().send("notification", {
-    id: id,
-    title: "you got a call",
-    body: " teams call",
-  });
-});
-
-ipcMain.on("get-settings", (e) => {
-  e.reply("get-settings", getSettings());
-});
-
-let lastId = null;
-
-ipcMain.on("route-changed", (e, location) => {
-  if (location.pathname.includes("/services")) {
-    // navigated to service route
-    const splitArray = location.pathname.split("/");
-    const id = splitArray[splitArray.length - 1];
-    if (getFocus()) {
-      storeServiceInteractionStartInCurrentFocus(id);
-      if (lastId !== null) {
-        storeServiceInteractionEndInCurrentFocus(lastId);
-      }
-    } else {
-      storeServiceInteractionStartInArchive(id);
-      if (lastId !== null) {
-        storeServiceInteractionEndInArchive(lastId);
-      }
-    }
-    lastId = id;
-  } else {
-    // navigated to non-service page
-    if (getFocus()) {
-      if (lastId !== null) {
-        storeServiceInteractionEndInCurrentFocus(lastId);
-      }
-    } else {
-      if (lastId !== null) {
-        storeServiceInteractionEndInArchive(lastId);
-      }
-    }
-    lastId = null;
-  }
-});
-
-const openService = (id) => {
-  // If a new notification comes in, open the corresponding service in the frontend
-  getMainWindow().webContents.send("open-service", id);
-};
 
 async function createWindow() {
   // Main Browser Window
@@ -482,15 +230,6 @@ app.whenReady().then(async () => {
     console.log(
       "close window, deleting all the timeouts and intervalls in memory"
     );
-    if (getFocus()) {
-      if (lastId !== null) {
-        storeServiceInteractionEndInCurrentFocus(lastId);
-      }
-    } else {
-      if (lastId !== null) {
-        storeServiceInteractionEndInArchive(lastId);
-      }
-    }
     handleWindowClose();
   });
 

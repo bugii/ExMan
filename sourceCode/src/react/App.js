@@ -99,6 +99,7 @@ function App() {
     ipcRenderer.on("notification", (e, { id, title, body }) => {
       const n = new Notification(title, {
         body,
+        silent: true,
       });
       n.onclick = () => {
         ipcRenderer.send("notification-clicked", id);

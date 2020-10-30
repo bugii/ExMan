@@ -15,7 +15,6 @@ const port = 4000;
 app.use(express.json());
 
 app.get("/oauth/google", async (req, res) => {
-  console.log(req.query.code);
   const code = req.query.code;
 
   const data = qs.stringify({
@@ -24,8 +23,7 @@ app.get("/oauth/google", async (req, res) => {
     scope: "https://www.googleapis.com/auth/calendar",
     code: code,
     redirect_uri: `http://localhost:${port}/oauth/google`,
-    // code_challenge,
-    // code_challenge_method: "S256",
+
     client_secret: "lyPQ5PC-xdNFM7cs828Tvqhd",
     grant_type: "authorization_code",
   });
@@ -40,7 +38,6 @@ app.get("/oauth/google", async (req, res) => {
   try {
     const res = await axios(config);
     // store both tokens in db
-    console.log(res);
     storeTokens("google", {
       access_token: res.data.access_token,
       refresh_token: res.data.refresh_token,
