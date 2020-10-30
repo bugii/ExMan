@@ -78,6 +78,14 @@ function Settings(props) {
     ipcRenderer.send("updateAutoResponse", autoReply);
   };
 
+  const handleOutlookCalClick = () => {
+    ipcRenderer.send("outlook-cal-register-start");
+  };
+
+  const handleGoogleCalClick = () => {
+    ipcRenderer.send("google-cal-register-start");
+  };
+
   return (
     <SettingsDiv>
       <h1>SETTINGS</h1>
@@ -128,6 +136,8 @@ function Settings(props) {
             onChange={(e) => handleLongFocus(e.target.value)}
           />
         </div>
+        <div onClick={handleOutlookCalClick}>Register Outlook Calendar</div>
+        <div onClick={handleGoogleCalClick}>Register Google Calendar</div>
       </Settingsbox>
     </SettingsDiv>
   );

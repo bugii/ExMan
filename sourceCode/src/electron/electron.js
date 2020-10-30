@@ -9,6 +9,8 @@ const {
   Menu,
 } = require("electron");
 
+require("../express/express");
+
 const log = require("electron-log");
 
 const {
@@ -70,6 +72,8 @@ const createTray = require("./utils/createTray");
 const activeWin = require("active-win");
 const updateFrontend = require("./utils/updateFrontend");
 const extendFocusDuration = require("./utils/extendFocusDuration");
+const { outlookAuthRequest } = require("./auth/outlookOAuth");
+const { googleAuthRequest } = require("./auth/googleOAuth");
 
 const isMac = process.platform === "darwin";
 
@@ -124,6 +128,16 @@ Menu.setApplicationMenu(mainMenu);
 
 eventEmitter.on("all-services-authed", allServicesAuthedHandler);
 
+ipcMain.on("outlook-cal-register-start", (e) => {
+  console.log("start outlook registration");
+  outlookAuthRequest();
+});
+
+ipcMain.on("google-cal-register-start", (e) => {
+  console.log("start google registration");
+  googleAuthRequest();
+});
+
 ipcMain.on("add-service", (event, name) => {
   console.log("add service", name);
   const id = servicesManager.addService({
@@ -159,6 +173,7 @@ ipcMain.on("refresh-service", (e, id) => {
 });
 
 ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
+  console.log("webview rendered", id);
   const service = servicesManager.getService(id);
 
   // console.log("webview rendered", id, webContentsId);

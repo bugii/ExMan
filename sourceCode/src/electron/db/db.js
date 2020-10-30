@@ -56,6 +56,19 @@ function init() {
     db.set("outOfFocusInteractions", {}).write();
   }
 
+  if (!db.has("tokens").value()) {
+    db.set("tokens", {
+      microsoft: {
+        access_token: null,
+        refresh_token: null,
+      },
+      google: {
+        access_token: null,
+        refresh_token: null,
+      },
+    }).write();
+  }
+
   return db;
 }
 
@@ -389,6 +402,17 @@ function storeServiceInteractionEndInArchive(id) {
     .write();
 }
 
+function storeTokens(provider, { access_token, refresh_token }) {
+  db.get("tokens")
+    .get(provider)
+    .assign({ access_token, refresh_token })
+    .write();
+}
+
+function getTokens(provider) {
+  return db.get("tokens").get(provider).value();
+}
+
 module.exports = {
   init,
   getDb,
@@ -430,4 +454,6 @@ module.exports = {
   storeServiceInteractionEndInCurrentFocus,
   storeServiceInteractionStartInArchive,
   storeServiceInteractionEndInArchive,
+  storeTokens,
+  getTokens,
 };
