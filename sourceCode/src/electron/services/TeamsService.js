@@ -4,6 +4,7 @@ const axios = require("axios");
 const Service = require("../services/Service");
 const { setUnreadChats } = require("../db/db");
 const fillAutoresponseTemplate = require("../utils/fillAutoresponseTemplate");
+const { setcallincoming } = require("../db/memoryDb");
 
 module.exports = class TeamsService extends Service {
   constructor(id, autoResponse, checkIfAllAuthed) {
@@ -12,6 +13,7 @@ module.exports = class TeamsService extends Service {
     super(id, "teams", autoResponse, checkIfAllAuthed);
     this.syncToken = null;
     this.username = null;
+    this.checkForCall = null;
   }
 
   unReadLoop() {
@@ -21,13 +23,10 @@ module.exports = class TeamsService extends Service {
       const unreadChats = await webContents
         .fromId(this.webContentsId)
         .executeJavaScript("window.getUnreadChats()");
-      // function check for call
-      const checkForcall = await webContents
+      // function check for call from preload
+      this.checkForCall = await webContents
         .fromId(this.webContentsId)
-        .executeJavaScript("window.checkForCall()");
-      // if true showcall popup ipcRenderer
-
-      // if false don't show popup
+        .executeJavaScript(`window.checkForCall(${this.checkForCall})`);
 
       this.unreadCount = unreadChats;
       // set in db
