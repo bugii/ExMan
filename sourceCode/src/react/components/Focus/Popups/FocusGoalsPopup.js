@@ -86,12 +86,12 @@ function FocusGoalsPopup(props) {
       aria-labelledby="simple-dialog-title"
       open={props.open}
       maxWidth={"lg"}
-      onClose={props.close}
+      onClose={handleSubmit}
     >
       <DialogTitle id="simple-dialog-title">Focus Goals</DialogTitle>
       <PreFocusDiv>
         <div style={{ position: "absolute", top: 0, right: 0 }}>
-          <IconButton onClick={props.close}>
+          <IconButton onClick={handleSubmit}>
             <CloseIcon fontSize="large" />
           </IconButton>
         </div>
