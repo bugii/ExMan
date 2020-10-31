@@ -1,18 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Colors from "../components/Colors";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import Grid from "@material-ui/core/Grid";
-import Rating from "@material-ui/lab/Rating";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import ServiceMessageSummaryBox from "../components/Summary/ServiceMessageSummaryBox";
-import Button from "@material-ui/core/Button";
 import GoalsChart from "../components/Summary/OverviewCharts/GoalsChart";
 import AnalyseChart from "../components/Summary/OverviewCharts/AnalyseChart";
-import ComparisonChart from "../components/Summary/OverviewCharts/ComparisonChart";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -42,7 +33,6 @@ export const LoadingDiv = styled.div`
 
 function Dashboard(props) {
   const [pastFocusSessions, setPastFocusSessions] = useState([]);
-  const [futureFocusSessions, setFutureFocusSessions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -52,41 +42,7 @@ function Dashboard(props) {
     });
     // on mounted -> get all past focus sessions and do something with it
     ipcRenderer.send("get-all-past-focus-sessions");
-
-    ipcRenderer.on("get-all-future-focus-sessions", (e, focusSessions) => {
-      setFutureFocusSessions(focusSessions);
-    });
-    // on mounted -> get all future focus sessions and do something with it
-    ipcRenderer.send("get-all-future-focus-sessions");
   }, []);
-
-  const formatSessionTimes = (start, end) => {
-    let date = new Date(start);
-    let startTime = new Date();
-    let endTime = new Date();
-    startTime.setTime(start);
-    endTime.setTime(end);
-    return (
-      date.getDate() +
-      "/" +
-      (date.getMonth() + 1) +
-      "/" +
-      date.getFullYear() +
-      " : " +
-      startTime.getHours() +
-      ":" +
-      ("0" + startTime.getMinutes()).substr(-2) +
-      " to " +
-      endTime.getHours() +
-      ":" +
-      ("0" + endTime.getMinutes()).substr(-2)
-    );
-  };
-
-  const cancelFutureSession = (sessionId) => {
-    console.log("Cancelling session: ", sessionId);
-    ipcRenderer.send("cancel-future-focus-session", sessionId);
-  };
 
   if (isLoading) {
     return (
@@ -103,77 +59,6 @@ function Dashboard(props) {
         <h1 style={{ textAlign: "center", color: Colors.navy }}>DASHBOARD</h1>
         <GoalsChart data={pastFocusSessions} />
         <AnalyseChart data={pastFocusSessions} />
-        <Grid
-          container
-          justify="center"
-          spacing={3}
-          style={{ textAlign: "center" }}
-        >
-          <Grid item xs={6}>
-            <h1 style={{ color: Colors.turquoise, fontSize: 50 }}>
-              {pastFocusSessions.length}
-            </h1>
-            <h2>Past Focus Sessions</h2>
-            {[...pastFocusSessions].reverse().map((focusSession) => (
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  {formatSessionTimes(
-                    focusSession.startTime,
-                    focusSession.endTime
-                  )}
-                  <Rating
-                    name="read-only"
-                    value={focusSession.rating}
-                    readOnly
-                    style={{ marginLeft: 10 }}
-                  />
-                </AccordionSummary>
-                <AccordionDetails style={{ flexDirection: "column" }}>
-                  <ServiceMessageSummaryBox
-                    formatTime={props.formatTime}
-                    focusSession={focusSession}
-                    offeredServices={props.offeredServices}
-                    setActiveService={props.setActiveService}
-                    backgroundColor={Colors.snow}
-                    charLimit={60}
-                  />
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Grid>
-          <Grid item xs={6}>
-            <h1 style={{ color: Colors.turquoise, fontSize: 50 }}>
-              {futureFocusSessions.length}
-            </h1>
-            <h2>Future Focus Sessions</h2>
-            {futureFocusSessions.map((focusSession) => (
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  {formatSessionTimes(
-                    focusSession.startTime,
-                    focusSession.endTime
-                  )}
-                </AccordionSummary>
-                <AccordionDetails style={{ justifyContent: "center" }}>
-                  <Button
-                    variant="contained"
-                    onClick={() => cancelFutureSession(focusSession.id)}
-                  >
-                    Cancel Session
-                  </Button>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Grid>
-        </Grid>
       </DashboardDiv>
     );
 }
