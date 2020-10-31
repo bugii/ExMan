@@ -1,6 +1,7 @@
 import Table from "@material-ui/core/Table";
 import Service from "../Navbar/Service";
-import React, { useState } from "react";
+import React from //useState
+"react";
 
 export default function ServiceMessageSummaryBox(props) {
   const shortenMessage = (msg) => {

@@ -4,7 +4,7 @@ import Colors from "../Colors";
 import MenuBoxes from "./MenuBoxes";
 import NewFocusSession from "../Focus/NewFocusSession";
 import ScheduleFocusSession from "../Focus/ScheduleFocusSession";
-import Button from "@material-ui/core/Button";
+//import Button from "@material-ui/core/Button";
 
 export const HomeDiv = styled.div`
   position: absolute;
@@ -23,7 +23,7 @@ export const ParagraphText = styled.p`
 `;
 
 function Home(props) {
-    const [chart, setChart] = useState(false);
+  //const [chart, setChart] = useState(false);
 
   const [newFocusSessionDialogOpen, setNewFocusSessionDialogOpen] = useState(
     false

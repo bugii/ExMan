@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import TodayIcon from "@material-ui/icons/Today";
 import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+//import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Colors from "../Colors";
 import { useHistory } from "react-router-dom";

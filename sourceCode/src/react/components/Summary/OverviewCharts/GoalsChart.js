@@ -78,7 +78,7 @@ function GoalsChart(props) {
         <Circle>{((reachedGoals / goals) * 100).toFixed(2)}%</Circle>
         <Text>
           <p>total goals: {goals}</p>
-          <p>reached goals: {reachedGoals}</p>
+          <p>achieved goals: {reachedGoals}</p>
         </Text>
       </Goals>
       <RatingDiv>
