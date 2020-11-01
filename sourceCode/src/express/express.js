@@ -10,8 +10,8 @@ const { getOutlookAuthWindow } = require("../electron/auth/outlookOAuth");
 const { getGoogleAuthWindow } = require("../electron/auth/googleOAuth");
 
 const app = express();
-const port = 4000;
-
+const { PORT: port } = require("../electron/db/memoryDb");
+const { calendarSuccessfullyAdded } = require("../electron/ipc/calendar");
 app.use(express.json());
 
 app.get("/oauth/google", async (req, res) => {
@@ -41,7 +41,9 @@ app.get("/oauth/google", async (req, res) => {
     storeTokens("google", {
       access_token: res.data.access_token,
       refresh_token: res.data.refresh_token,
+      expires_in: res.data.expires_in,
     });
+    calendarSuccessfullyAdded("google");
     getGoogleAuthWindow().destroy();
   } catch (error) {
     console.log(error);
@@ -74,7 +76,9 @@ app.get("/oauth/microsoft", async (req, res) => {
     storeTokens("microsoft", {
       access_token: res.data.access_token,
       refresh_token: res.data.refresh_token,
+      expires_in: res.data.expires_in,
     });
+    calendarSuccessfullyAdded("outlook");
     getOutlookAuthWindow().destroy();
   } catch (error) {
     console.log(error);
@@ -84,3 +88,7 @@ app.get("/oauth/microsoft", async (req, res) => {
 app.listen(port, () => {
   console.log(`Local webserver running on port: ${port}`);
 });
+
+module.exports = {
+  PORT: port,
+};

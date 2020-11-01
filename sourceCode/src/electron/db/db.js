@@ -57,16 +57,7 @@ function init() {
   }
 
   if (!db.has("tokens").value()) {
-    db.set("tokens", {
-      microsoft: {
-        access_token: null,
-        refresh_token: null,
-      },
-      google: {
-        access_token: null,
-        refresh_token: null,
-      },
-    }).write();
+    db.set("tokens", {}).write();
   }
 
   return db;
@@ -123,9 +114,7 @@ function createNewFocusSession(startTime, endTime) {
   }).write();
 }
 
-function createNewFutureFocusSession(startTime, endTime) {
-  const id = uuidv4();
-
+function createNewFutureFocusSession(startTime, endTime, id) {
   db.get("futureFocusSessions")
     .push({
       id,
@@ -134,8 +123,6 @@ function createNewFutureFocusSession(startTime, endTime) {
       scheduled: true,
     })
     .write();
-
-  return id;
 }
 
 function getCurrentFocusSession() {
@@ -402,15 +389,14 @@ function storeServiceInteractionEndInArchive(id) {
     .write();
 }
 
-function storeTokens(provider, { access_token, refresh_token }) {
-  db.get("tokens")
-    .get(provider)
-    .assign({ access_token, refresh_token })
-    .write();
+function storeTokens(provider, { access_token, refresh_token, expires_in }) {
+  db.set("tokens", {
+    [provider]: { access_token, refresh_token, expires_in },
+  }).write();
 }
 
-function getTokens(provider) {
-  return db.get("tokens").get(provider).value();
+function getTokens() {
+  return db.get("tokens").value();
 }
 
 module.exports = {

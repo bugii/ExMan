@@ -1,5 +1,6 @@
 const timeoutRefs = [];
 const intervallRefs = [];
+const futureFocusSessionsRefs = {};
 let focusEndRef = null;
 let mainWindow = null;
 let isFocus = false;
@@ -44,6 +45,14 @@ function setFocus(bool) {
   isFocus = bool;
 }
 
+function storeFutureFocusRef(id, ref) {
+  futureFocusSessionsRefs[id] = ref;
+}
+
+function getFutureFocusRef(id) {
+  return futureFocusSessionsRefs[id];
+}
+
 module.exports = {
   storeMainWindow,
   getMainWindow,
@@ -55,4 +64,7 @@ module.exports = {
   getFocusEndRef,
   getFocus,
   setFocus,
+  storeFutureFocusRef,
+  getFutureFocusRef,
+  PORT: 4000,
 };

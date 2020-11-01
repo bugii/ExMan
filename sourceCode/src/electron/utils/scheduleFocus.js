@@ -3,16 +3,24 @@ const {
   createNewFutureFocusSession,
   deleteFutureFocusSession,
   getCurrentFocusSession,
+  getAllFutureFocusSessions,
 } = require("../db/db");
+const { storeFutureFocusRef } = require("../db/memoryDb");
 
-module.exports = (start, end, id = null) => {
-  if (!id) {
-    let id = createNewFutureFocusSession(start, end);
+module.exports = (start, end, id) => {
+  const futureSessions = getAllFutureFocusSessions();
+  // If we try to schedule a future focus session with the same id again
+  // -> don't allow
+  for (const session of futureSessions) {
+    if (id === session.id) {
+      return;
+    }
   }
-  // if id is provided, don't create the focus session again, just schedule
-  else id = id;
 
-  setTimeout(() => {
+  console.log("scheduling new focus session");
+  createNewFutureFocusSession(start, end, id);
+
+  const ref = setTimeout(() => {
     // if there is no ongoing focus session: start this one
     if (!getCurrentFocusSession()) {
       // start focus session (this also creates a new object in the currentFocusSession db key)
@@ -25,4 +33,6 @@ module.exports = (start, end, id = null) => {
       );
     }
   }, start - new Date().getTime());
+
+  storeFutureFocusRef(id, ref);
 };

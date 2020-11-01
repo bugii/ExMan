@@ -3,8 +3,6 @@ import styled from "styled-components";
 import Colors from "../Colors";
 import MenuBoxes from "./MenuBoxes";
 import NewFocusSession from "../Focus/NewFocusSession";
-import ScheduleFocusSession from "../Focus/ScheduleFocusSession";
-import Button from "@material-ui/core/Button";
 
 export const HomeDiv = styled.div`
   position: absolute;
@@ -23,15 +21,9 @@ export const ParagraphText = styled.p`
 `;
 
 function Home(props) {
-    const [chart, setChart] = useState(false);
-
   const [newFocusSessionDialogOpen, setNewFocusSessionDialogOpen] = useState(
     false
   );
-  const [
-    scheduleFocusSessionDialogOpen,
-    setScheduleFocusSessionDialogOpen,
-  ] = useState(false);
 
   const openNewFocusSessionDialog = () => {
     setNewFocusSessionDialogOpen(true);
@@ -39,14 +31,6 @@ function Home(props) {
 
   const closeNewFocusSessionDialog = () => {
     setNewFocusSessionDialogOpen(false);
-  };
-
-  const openScheduleSessionDialog = () => {
-    setScheduleFocusSessionDialogOpen(true);
-  };
-
-  const closeScheduleSessionDialog = () => {
-    setScheduleFocusSessionDialogOpen(false);
   };
 
   return (
@@ -60,17 +44,10 @@ function Home(props) {
         To begin, add your apps and click focus now or schedule your next focus
         session.
       </ParagraphText>
-      <MenuBoxes
-        handleFocusNow={openNewFocusSessionDialog}
-        handleScheduleFocus={openScheduleSessionDialog}
-      />
+      <MenuBoxes handleFocusNow={openNewFocusSessionDialog} />
       <NewFocusSession
         open={newFocusSessionDialogOpen}
         closeDialog={closeNewFocusSessionDialog}
-      />
-      <ScheduleFocusSession
-        open={scheduleFocusSessionDialogOpen}
-        closeDialog={closeScheduleSessionDialog}
       />
       <p> Currently added {props.nrOfServices} service/s </p>
     </HomeDiv>

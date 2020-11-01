@@ -18,6 +18,7 @@ require("./ipc/notifications");
 require("./ipc/services");
 require("./ipc/settings");
 require("./ipc/goals");
+require("./ipc/auth");
 
 require("../express/express");
 
@@ -36,8 +37,6 @@ const {
   storeAppStart,
   storeActiveWindowInArchive,
   storeActiveWindowInCurrentFocus,
-  storeServiceInteractionEndInCurrentFocus,
-  storeServiceInteractionEndInArchive,
 } = require("./db/db");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 
@@ -61,6 +60,8 @@ const createTray = require("./utils/createTray");
 const activeWin = require("active-win");
 const updateFrontend = require("./utils/updateFrontend");
 
+const calendarLoop = require("./calendar/calendarLoop");
+
 const isMac = process.platform === "darwin";
 
 console.log = log.log;
@@ -69,7 +70,6 @@ console.log("starting app");
 // Initialize db
 db_init();
 storeAppStart();
-
 servicesManager.init();
 
 let mainMenu;
@@ -176,6 +176,9 @@ async function createWindow() {
 // Some APIs can only be used after this event occurs.
 
 app.whenReady().then(async () => {
+  // refreshes tokens and starts cal loop: Call before frontend window is created to avoid frontend calls without valid tokens
+  await calendarLoop();
+
   await createWindow();
   createTray();
 

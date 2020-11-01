@@ -52,12 +52,6 @@ function Dashboard(props) {
     });
     // on mounted -> get all past focus sessions and do something with it
     ipcRenderer.send("get-all-past-focus-sessions");
-
-    ipcRenderer.on("get-all-future-focus-sessions", (e, focusSessions) => {
-      setFutureFocusSessions(focusSessions);
-    });
-    // on mounted -> get all future focus sessions and do something with it
-    ipcRenderer.send("get-all-future-focus-sessions");
   }, []);
 
   const formatSessionTimes = (start, end) => {
@@ -81,11 +75,6 @@ function Dashboard(props) {
       ":" +
       ("0" + endTime.getMinutes()).substr(-2)
     );
-  };
-
-  const cancelFutureSession = (sessionId) => {
-    console.log("Cancelling session: ", sessionId);
-    ipcRenderer.send("cancel-future-focus-session", sessionId);
   };
 
   if (isLoading) {
@@ -141,34 +130,6 @@ function Dashboard(props) {
                     backgroundColor={Colors.snow}
                     charLimit={60}
                   />
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Grid>
-          <Grid item xs={6}>
-            <h1 style={{ color: Colors.turquoise, fontSize: 50 }}>
-              {futureFocusSessions.length}
-            </h1>
-            <h2>Future Focus Sessions</h2>
-            {futureFocusSessions.map((focusSession) => (
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  {formatSessionTimes(
-                    focusSession.startTime,
-                    focusSession.endTime
-                  )}
-                </AccordionSummary>
-                <AccordionDetails style={{ justifyContent: "center" }}>
-                  <Button
-                    variant="contained"
-                    onClick={() => cancelFutureSession(focusSession.id)}
-                  >
-                    Cancel Session
-                  </Button>
                 </AccordionDetails>
               </Accordion>
             ))}

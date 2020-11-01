@@ -7,13 +7,14 @@ const {
   deleteFutureFocusSession,
   storeBreakFocusClicks,
 } = require("../db/db");
-const { getFocus } = require("../db/memoryDb");
+const { getFocus, getFutureFocusRef } = require("../db/memoryDb");
 const extendFocusDuration = require("../utils/extendFocusDuration");
 const focusEnd = require("../utils/focusEnd");
 const focusStart = require("../utils/focusStart");
 const isOverlappingWithFocusSessions = require("../utils/isOverlappingWithFocusSessions");
 const isWrongFocusDuration = require("../utils/isWrongFocusDuration");
 const scheduleFocus = require("../utils/scheduleFocus");
+const deleteCalendarEvent = require("../calendar/deleteCalendarEvent");
 
 ipcMain.on("focus-start-request", (e, { startTime, endTime }) => {
   console.log("focus requested from react", startTime, endTime);
@@ -88,6 +89,10 @@ ipcMain.on("get-all-past-focus-sessions", (e, args) => {
 ipcMain.on("cancel-future-focus-session", (e, sessionId) => {
   console.log("delete future session, id: ", sessionId);
   deleteFutureFocusSession(sessionId);
+  // remove the timeout, so it does not get scheduled
+  clearTimeout(getFutureFocusRef(sessionId));
+  // delete calendar event as well -> that way it does not schedule again the next minute
+  deleteCalendarEvent(sessionId);
   e.reply("get-all-future-focus-sessions", getAllFutureFocusSessions());
 });
 
