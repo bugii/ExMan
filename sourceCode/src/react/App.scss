@@ -19,6 +19,16 @@
 .MuiAccordionSummary-root.Mui-expanded {
   min-height: 45px;
 }
+.MuiTable-root {
+  width: 40%;
+  text-align: left;
+}
+
+.MuiDrawer-paper {
+  justify-content: space-between;
+  width: 100px;
+  background-color: rgb(23, 42, 58)!important;
+}
 
 * {
   box-sizing: border-box;

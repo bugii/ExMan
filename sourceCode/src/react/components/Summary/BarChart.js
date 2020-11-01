@@ -5,7 +5,7 @@ import Colors from "../Colors";
 
 export const CustomBar = styled.div`
   padding: 2rem;
-  width: 60%;
+  width: 100%;
   display: flex;
 `;
 

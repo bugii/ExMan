@@ -4,6 +4,7 @@ import Colors from "../components/Colors";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import GoalsChart from "../components/Summary/OverviewCharts/GoalsChart";
 import AnalyseChart from "../components/Summary/OverviewCharts/AnalyseChart";
+//import ComparisonChart from "../components/Summary/OverviewCharts/ComparisonChart";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;

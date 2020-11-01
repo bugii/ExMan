@@ -16,7 +16,7 @@ export const FocusDiv = styled.div`
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 30;
+  z-index: 1500;
   height: 100vh;
   width: 100vw;
   background: ${Colors.turquoise};
