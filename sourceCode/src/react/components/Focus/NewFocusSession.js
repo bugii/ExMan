@@ -4,10 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -26,8 +23,8 @@ export const FormButtons = styled.div`
 
 function NewFocusSession(props) {
   let [duration, setDuration] = useState(40);
-  let [menuSelect, setMenuSelect] = useState("custom");
   let [settings, setSettings] = useState(null);
+  let [showCustom, setShowCustom] = useState(false);
 
   useEffect(() => {
     ipcRenderer.on("get-settings", (e, settings) => {
@@ -39,33 +36,6 @@ function NewFocusSession(props) {
 
   const handleDurationChange = (e) => {
     setDuration(Number(e.target.value));
-  };
-
-  const handleMenuSelect = (e) => {
-    switch (e.target.value) {
-      case "short":
-        setMenuSelect("short");
-        setDuration(settings.shortFocusDuration);
-        break;
-      case "medium":
-        setMenuSelect("medium");
-        setDuration(settings.mediumFocusDuration);
-        break;
-      case "long":
-        setMenuSelect("long");
-        setDuration(settings.longFocusDuration);
-        break;
-      case "open":
-        setMenuSelect("open");
-        setDuration(null);
-        break;
-      case "custom":
-        setMenuSelect("custom");
-        setDuration(40);
-        break;
-      default:
-        setDuration(0);
-    }
   };
 
   const handleSubmit = (focusDuration = null) => {
@@ -98,23 +68,22 @@ function NewFocusSession(props) {
 
       {settings ? (
         <FormContainer noValidate>
-          <FormControl style={{ margin: "1rem", width: "77%" }}>
-            <InputLabel>Duration</InputLabel>
-            <Select value={menuSelect} onChange={handleMenuSelect}>
-              <MenuItem value={"custom"}>Custom</MenuItem>
-              <MenuItem value={"short"}>
-                Short - {settings.shortFocusDuration} min
-              </MenuItem>
-              <MenuItem value={"medium"}>
-                Medium - {settings.mediumFocusDuration} min
-              </MenuItem>
-              <MenuItem value={"long"}>
-                Long - {settings.longFocusDuration} min
-              </MenuItem>
-              <MenuItem value={"open"}>Open</MenuItem>
-            </Select>
-          </FormControl>
-          {menuSelect === "custom" ? (
+          <ButtonGroup
+              orientation="vertical"
+              color="primary"
+              aria-label="vertical outlined primary button group"
+              style={{margin: 10}}
+          >
+          <ButtonGroup size="large" color="primary" aria-label="large outlined primary button group">
+            <Button onClick={() => handleSubmit(settings.shortFocusDuration)}>Short - {settings.shortFocusDuration}</Button>
+            <Button onClick={() => handleSubmit(settings.mediumFocusDuration)}>Medium - {settings.mediumFocusDuration}</Button>
+            <Button onClick={() => handleSubmit(settings.longFocusDuration)}>Long - {settings.longFocusDuration}</Button>
+          </ButtonGroup>
+            <Button onClick={() => handleSubmit()}>Open</Button>
+            <Button onClick={() => setShowCustom(!showCustom)}>Custom</Button>
+          </ButtonGroup>
+
+          {showCustom ? (
             <TextField
               id="minutes"
               label="Custom Length (min)"
