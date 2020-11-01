@@ -113,11 +113,12 @@ function DonutChart(props) {
     ],
   };
 
-
   return (
     <CustomBar>
       <h3>Focus Review</h3>
-      <FocusGrade goodGrade={(servicesBreakArray[servicesBreakArray.length - 1] > 70)}/>
+      <FocusGrade
+        goodGrade={servicesBreakArray[servicesBreakArray.length - 1] > 70}
+      />
       <br />
       <AdditionalText>Frequency of focus breaks: {numOfbreaks}</AdditionalText>
       <br />
@@ -132,7 +133,7 @@ function DonutChart(props) {
           },
           maintainAspectRatio: true,
           responsive: true,
-          cutoutPercentage: 30,
+          cutoutPercentage: 50,
         }}
         text={numOfbreaks}
       />
