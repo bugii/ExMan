@@ -1,5 +1,5 @@
 const { ipcMain } = require("electron");
-const { getMainWindow } = require("../db/memoryDb");
+const { getMainWindow, getFocus } = require("../db/memoryDb");
 const openService = require("../utils/openService");
 const servicesManager = require("../services/ServicesManger");
 
