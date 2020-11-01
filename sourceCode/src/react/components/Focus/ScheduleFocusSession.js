@@ -36,6 +36,7 @@ function ScheduleFocusSession(props) {
       startTime: startDateTime.getTime(),
       endTime: endDateTime.getTime(),
     });
+    props.getFutureFocusSessions();
     props.closeDialog();
   };
 

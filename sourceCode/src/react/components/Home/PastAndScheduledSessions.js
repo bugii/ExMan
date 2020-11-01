@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Colors from "../Colors";
 import Grid from "@material-ui/core/Grid";
 import Accordion from "@material-ui/core/Accordion";
@@ -8,7 +7,6 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Rating from "@material-ui/lab/Rating";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Button from "@material-ui/core/Button";
-import {LoadingDiv} from "../../Pages/Dashboard";
 import styled from "styled-components";
 
 const electron = window.require("electron");
@@ -36,25 +34,7 @@ export const IncompleteListItem = styled.li`
     color: red
 `;
 
-function PastAndScheduledSessions() {
-    const [pastFocusSessions, setPastFocusSessions] = useState([]);
-    const [futureFocusSessions, setFutureFocusSessions] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        ipcRenderer.on("get-all-past-focus-sessions", (e, focusSessions) => {
-            setPastFocusSessions(focusSessions);
-            setIsLoading(false);
-        });
-        // on mounted -> get all past focus sessions and do something with it
-        ipcRenderer.send("get-all-past-focus-sessions");
-
-        ipcRenderer.on("get-all-future-focus-sessions", (e, focusSessions) => {
-            setFutureFocusSessions(focusSessions);
-        });
-        // on mounted -> get all future focus sessions and do something with it
-        ipcRenderer.send("get-all-future-focus-sessions");
-    }, []);
+function PastAndScheduledSessions(props) {
 
     const formatSessionTimes = (start, end) => {
         let date = new Date(start);
@@ -84,15 +64,6 @@ function PastAndScheduledSessions() {
         ipcRenderer.send("cancel-future-focus-session", sessionId);
     };
 
-    if (isLoading) {
-        return (
-            <LoadingDiv>
-                <CircularProgress/>
-            </LoadingDiv>
-        );
-    }
-
-    else
         return (
             <div style={{width: "90%"}}>
                 <Grid
@@ -103,10 +74,10 @@ function PastAndScheduledSessions() {
                 >
                     <Grid item xs={6}>
                         <h1 style={{color: Colors.turquoise, fontSize: 50, margin: 10}}>
-                            {pastFocusSessions.length}
+                            {props.pastFocusSessions.length}
                         </h1>
                         <h2 style={{margin: 15}}>Past Focus Sessions</h2>
-                        {[...pastFocusSessions].reverse().map((focusSession) => (
+                        {[...props.pastFocusSessions].reverse().map((focusSession) => (
                             <Accordion>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon/>}
@@ -142,10 +113,10 @@ function PastAndScheduledSessions() {
                     </Grid>
                     <Grid item xs={6}>
                         <h1 style={{color: Colors.turquoise, fontSize: 50, margin: 10}}>
-                            {futureFocusSessions.length}
+                            {props.futureFocusSessions.length}
                         </h1>
                         <h2 style={{margin: 15}}>Future Focus Sessions</h2>
-                        {futureFocusSessions.map((focusSession) => (
+                        {props.futureFocusSessions.map((focusSession) => (
                             <Accordion>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon/>}
