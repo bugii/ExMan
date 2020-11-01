@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import styled from "styled-components";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
@@ -25,127 +25,113 @@ export const FormButtons = styled.div`
 `;
 
 function NewFocusSession(props) {
-  let [duration, setDuration] = useState(40);
-  let [menuSelect, setMenuSelect] = useState("custom");
-  let [settings, setSettings] = useState(null);
+    let [duration, setDuration] = useState(40);
+    let [settings, setSettings] = useState(null);
+    let [showCustom, setShowCustom] = useState(false);
 
-  useEffect(() => {
-    ipcRenderer.on("get-settings", (e, settings) => {
-      setSettings(settings);
-    });
+    useEffect(() => {
+        ipcRenderer.on("get-settings", (e, settings) => {
+            setSettings(settings);
+        });
 
-    ipcRenderer.send("get-settings");
-  }, []);
+        ipcRenderer.send("get-settings");
+    }, []);
 
-  const handleDurationChange = (e) => {
-    setDuration(Number(e.target.value));
-  };
+    const handleDurationChange = (e) => {
+        setDuration(Number(e.target.value));
+    };
 
-  const handleMenuSelect = (e) => {
-    switch (e.target.value) {
-      case "short":
-        setMenuSelect("short");
-        setDuration(settings.shortFocusDuration);
-        break;
-      case "medium":
-        setMenuSelect("medium");
-        setDuration(settings.mediumFocusDuration);
-        break;
-      case "long":
-        setMenuSelect("long");
-        setDuration(settings.longFocusDuration);
-        break;
-      case "open":
-        setMenuSelect("open");
-        setDuration(null);
-        break;
-      case "custom":
-        setMenuSelect("custom");
-        setDuration(40);
-        break;
-      default:
-        setDuration(0);
-    }
-  };
+    const handleSubmit = (focusDuration = null) => {
+        const start = new Date().getTime();
+        let end;
+        if (!focusDuration) {
+            // open ended
+            end = null;
+        } else {
+            end = start + focusDuration * 1000 * 60;
+        }
 
-  const handleSubmit = (focusDuration = null) => {
-    const start = new Date().getTime();
-    let end;
-    if (!focusDuration) {
-      // open ended
-      end = null;
-    } else {
-      end = start + focusDuration * 1000 * 60;
-    }
+        console.log(start, end);
 
-    console.log(start, end);
+        ipcRenderer.send("focus-start-request", {
+            startTime: start,
+            endTime: end,
+        });
 
-    ipcRenderer.send("focus-start-request", {
-      startTime: start,
-      endTime: end,
-    });
+        props.closeDialog();
+    };
 
-    props.closeDialog();
-  };
+    const handleClose = () => {
+        setShowCustom(false);
+        props.closeDialog();
+    };
 
-  return (
-    <Dialog
-      aria-labelledby="simple-dialog-title"
-      open={props.open}
-      onClose={props.closeDialog}
-    >
-      <DialogTitle id="simple-dialog-title">Create Focus Session</DialogTitle>
+    return (
+        <Dialog
+            aria-labelledby="simple-dialog-title"
+            open={props.open}
+            onClose={handleClose}
+        >
+            <DialogTitle id="simple-dialog-title" style={{paddingBottom: 0}}>Create Focus Session</DialogTitle>
+            <div style={{position: "absolute", top: 0, right: 0}}>
+                <IconButton onClick={handleClose}>
+                    <CloseIcon fontSize="large"/>
+                </IconButton>
+            </div>
+            {settings ? (
+                <FormContainer noValidate>
+                    <ButtonGroup
+                        orientation="vertical"
+                        color="primary"
+                        aria-label="vertical outlined primary button group"
+                        style={{margin: 15}}
+                    >
+                        <ButtonGroup size="large" color="primary" aria-label="large outlined primary button group">
+                            <Button onClick={() => handleSubmit(settings.shortFocusDuration)}>Short
+                                - {settings.shortFocusDuration}</Button>
+                            <Button onClick={() => handleSubmit(settings.mediumFocusDuration)}>Medium
+                                - {settings.mediumFocusDuration}</Button>
+                            <Button onClick={() => handleSubmit(settings.longFocusDuration)}>Long
+                                - {settings.longFocusDuration}</Button>
+                        </ButtonGroup>
+                        <Button onClick={() => handleSubmit()}>Open</Button>
+                        <Button onClick={() => setShowCustom(!showCustom)}>Custom</Button>
+                    </ButtonGroup>
 
-      {settings ? (
-        <FormContainer noValidate>
-          <FormControl style={{ margin: "1rem", width: "77%" }}>
-            <InputLabel>Duration</InputLabel>
-            <Select value={menuSelect} onChange={handleMenuSelect}>
-              <MenuItem value={"custom"}>Custom</MenuItem>
-              <MenuItem value={"short"}>
-                Short - {settings.shortFocusDuration} min
-              </MenuItem>
-              <MenuItem value={"medium"}>
-                Medium - {settings.mediumFocusDuration} min
-              </MenuItem>
-              <MenuItem value={"long"}>
-                Long - {settings.longFocusDuration} min
-              </MenuItem>
-              <MenuItem value={"open"}>Open</MenuItem>
-            </Select>
-          </FormControl>
-          {menuSelect === "custom" ? (
-            <TextField
-              id="minutes"
-              label="Custom Length (min)"
-              type="number"
-              onChange={handleDurationChange}
-              defaultValue={duration}
-              style={{ margin: "1rem" }}
-            />
-          ) : null}
-          <FormButtons>
-            <Button
-              variant="contained"
-              color="0"
-              onClick={props.closeDialog}
-              style={{ margin: "1rem" }}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleSubmit(duration)}
-              style={{ margin: "1rem" }}
-            >
-              Submit
-            </Button>
-          </FormButtons>
-        </FormContainer>
-      ) : null}
-    </Dialog>
-  );
+                    {showCustom ? (
+                        <div style={{textAlign: "center"}}>
+                            <TextField
+                                id="minutes"
+                                label="Duration"
+                                type="number"
+                                onChange={handleDurationChange}
+                                defaultValue={duration}
+                                style={{width: 50}}
+                            />
+                            <FormButtons>
+                                <Button
+                                    variant="contained"
+                                    color="0"
+                                    onClick={handleClose}
+                                    style={{margin: "1rem"}}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleSubmit(duration)}
+                                    style={{margin: "1rem"}}
+                                >
+                                    Submit
+                                </Button>
+                            </FormButtons>
+                        </div>
+                    ) : null}
+                </FormContainer>
+            ) : null}
+        </Dialog>
+    );
 }
 
 export default NewFocusSession;
