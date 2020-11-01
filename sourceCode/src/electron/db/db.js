@@ -220,6 +220,11 @@ function updateBreakFocusPerService(id) {
   }
 }
 
+function getAppUsedData() {
+  const appUsage = db.get("appUsage").value();
+  return appUsage.slice(0, appUsage.length - 1);
+}
+
 function toggleAutoResponseAvailablity(id) {
   let currentState = db
     .get("services")
@@ -456,4 +461,5 @@ module.exports = {
   storeServiceInteractionEndInArchive,
   storeTokens,
   getTokens,
+  getAppUsedData,
 };

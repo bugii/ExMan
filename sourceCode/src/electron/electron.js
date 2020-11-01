@@ -18,6 +18,7 @@ require("./ipc/notifications");
 require("./ipc/services");
 require("./ipc/settings");
 require("./ipc/goals");
+require("./ipc/dashboard");
 
 require("../express/express");
 

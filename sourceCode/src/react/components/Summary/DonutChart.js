@@ -133,9 +133,9 @@ function DonutChart(props) {
             display: true,
             text: "broken focus sessions sorted by services",
           },
-          maintainAspectRatio: false,
+          maintainAspectRatio: true,
           responsive: true,
-          cutoutPercentage: 60,
+          cutoutPercentage: 30,
         }}
         text={text_inside}
       />
