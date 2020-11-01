@@ -24,6 +24,18 @@ export const RandomPopup = styled.div`
 function RandomProductivityPopup(props) {
   const [productivity, setRating] = useState(0);
 
+  // const onEnterPress = (event) => {
+  //   if (event.key === "Enter") {
+  //     handleSubmit();
+  //   }
+  // };
+
+  // const onClosePress = (event) => {
+  //   if (event.key === "Esc") {
+  //     onClose();
+  //   }
+  // };
+
   const handleSubmit = () => {
     ipcRenderer.send("random-popup-submission", {
       productivity,
@@ -51,7 +63,7 @@ function RandomProductivityPopup(props) {
             <CloseIcon fontSize="large" />
           </IconButton>
         </div>
-        <p>How productive do you feel currently?</p>
+        <p>How productive were you in the last 30 minutes?</p>
         <Rating
           name="rating"
           value={productivity}
@@ -68,8 +80,22 @@ function RandomProductivityPopup(props) {
             margin: "10px",
           }}
           onClick={handleSubmit}
+          //onKeyPress={onEnterPress}
         >
           submit
+        </Button>
+        <Button
+          style={{
+            backgroundColor: Colors.navy,
+            color: "white",
+            width: "400px",
+            textAlign: "center",
+            margin: "10px",
+          }}
+          onClick={onClose}
+          //onKeyPress={onClosePress}
+        >
+          I have not been working for the last 30 minutes
         </Button>
       </RandomPopup>
     </Dialog>
