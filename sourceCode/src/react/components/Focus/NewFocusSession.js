@@ -61,15 +61,20 @@ function NewFocusSession(props) {
         props.closeDialog();
     };
 
+    const handleClose = () => {
+        setShowCustom(false);
+        props.closeDialog();
+    };
+
     return (
         <Dialog
             aria-labelledby="simple-dialog-title"
             open={props.open}
-            onClose={props.closeDialog}
+            onClose={handleClose}
         >
             <DialogTitle id="simple-dialog-title" style={{paddingBottom: 0}}>Create Focus Session</DialogTitle>
             <div style={{position: "absolute", top: 0, right: 0}}>
-                <IconButton onClick={props.closeDialog}>
+                <IconButton onClick={handleClose}>
                     <CloseIcon fontSize="large"/>
                 </IconButton>
             </div>
@@ -107,7 +112,7 @@ function NewFocusSession(props) {
                                 <Button
                                     variant="contained"
                                     color="0"
-                                    onClick={props.closeDialog}
+                                    onClick={handleClose}
                                     style={{margin: "1rem"}}
                                 >
                                     Cancel
