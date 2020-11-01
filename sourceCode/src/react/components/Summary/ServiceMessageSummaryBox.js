@@ -34,7 +34,7 @@ export default function ServiceMessageSummaryBox(props) {
                   deleteApp={props.deleteApp}
                 />
               </td>
-              {service.messages.map((message) => (
+              {service.messages.sort(((a, b) => a.title !== b.title ? a.title < b.title ? -1 : 1 : 0)).map((message) => (
                 <tr style={{ fontSize: 12, textAlign: "left" }}>
                   <td>{props.formatTime(message.timestamp)}</td>
                   <td>{message.title}</td>
