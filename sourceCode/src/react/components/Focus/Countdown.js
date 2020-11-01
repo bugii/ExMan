@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from //useState, useEffect
+"react";
 import styled from "styled-components";
 import Colors from "../Colors";
 

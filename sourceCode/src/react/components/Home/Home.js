@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Colors from "../Colors";
 import MenuBoxes from "./MenuBoxes";
 import NewFocusSession from "../Focus/NewFocusSession";
+import PastAndScheduledSessions from "./PastAndScheduledSessions";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { LoadingDiv } from "../../Pages/Dashboard";
+
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 export const HomeDiv = styled.div`
-  position: absolute;
-  z-index: 1;
-  height: 100vh;
-  width: 100%;
-  background: ${Colors.snow};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -24,6 +25,28 @@ function Home(props) {
   const [newFocusSessionDialogOpen, setNewFocusSessionDialogOpen] = useState(
     false
   );
+  const [
+    scheduleFocusSessionDialogOpen,
+    setScheduleFocusSessionDialogOpen,
+  ] = useState(false);
+  const [pastFocusSessions, setPastFocusSessions] = useState([]);
+  const [futureFocusSessions, setFutureFocusSessions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    ipcRenderer.once("get-all-past-focus-sessions", (e, focusSessions) => {
+      setPastFocusSessions(focusSessions);
+      setIsLoading(false);
+    });
+    // on mounted -> get all past focus sessions and do something with it
+    ipcRenderer.send("get-all-past-focus-sessions");
+
+    ipcRenderer.once("get-all-future-focus-sessions", (e, focusSessions) => {
+      setFutureFocusSessions(focusSessions);
+    });
+    // on mounted -> get all future focus sessions and do something with it
+    ipcRenderer.send("get-all-future-focus-sessions");
+  }, []);
 
   const openNewFocusSessionDialog = () => {
     setNewFocusSessionDialogOpen(true);
@@ -31,6 +54,22 @@ function Home(props) {
 
   const closeNewFocusSessionDialog = () => {
     setNewFocusSessionDialogOpen(false);
+  };
+
+  const openScheduleSessionDialog = () => {
+    setScheduleFocusSessionDialogOpen(true);
+  };
+
+  const closeScheduleSessionDialog = () => {
+    setScheduleFocusSessionDialogOpen(false);
+  };
+
+  const getFutureFocusSessions = () => {
+    ipcRenderer.on("get-all-future-focus-sessions", (e, focusSessions) => {
+      setFutureFocusSessions(focusSessions);
+    });
+    // on mounted -> get all future focus sessions and do something with it
+    ipcRenderer.send("get-all-future-focus-sessions");
   };
 
   return (
@@ -44,12 +83,27 @@ function Home(props) {
         To begin, add your apps and click focus now or schedule your next focus
         session.
       </ParagraphText>
-      <MenuBoxes handleFocusNow={openNewFocusSessionDialog} />
+      <MenuBoxes
+        handleFocusNow={openNewFocusSessionDialog}
+        handleScheduleFocus={openScheduleSessionDialog}
+      />
       <NewFocusSession
         open={newFocusSessionDialogOpen}
         closeDialog={closeNewFocusSessionDialog}
       />
+
       <p> Currently added {props.nrOfServices} service/s </p>
+
+      {isLoading ? (
+        <LoadingDiv>
+          <CircularProgress />
+        </LoadingDiv>
+      ) : (
+        <PastAndScheduledSessions
+          pastFocusSessions={pastFocusSessions}
+          futureFocusSessions={futureFocusSessions}
+        />
+      )}
     </HomeDiv>
   );
 }

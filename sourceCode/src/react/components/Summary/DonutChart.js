@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import styled from "styled-components";
 import Colors from "../Colors";
+import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 
 export const CustomBar = styled.div`
   padding: 2rem;
@@ -13,6 +15,14 @@ export const AdditionalText = styled.div`
   text-align: center;
   color: ${Colors.navy};
   font-weight: 900;
+`;
+
+export const PositivFeedback = styled.div`
+  color: green;
+`;
+
+export const NegativFeedback = styled.div`
+  color: red;
 `;
 
 function DonutChart(props) {
@@ -131,6 +141,20 @@ function DonutChart(props) {
       />
       <br />
       <AdditionalText>Frequency of focus breaks: {text_inside}</AdditionalText>
+      {servicesBreakArray[servicesBreakArray.length - 1] > 70 ? (
+        <PositivFeedback>
+          <p style={{ fontWeight: "bold" }}>You did great. Keep it up.</p>
+          <ThumbUpIcon></ThumbUpIcon>
+        </PositivFeedback>
+      ) : (
+        <NegativFeedback>
+          <p style={{ fontWeight: "bold" }}>
+            You were too distracted in the last focus session. Try to focus
+            more!
+          </p>
+          <ThumbDownIcon></ThumbDownIcon>
+        </NegativFeedback>
+      )}
     </CustomBar>
   );
 }

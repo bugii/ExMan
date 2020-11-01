@@ -9,11 +9,6 @@ const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 export const SettingsDiv = styled.div`
-  position: absolute;
-  z-index: 1;
-  height: 100vh;
-  width: 100%;
-  background: ${Colors.snow};
   display: flex;
   flex-direction: column;
   justify-content: center;

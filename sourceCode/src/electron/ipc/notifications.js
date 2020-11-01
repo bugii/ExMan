@@ -25,11 +25,11 @@ ipcMain.on("notification-clicked", (e, id) => {
   openService(id);
 });
 
-ipcMain.on("callChecker-send", (e, id) => {
+ipcMain.on("callChecker-send", (e, { id }) => {
   // display notification
   getMainWindow().send("notification", {
     id: id,
-    title: "you got a call",
-    body: " teams call",
+    title: "you got a call from teams",
+    body: " press on the notification to move to the teams page.",
   });
 });

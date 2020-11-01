@@ -46,8 +46,6 @@ const refreshToken = async () => {
     const data = qs.stringify({
       client_id:
         "826944190379-4ollq01hentnf2ilduosida4g647a005.apps.googleusercontent.com",
-      scope: "https://www.googleapis.com/auth/calendar",
-      redirect_uri: `http://localhost:${port}/oauth/google`,
       client_secret: "lyPQ5PC-xdNFM7cs828Tvqhd",
       grant_type: "refresh_token",
       refresh_token,
@@ -65,7 +63,7 @@ const refreshToken = async () => {
       // store both tokens in db
       storeTokens("google", {
         access_token: res.data.access_token,
-        refresh_token: res.data.refresh_token,
+        refresh_token,
         expires_in: res.data.expires_in,
       });
       console.log("renewed google token");

@@ -5,11 +5,6 @@ import Colors from "../Colors";
 import { useHistory } from "react-router-dom";
 
 export const AddServiceDiv = styled.div`
-  position: absolute;
-  z-index: 1;
-  height: 100vh;
-  width: 100%;
-  background: ${Colors.snow};
   display: flex;
   justify-content: center;
   align-items: center;

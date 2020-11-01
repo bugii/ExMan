@@ -15,10 +15,6 @@ const ipcRenderer = electron.ipcRenderer;
 
 export const SummaryDiv = styled.div`
   padding: 2rem;
-  position: absolute;
-  z-index: 1;
-  height: 100vh;
-  overflow: scroll;
   width: 100%;
   background: ${Colors.snow};
   display: flex;
@@ -29,6 +25,7 @@ export const SummaryDiv = styled.div`
 export const ChartsDiv = styled.div`
   display: flex;
   width: 100%;
+  height: 50vh;
   justify-content: space-evenly;
   margin: 25px;
 `;
@@ -67,7 +64,9 @@ function Summary(props) {
       {showPostFocusPopup && focusSession ? (
         <PostFocusPopup
           goals={focusSession.goals ? focusSession.goals : []}
-          completedGoals={focusSession.completedGoals ? focusSession.completedGoals : []}
+          completedGoals={
+            focusSession.completedGoals ? focusSession.completedGoals : []
+          }
           open={showPostFocusPopup}
           close={() => setshowPostFocusPopup(false)}
         />

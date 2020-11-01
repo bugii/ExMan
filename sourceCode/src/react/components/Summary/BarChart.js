@@ -9,6 +9,15 @@ export const CustomBar = styled.div`
   display: flex;
 `;
 
+export const PlaceHolder = styled.div`
+  padding: 100px;
+  display: flex;
+  background-color: white;
+  border: solid black;
+  vertical-align: middle;
+  text-align: center;
+`;
+
 function BarChart(props) {
   let serviceIndex;
   let messageIndex;
@@ -80,9 +89,22 @@ function BarChart(props) {
     ],
   };
 
+  const noMessages = (array) => {
+    for (let k = 0; k > array.length; k++) {
+      if (array[k] !== 0) return false;
+    }
+    return true;
+  };
+
   return (
     <CustomBar>
-      <Bar data={data} />
+      {noMessages(frequency) === false ? (
+        <Bar data={data} />
+      ) : (
+        <PlaceHolder>
+          <p>No messages were sent during the past focus session.</p>
+        </PlaceHolder>
+      )}
     </CustomBar>
   );
 }

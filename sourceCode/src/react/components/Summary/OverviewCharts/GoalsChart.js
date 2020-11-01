@@ -5,8 +5,8 @@ import Rating from "@material-ui/lab/Rating";
 
 export const Circle = styled.div`
   padding: 2rem;
-  height: 200px;
-  width: 200px;
+  width: 100%;
+  height: 100%;
   display: inline;
   background-color: ${Colors.turquoise};
   border-radius: 50%;
@@ -17,9 +17,7 @@ export const Circle = styled.div`
 
 export const Goals = styled.div`
   background-color: white;
-  padding: 3rem;
-  float: left;
-  margin: auto;
+  padding: 2rem;
   width: 40%;
   text-align: center;
 `;
@@ -32,18 +30,16 @@ export const Text = styled.div`
 
 export const RatingDiv = styled.div`
   background-color: white;
-  padding: 3rem;
-  float: right;
-  margin: auto;
+  padding: 2rem;
   width: 40%;
   height: 100%;
   text-align: center;
 `;
 
 export const Custom = styled.div`
-  background-color: ${Colors.navy};
-  padding: 3rem;
-  margin-top: 40px;
+  display: flex;
+  height: 30vh;
+  justify-content: space-around;
 `;
 
 function GoalsChart(props) {
@@ -78,7 +74,7 @@ function GoalsChart(props) {
         <Circle>{((reachedGoals / goals) * 100).toFixed(2)}%</Circle>
         <Text>
           <p>total goals: {goals}</p>
-          <p>reached goals: {reachedGoals}</p>
+          <p>achieved goals: {reachedGoals}</p>
         </Text>
       </Goals>
       <RatingDiv>

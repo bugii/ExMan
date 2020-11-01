@@ -6,7 +6,7 @@ const { remote } = window.require("electron");
 
 const { Menu, MenuItem } = remote;
 
-const electron = window.require("electron");
+//const electron = window.require("electron");
 
 export const ServiceDiv = styled.div`
   position: relative;

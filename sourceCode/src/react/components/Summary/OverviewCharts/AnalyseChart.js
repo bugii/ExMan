@@ -7,7 +7,7 @@ export const CustomBar = styled.div`
   padding: 2rem;
   text-align: center;
   width: 100%;
-  background-color: ${Colors.navy};
+  height: 40vh;
   margin-top: 20px;
 `;
 

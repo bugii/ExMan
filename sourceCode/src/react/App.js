@@ -24,14 +24,15 @@ const log = window.require("electron-log");
 console.log = log.log;
 
 function App() {
+  let history = useHistory();
+  let location = useLocation();
+
   const [services, setServices] = useState([]);
   const [activeService, setActiveService] = useState(null);
+  const [isOnService, setIsOnService] = useState(false);
   const [currentFocusSession, setCurrentFocusSession] = useState(null);
   const [showRandomPopUp, setShowRandomPopUp] = useState(false);
   const [wasMinimized, setWasMinimized] = useState(false);
-
-  let history = useHistory();
-  let location = useLocation();
 
   const addApp = (name) => {
     ipcRenderer.send("add-service", name);
@@ -119,6 +120,7 @@ function App() {
 
   useEffect(() => {
     ipcRenderer.send("route-changed", location);
+    setIsOnService(location.pathname.includes("services"));
   }, [location]);
 
   return (
@@ -133,6 +135,24 @@ function App() {
           refreshApp={refreshApp}
         />
       </div>
+
+      {/* For the services we don't use the exact prop -> this way it is always rendered. If you just want to show the services and not Home for example -> use history.push("/services/${id}") */}
+      <div className="services" style={{ zIndex: isOnService ? 1 : -1 }}>
+        <Route path="/">
+          {services.map((service) => (
+            <Webview
+              isActive={activeService === service.id}
+              key={service.id}
+              id={service.id}
+              name={service.name}
+              useragent={offeredServices[service.name].useragent}
+              url={offeredServices[service.name].url}
+              icon={offeredServices[service.name].icon}
+            />
+          ))}
+        </Route>
+      </div>
+
       {location.pathname !== "/focus" && currentFocusSession ? (
         <FocusBubble
           handleClick={returnToFocus}
@@ -149,21 +169,6 @@ function App() {
       <div className="main-content">
         <Route path="/" exact>
           <Home nrOfServices={services.length} />
-        </Route>
-
-        {/* For the services we don't use the exact prop -> this way it is always rendered. If you just want to show the services and not Home for example -> use history.push("/services/${id}") */}
-        <Route path="/">
-          {services.map((service) => (
-            <Webview
-              isActive={activeService === service.id}
-              key={service.id}
-              id={service.id}
-              name={service.name}
-              useragent={offeredServices[service.name].useragent}
-              url={offeredServices[service.name].url}
-              icon={offeredServices[service.name].icon}
-            />
-          ))}
         </Route>
 
         <Route path="/focus">
