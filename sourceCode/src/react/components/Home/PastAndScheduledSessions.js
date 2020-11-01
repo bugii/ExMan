@@ -9,9 +9,32 @@ import Rating from "@material-ui/lab/Rating";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Button from "@material-ui/core/Button";
 import {LoadingDiv} from "../../Pages/Dashboard";
+import styled from "styled-components";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
+
+export const GoalsList = styled.ul`
+  list-style: none;
+  margin-top: 0px;
+  margin-bottom: 15px;
+  padding-left: 0px;
+  width: 50%;
+`;
+
+export const CompletedListItem = styled.li`
+    &:before {
+        content: "✓  ";
+    }
+    color: green
+`;
+
+export const IncompleteListItem = styled.li`
+    &:before {
+        content: 'X  ';
+    }
+    color: red
+`;
 
 function PastAndScheduledSessions() {
     const [pastFocusSessions, setPastFocusSessions] = useState([]);
@@ -101,8 +124,18 @@ function PastAndScheduledSessions() {
                                         style={{marginLeft: 10}}
                                     />
                                 </AccordionSummary>
-                                <AccordionDetails style={{flexDirection: "column"}}>
-                                    Here will be the goals accomplished...
+                                <AccordionDetails style={{flexDirection: "row", textAlign: "left", justifyContent: "space-evenly"}}>
+                                        <GoalsList>
+                                            {focusSession.completedGoals.length > 0 ? (focusSession.completedGoals.map((goal) =>
+                                                <CompletedListItem>{goal}</CompletedListItem>
+                                            )) : <div style={{color: "gray"}}>No completed goals</div> }
+                                        </GoalsList>
+                                        <GoalsList>
+                                            {focusSession.goals.filter(goal => !focusSession.completedGoals.includes(goal)).length > 0 ?
+                                                (focusSession.goals.filter(goal => !focusSession.completedGoals.includes(goal)).map((goal) =>
+                                                <IncompleteListItem>{goal}</IncompleteListItem>
+                                            )) : <div style={{color: "gray"}}>No incomplete goals</div> }
+                                        </GoalsList>
                                 </AccordionDetails>
                             </Accordion>
                         ))}
