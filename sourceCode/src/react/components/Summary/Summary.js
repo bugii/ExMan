@@ -7,7 +7,6 @@ import { useHistory } from "react-router-dom";
 import IconButton from "@material-ui/core/IconButton";
 import BarChart from "./BarChart";
 import DonutChart from "./DonutChart";
-//import MessagesChart from "./MessagesChart";
 import ServiceMessageSummaryBox from "./ServiceMessageSummaryBox";
 
 const electron = window.require("electron");
@@ -88,17 +87,23 @@ function Summary(props) {
             {props.formatTime(focusSession.endTime)}
           </p>
           <ChartsDiv>
-            <BarChart data={focusSession} />
-            <DonutChart data={focusSession} />
+            <div style={{width: "50%"}}>
+              <h3>Notification Summary</h3>
+              <ServiceMessageSummaryBox
+                  formatTime={props.formatTime}
+                  focusSession={focusSession}
+                  offeredServices={props.offeredServices}
+                  setActiveService={props.setActiveService}
+                  backgroundColor={"white"}
+                  charLimit={120}
+              />
+              <h3>Bar Chart</h3>
+              <BarChart data={focusSession} />
+            </div>
+            <div style={{width: "50%"}}>
+              <DonutChart data={focusSession} />
+            </div>
           </ChartsDiv>
-          <ServiceMessageSummaryBox
-            formatTime={props.formatTime}
-            focusSession={focusSession}
-            offeredServices={props.offeredServices}
-            setActiveService={props.setActiveService}
-            backgroundColor={"white"}
-            charLimit={120}
-          />
         </div>
       ) : null}
     </SummaryDiv>

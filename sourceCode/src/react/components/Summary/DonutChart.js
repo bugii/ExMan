@@ -4,10 +4,10 @@ import styled from "styled-components";
 import Colors from "../Colors";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ThumbDownIcon from "@material-ui/icons/ThumbDown";
+import FocusGrade from "./OverviewCharts/FocusGrade";
 
 export const CustomBar = styled.div`
-  padding: 2rem;
-  width: 60%;
+  padding-left: 2rem;
 `;
 
 export const AdditionalText = styled.div`
@@ -15,14 +15,6 @@ export const AdditionalText = styled.div`
   text-align: center;
   color: ${Colors.navy};
   font-weight: 900;
-`;
-
-export const PositivFeedback = styled.div`
-  color: green;
-`;
-
-export const NegativFeedback = styled.div`
-  color: red;
 `;
 
 function DonutChart(props) {
@@ -121,40 +113,29 @@ function DonutChart(props) {
     ],
   };
 
-  const text_inside = numOfbreaks;
 
   return (
     <CustomBar>
+      <h3>Focus Review</h3>
+      <FocusGrade goodGrade={(servicesBreakArray[servicesBreakArray.length - 1] > 70)}/>
+      <br />
+      <AdditionalText>Frequency of focus breaks: {numOfbreaks}</AdditionalText>
+      <br />
+      <h3>Time spent in focus or in each service</h3>
       <Doughnut
         data={data}
         options={{
           legend: { display: true },
           title: {
-            display: true,
-            text: "broken focus sessions sorted by services",
+            display: false,
+            text: "Time spent in focus or in each service",
           },
           maintainAspectRatio: false,
           responsive: true,
           cutoutPercentage: 60,
         }}
-        text={text_inside}
+        text={numOfbreaks}
       />
-      <br />
-      <AdditionalText>Frequency of focus breaks: {text_inside}</AdditionalText>
-      {servicesBreakArray[servicesBreakArray.length - 1] > 70 ? (
-        <PositivFeedback>
-          <p style={{ fontWeight: "bold" }}>You did great. Keep it up.</p>
-          <ThumbUpIcon></ThumbUpIcon>
-        </PositivFeedback>
-      ) : (
-        <NegativFeedback>
-          <p style={{ fontWeight: "bold" }}>
-            You were too distracted in the last focus session. Try to focus
-            more!
-          </p>
-          <ThumbDownIcon></ThumbDownIcon>
-        </NegativFeedback>
-      )}
     </CustomBar>
   );
 }
