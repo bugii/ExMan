@@ -161,6 +161,10 @@ function getAllFutureFocusSessions() {
   return db.get("futureFocusSessions").value();
 }
 
+function getSingleFutureFocusSession(id) {
+  return db.get("futureFocusSessions").find({ id }).value();
+}
+
 function setEndTime(timestamp) {
   db.get("currentFocusSession").assign({ endTime: timestamp }).write();
 }
@@ -415,6 +419,7 @@ module.exports = {
   getCurrentFocusSession,
   endCurrentFocusSession,
   deleteFutureFocusSession,
+  getSingleFutureFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
   getAutoresponse,
