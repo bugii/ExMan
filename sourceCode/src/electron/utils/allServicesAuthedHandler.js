@@ -9,10 +9,11 @@ const { getFocus } = require("../db/memoryDb");
 const focusStart = require("../utils/focusStart");
 const focusEnd = require("../utils/focusEnd");
 const scheduleFocus = require("../utils/scheduleFocus");
+const calendarLoop = require("../calendar/calendarLoop");
 
 let checked = false;
 
-module.exports = () => {
+module.exports = async () => {
   console.log("all services authed");
 
   if (checked) return;
@@ -54,4 +55,6 @@ module.exports = () => {
       deleteFutureFocusSession(focusSession.id);
     }
   });
+
+  await calendarLoop();
 };

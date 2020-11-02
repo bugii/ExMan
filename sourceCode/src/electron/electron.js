@@ -176,9 +176,6 @@ async function createWindow() {
 // Some APIs can only be used after this event occurs.
 
 app.whenReady().then(async () => {
-  // refreshes tokens and starts cal loop: Call before frontend window is created to avoid frontend calls without valid tokens
-  await calendarLoop();
-
   await createWindow();
   createTray();
 

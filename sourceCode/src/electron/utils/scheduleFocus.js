@@ -5,16 +5,24 @@ const {
   getCurrentFocusSession,
   getAllFutureFocusSessions,
 } = require("../db/db");
-const { storeFutureFocusRef } = require("../db/memoryDb");
+const { storeFutureFocusRef, getFutureFocusRef } = require("../db/memoryDb");
 
 module.exports = (start, end, id) => {
-  const futureSessions = getAllFutureFocusSessions();
+  // const futureSessions = getAllFutureFocusSessions();
+
   // If we try to schedule a future focus session with the same id again
   // -> don't allow
-  for (const session of futureSessions) {
-    if (id === session.id) {
-      return;
-    }
+  // for (const session of futureSessions) {
+  //   if (id === session.id) {
+  //     return;
+  //   }
+  // }
+
+  if (getFutureFocusRef(id)) {
+    console.log(
+      "dont schedule again, same focus session has already been scheduled"
+    );
+    return;
   }
 
   console.log("scheduling new focus session");

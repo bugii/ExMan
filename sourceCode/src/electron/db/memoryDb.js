@@ -50,7 +50,11 @@ function storeFutureFocusRef(id, ref) {
 }
 
 function getFutureFocusRef(id) {
-  return futureFocusSessionsRefs[id];
+  try {
+    return futureFocusSessionsRefs[id];
+  } catch (error) {
+    return null;
+  }
 }
 
 module.exports = {
