@@ -87,6 +87,7 @@ function FocusGoalsPopup(props) {
       open={props.open}
       maxWidth={"lg"}
       onClose={handleSubmit}
+      style={{zIndex: 1600}}
     >
       <DialogTitle id="simple-dialog-title">Focus Goals</DialogTitle>
       <PreFocusDiv>
