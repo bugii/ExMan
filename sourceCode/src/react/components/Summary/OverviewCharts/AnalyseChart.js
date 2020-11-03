@@ -15,21 +15,19 @@ export const CustomBar = styled.div`
 `;
 
 export const LeftContainer = styled.div`
-  width: 47.5%;
+  width: 60%;
   padding: 2rem;
   color: black;
   background-color: white;
   margin: auto;
-  float: left;
 `;
 
 export const RightContainer = styled.div`
-  width: 50%;
+  width: 60%;
   padding: 2rem;
   color: black;
   background-color: white;
   margin: auto;
-  float: right;
 `;
 
 export const AdditionalText = styled.div`
