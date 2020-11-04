@@ -19,6 +19,7 @@ require("./ipc/services");
 require("./ipc/settings");
 require("./ipc/goals");
 require("./ipc/dashboard");
+require("./ipc/auth");
 
 require("../express/express");
 
