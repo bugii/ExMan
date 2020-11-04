@@ -48,12 +48,12 @@ function Dashboard(props) {
         <div>
           <RatingChart style={{ margin: "20px" }} data={pastFocusSessions} />
         </div>
-        <div style={{ margin: "20px" }}>
+        <div style={{ margin: "20px", height: "300px" }}>
           <GoalsChart data={pastFocusSessions} />
 
           <AnalyseChart data={pastFocusSessions} />
         </div>
-        <div>
+        <div style={{ marginTop: "20px" }}>
           <UsageChart data={pastFocusSessions} />
         </div>
       </div>

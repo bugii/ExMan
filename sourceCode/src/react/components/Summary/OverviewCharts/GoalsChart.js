@@ -16,8 +16,10 @@ export const Circle = styled.div`
 
 export const Goals = styled.div`
   background-color: white;
-  width: 40%;
+  width: 50%;
   text-align: center;
+  float: left;
+  height: 300px;
 `;
 
 export const Text = styled.div`

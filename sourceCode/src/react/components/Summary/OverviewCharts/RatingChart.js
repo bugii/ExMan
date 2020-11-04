@@ -13,7 +13,7 @@ export const RatingDiv = styled.div`
 
 export const Custom = styled.div`
   display: flex;
-  height: 30vh;
+  height: 150px;
   justify-content: space-around;
 `;
 
