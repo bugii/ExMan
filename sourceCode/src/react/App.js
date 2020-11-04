@@ -106,6 +106,19 @@ function App() {
         ipcRenderer.send("notification-clicked", id);
       };
     });
+    ipcRenderer.on("notification-scheduled-start", (e) => {
+      new Notification("ExMan", {
+        body:
+          "Your scheduled focus session (from calendar) has just started. Set your goals now!",
+        silent: true,
+      });
+    });
+    ipcRenderer.on("notification-focus-resumed", (e) => {
+      new Notification("ExMan", {
+        body: "We resumed a previous focus sessions, keep focusing!",
+        silent: true,
+      });
+    });
 
     ipcRenderer.on("random-popup-survey", (e, wasMinimized) => {
       if (wasMinimized) {

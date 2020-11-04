@@ -4,12 +4,13 @@ const {
   deleteFutureFocusSession,
 } = require("../db/db");
 
-const { getFocus } = require("../db/memoryDb");
+const { getFocus, getMainWindow } = require("../db/memoryDb");
 
 const focusStart = require("../utils/focusStart");
 const focusEnd = require("../utils/focusEnd");
 const scheduleFocus = require("../utils/scheduleFocus");
 const calendarLoop = require("../calendar/calendarLoop");
+const { ipcMain } = require("electron");
 
 let checked = false;
 
@@ -29,6 +30,7 @@ module.exports = async () => {
       currentFocusSession.endTime > new Date().getTime()
     ) {
       console.log("current focus session found, starting..");
+      getMainWindow().send("notification-focus-resumed");
       focusStart(
         currentFocusSession.startTime,
         currentFocusSession.endTime,
