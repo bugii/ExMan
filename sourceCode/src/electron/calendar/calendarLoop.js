@@ -1,6 +1,7 @@
 const { refreshToken: refreshTokenGoogle } = require("../auth/googleOAuth");
 const { refreshToken: refreshTokenMS } = require("../auth/outlookOAuth");
 const { getTokens } = require("../db/db");
+const { storeIntervallRef } = require("../db/memoryDb");
 const scheduleFocus = require("../utils/scheduleFocus");
 const getCalendarFocus24h = require("./getCalendarFocus24h");
 
@@ -34,7 +35,9 @@ module.exports = async () => {
 
   calendarLoop();
 
-  setInterval(async () => {
+  const ref = setInterval(async () => {
     calendarLoop();
   }, 60000);
+
+  storeIntervallRef(ref);
 };

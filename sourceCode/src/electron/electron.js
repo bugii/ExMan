@@ -60,8 +60,7 @@ const updater = require("./utils/updater");
 const createTray = require("./utils/createTray");
 const activeWin = require("active-win");
 const updateFrontend = require("./utils/updateFrontend");
-
-const calendarLoop = require("./calendar/calendarLoop");
+const reminderLoop = require("./utils/reminderLoop");
 
 const isMac = process.platform === "darwin";
 
@@ -179,6 +178,7 @@ async function createWindow() {
 app.whenReady().then(async () => {
   await createWindow();
   createTray();
+  reminderLoop();
 
   scheduleRandomPopup();
   servicesManager.clearSessions();

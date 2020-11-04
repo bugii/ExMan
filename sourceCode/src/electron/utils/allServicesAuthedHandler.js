@@ -10,7 +10,6 @@ const focusStart = require("../utils/focusStart");
 const focusEnd = require("../utils/focusEnd");
 const scheduleFocus = require("../utils/scheduleFocus");
 const calendarLoop = require("../calendar/calendarLoop");
-const { ipcMain } = require("electron");
 
 let checked = false;
 

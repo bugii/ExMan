@@ -342,6 +342,10 @@ function storeAppEnd() {
   db.get("appUsage").last().push(new Date().getTime()).write();
 }
 
+function getLastAppStartTime() {
+  return db.get("appUsage").last().value()[0];
+}
+
 function storeActiveWindowInCurrentFocus({ name, title }) {
   // get the last entry and check if anything has changed.. if not -> don't add another entry
   const lastWindow = db
@@ -485,4 +489,5 @@ module.exports = {
   getTokens,
   getAppUsedData,
   moveFutureSessionToCurrent,
+  getLastAppStartTime,
 };

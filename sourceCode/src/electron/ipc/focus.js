@@ -6,6 +6,7 @@ const {
   getAllFutureFocusSessions,
   deleteFutureFocusSession,
   storeBreakFocusClicks,
+  getSettings,
 } = require("../db/db");
 const { getFocus, getFutureFocusRef } = require("../db/memoryDb");
 const extendFocusDuration = require("../utils/extendFocusDuration");
@@ -62,6 +63,14 @@ ipcMain.on("focus-schedule-request", (e, { startTime, endTime }) => {
   }
 
   scheduleFocus(startTime, endTime);
+});
+
+ipcMain.on("default-focus-start-request", (e) => {
+  const settings = getSettings();
+  const mediumDuration = settings.mediumFocusDuration;
+  const now = new Date().getTime();
+
+  focusStart(now, now + mediumDuration * 60 * 1000);
 });
 
 ipcMain.on("focus-end-request", (e) => {

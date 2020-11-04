@@ -119,6 +119,15 @@ function App() {
         silent: true,
       });
     });
+    ipcRenderer.on("notification-focus-reminder", (e) => {
+      const n = new Notification("ExMan", {
+        body: "Feel like focssing? Click to start a focus session!",
+        silent: true,
+      });
+      n.onclick = () => {
+        ipcRenderer.send("default-focus-start-request");
+      };
+    });
 
     ipcRenderer.on("random-popup-survey", (e, wasMinimized) => {
       if (wasMinimized) {
