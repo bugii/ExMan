@@ -120,7 +120,6 @@ function createNewFutureFocusSession(startTime, endTime, id) {
       id,
       startTime,
       endTime,
-      scheduled: true,
     })
     .write();
 }
@@ -163,6 +162,38 @@ function getAllFutureFocusSessions() {
 
 function getSingleFutureFocusSession(id) {
   return db.get("futureFocusSessions").find({ id }).value();
+}
+
+function moveFutureSessionToCurrent(id) {
+  const futureSession = db.get("futureFocusSessions").find({ id }).value();
+  // remove in future
+  db.get("futureFocusSessions").remove({ id }).write();
+
+  let services = getServices();
+  // add additional fields to each service: 'lastUpdated', 'autoReplied', and a 'messages' array to store new messages that arrive during focus mode
+  services = services.map((service) => ({
+    id: service.id,
+    name: service.name,
+    unreadCount: 0,
+    autoReplied: [],
+    messages: [],
+    interactions: [],
+  }));
+
+  db.set("currentFocusSession", {
+    id,
+    startTime: futureSession.startTime,
+    endTime: futureSession.endTime,
+    originalEndTime: futureSession.endTime,
+    scheduled: true,
+    services,
+    brokenFocus: [],
+    goals: [],
+    completedGoals: [],
+    rating: null,
+    chatWorkRelated: false,
+    activeWindows: [],
+  }).write();
 }
 
 function setEndTime(timestamp) {
@@ -453,4 +484,5 @@ module.exports = {
   storeTokens,
   getTokens,
   getAppUsedData,
+  moveFutureSessionToCurrent,
 };

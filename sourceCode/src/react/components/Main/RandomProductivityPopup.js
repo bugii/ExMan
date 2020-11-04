@@ -22,7 +22,7 @@ export const RandomPopup = styled.div`
 `;
 
 function RandomProductivityPopup(props) {
-  const [productivity, setRating] = useState(0);
+  const [productivity, setRating] = useState(null);
 
   // const onEnterPress = (event) => {
   //   if (event.key === "Enter") {
