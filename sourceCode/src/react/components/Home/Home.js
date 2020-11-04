@@ -60,18 +60,6 @@ function Home(props) {
     setScheduleFocusSessionDialogOpen(true);
   };
 
-  const closeScheduleSessionDialog = () => {
-    setScheduleFocusSessionDialogOpen(false);
-  };
-
-  const getFutureFocusSessions = () => {
-    ipcRenderer.on("get-all-future-focus-sessions", (e, focusSessions) => {
-      setFutureFocusSessions(focusSessions);
-    });
-    // on mounted -> get all future focus sessions and do something with it
-    ipcRenderer.send("get-all-future-focus-sessions");
-  };
-
   return (
     <HomeDiv>
       <h1 style={{ color: Colors.turquoise }}> EXPECTATION MANAGEMENT</h1>
