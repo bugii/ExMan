@@ -4,14 +4,16 @@ import styled from "styled-components";
 import Colors from "../../Colors";
 
 const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
 
 export const Container = styled.div`
-  float: right;
-  width: 40%;
-  padding: 4rem;
+  width: 50%;
+  padding: 2rem;
   color: black;
   background-color: white;
-  height: 300px;
+  margin: 20px;
+  height: 40vh;
+  float: left;
 `;
 
 export const AdditionalText = styled.div`
@@ -21,19 +23,10 @@ export const AdditionalText = styled.div`
   font-weight: 900;
 `;
 
-function AnalyseChart(props) {
-  const [servicesArray, setServicesArray] = useState([]);
+function UsageChart(props) {
   const [servicesBreakArray, setServicesBreakArray] = useState([]);
-  const [colorArray, setColorArray] = useState([]);
-  const [numOfbreaks, setNumOfbreaks] = useState(null);
 
-  const brokenFocus = (focusObject) => {
-    let numOfbreaks = 0;
-    for (let i = 0; i < focusObject.length; i++) {
-      numOfbreaks += focusObject[i].brokenFocus.length;
-    }
-    return numOfbreaks;
-  };
+  const [appUsed, setAppUsed] = useState([]);
 
   const breakFocusUsage = (breakArray) => {
     let duration = 0;
@@ -65,20 +58,6 @@ function AnalyseChart(props) {
     return [fulllength, truelength];
   };
 
-  const colorCreator = (service_array) => {
-    let color_array = [];
-    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    for (let i = 0; i < service_array.length; i++) {
-      if (service_array[i] === "whatsapp") color_array.push(Colors.whatsapp);
-      else if (service_array[i] === "slack") color_array.push(Colors.slack);
-      else if (service_array[i] === "teams") color_array.push(Colors.teams);
-      else if (service_array[i] === "telegram")
-        color_array.push(Colors.telegram);
-      else color_array.push(randomColor);
-    }
-    return color_array;
-  };
-
   const toPercent = (fulllength, array) => {
     let core_value = fulllength;
     let temp;
@@ -89,25 +68,27 @@ function AnalyseChart(props) {
     return array;
   };
 
+  const focusVsAppUsed = (focus, appUsed) => {
+    let array = [];
+    array.push(100 * (focus / appUsed).toFixed(2));
+    array.push(100 * ((appUsed - focus) / appUsed).toFixed(2));
+    return array;
+  };
+
   useEffect(() => {
     let serviceIndex;
     const serviceObj = {};
 
-    let servicesTempArray;
     let servicesTempBreakArray = [];
-    let colorTempArray = [];
     let timeinFocus;
-    let brokenFocusvariable;
-
+    let appUsedInterval = 0;
+    let datareceived;
     const pastSession = props.data;
-    brokenFocusvariable = brokenFocus(pastSession);
-    setNumOfbreaks(brokenFocusvariable);
 
     for (serviceIndex in pastSession) {
       for (let z in pastSession[serviceIndex].services) {
-        let service;
         let duration = 0;
-        service = pastSession[serviceIndex].services[z].name;
+        let service;
         duration = breakFocusUsage(
           pastSession[serviceIndex].services[z].interactions
         );
@@ -118,39 +99,51 @@ function AnalyseChart(props) {
         }
       }
     }
-    servicesTempArray = Object.keys(serviceObj);
 
-    colorTempArray = colorCreator(servicesTempArray);
     servicesTempBreakArray = Object.values(serviceObj);
 
     timeinFocus = trueFocus(servicesTempBreakArray, pastSession);
 
-    servicesTempArray.push("real Time in Focus");
+    ipcRenderer.on("appUsage-statistic", (e, appUsedData) => {
+      console.log(appUsedData);
+      for (let k = 0; k < appUsedData.length; k++) {
+        if (appUsedData[k].length === 1) {
+        } else if (appUsedData[k].length === 2) {
+          let interval = appUsedData[k][1] - appUsedData[k][0];
+          appUsedInterval += interval;
+        } else {
+          let interval = appUsedData[k][2] - appUsedData[k][0];
+          appUsedInterval += interval;
+        }
+      }
+      datareceived = focusVsAppUsed(timeinFocus[0], appUsedInterval);
+      console.log(datareceived);
+      setAppUsed(datareceived);
+    });
+
+    ipcRenderer.send("appUsage-statistic");
+
     servicesTempBreakArray.push(timeinFocus[1]);
-    colorTempArray.push(Colors.focus);
+
     servicesTempBreakArray = toPercent(timeinFocus[0], servicesTempBreakArray);
 
-    setServicesArray(servicesTempArray);
     setServicesBreakArray(servicesTempBreakArray);
-    setColorArray(colorTempArray);
   }, []);
 
-  const data = {
-    labels: servicesArray,
+  const datasecond = {
+    labels: ["focus", "app used without focus"],
     datasets: [
       {
-        backgroundColor: colorArray,
-        data: servicesBreakArray,
+        backgroundColor: ["blue", "red"],
+        data: appUsed,
       },
     ],
   };
 
-  const text_inside = numOfbreaks;
-
   return (
     <Container>
       <Doughnut
-        data={data}
+        data={datasecond}
         options={{
           legend: { display: true },
           title: {
@@ -161,12 +154,9 @@ function AnalyseChart(props) {
           responsive: true,
           cutoutPercentage: 60,
         }}
-        text={text_inside}
       />
-      <br />
-      <AdditionalText>Frequency of focus breaks: {text_inside}</AdditionalText>
     </Container>
   );
 }
 
-export default AnalyseChart;
+export default UsageChart;

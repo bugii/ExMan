@@ -42,6 +42,7 @@ function BreakFocusPopup(props) {
             open={props.open}
             maxWidth={"lg"}
             onClose={props.close}
+            style={{zIndex: 1600}}
         >
             <DialogTitle id="simple-dialog-title" style={{color: "white", backgroundColor: Colors.navy}}>Do you really want to break your focus?</DialogTitle>
             <div style={{display: "flex", flexDirection: "column", alignItems: "center", padding: "1rem", backgroundColor: Colors.navy}}>

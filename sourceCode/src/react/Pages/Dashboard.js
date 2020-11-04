@@ -4,6 +4,8 @@ import Colors from "../components/Colors";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import GoalsChart from "../components/Summary/OverviewCharts/GoalsChart";
 import AnalyseChart from "../components/Summary/OverviewCharts/AnalyseChart";
+import RatingChart from "../components/Summary/OverviewCharts/RatingChart";
+import UsageChart from "../components/Summary/OverviewCharts/UsageChart";
 //import ComparisonChart from "../components/Summary/OverviewCharts/ComparisonChart";
 
 const electron = window.require("electron");
@@ -43,8 +45,17 @@ function Dashboard(props) {
     return (
       <div>
         <h1 style={{ textAlign: "center", color: Colors.navy }}>DASHBOARD</h1>
-        <GoalsChart style={{ height: "45vh" }} data={pastFocusSessions} />
-        <AnalyseChart style={{ height: "45vh" }} data={pastFocusSessions} />
+        <div>
+          <RatingChart style={{ margin: "20px" }} data={pastFocusSessions} />
+        </div>
+        <div style={{ margin: "20px", height: "300px" }}>
+          <GoalsChart data={pastFocusSessions} />
+
+          <AnalyseChart data={pastFocusSessions} />
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          <UsageChart data={pastFocusSessions} />
+        </div>
       </div>
     );
 }

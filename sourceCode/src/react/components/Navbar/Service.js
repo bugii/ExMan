@@ -33,6 +33,35 @@ export const MessageCountBubble = styled.div`
   color: white;
 `;
 
+export const Loader = styled.div`
+  top: 0px;
+  right: 0px;
+  position: absolute;
+  border: 3px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 2px solid #3498db;
+  width: 20px;
+  height: 20px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  @-webkit-keyframes spin {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
 function Service(props) {
   let history = useHistory();
 
@@ -67,9 +96,16 @@ function Service(props) {
 
   return (
     <ServiceDiv>
-      {props.showBubble && (!props.isAuthed || !props.isReady) ? (
+      {props.showBubble &&
+      !props.isAuthed &&
+      (!props.isReady || props.isReady) ? (
         <MessageCountBubble> ! </MessageCountBubble>
       ) : null}
+
+      {props.showBubble && props.isAuthed && !props.isReady ? (
+        <Loader></Loader>
+      ) : null}
+
       {props.unreadCount ? (
         <MessageCountBubble> {props.unreadCount} </MessageCountBubble>
       ) : null}
