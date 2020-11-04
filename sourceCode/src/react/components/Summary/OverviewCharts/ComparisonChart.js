@@ -3,14 +3,6 @@ import { Doughnut } from "react-chartjs-2";
 import styled from "styled-components";
 import Colors from "../../Colors";
 
-export const CustomBar = styled.div`
-  padding: 2rem;
-  text-align: center;
-  width: 100%;
-  background-color: ${Colors.navy};
-  margin-top: 20px;
-`;
-
 export const Container = styled.div`
   width: 80%;
   padding: 2rem;
@@ -110,24 +102,22 @@ function ComparisonChart(props) {
   };
 
   return (
-    <CustomBar>
-      <Container>
-        <Doughnut
-          data={data}
-          options={{
-            legend: { display: true },
-            title: {
-              display: true,
-              text: "usage of applications in focus",
-            },
-            maintainAspectRatio: false,
-            responsive: true,
-            cutoutPercentage: 60,
-          }}
-        />
-        <br />
-      </Container>
-    </CustomBar>
+    <Container>
+      <Doughnut
+        data={data}
+        options={{
+          legend: { display: true },
+          title: {
+            display: true,
+            text: "usage of applications in focus",
+          },
+          maintainAspectRatio: false,
+          responsive: true,
+          cutoutPercentage: 60,
+        }}
+      />
+      <br />
+    </Container>
   );
 }
 
