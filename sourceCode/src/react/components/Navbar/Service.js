@@ -106,7 +106,7 @@ function Service(props) {
         <Loader></Loader>
       ) : null}
 
-      {props.unreadCount ? (
+      {props.unreadCount && props.showBubble ? (
         <MessageCountBubble> {props.unreadCount} </MessageCountBubble>
       ) : null}
       <div
