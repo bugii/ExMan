@@ -1,4 +1,5 @@
 // Modules to control application life and create native browser window
+
 const {
   app,
   BrowserWindow,
@@ -50,6 +51,7 @@ const {
 } = require("./db/memoryDb");
 
 const exportDb = require("./utils/exportDb");
+const {showAboutWindow} = require('electron-util');
 const servicesManager = require("./services/ServicesManger");
 const eventEmitter = require("./utils/eventEmitter");
 const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
@@ -78,7 +80,28 @@ mainMenu = Menu.buildFromTemplate([
   {
     label: "ExMan",
     submenu: [
-      { role: "about" },
+      {
+        label: "About",
+        click: () => {
+          showAboutWindow({
+            icon: path.join(__dirname, './assets/icon.png'),
+            copyright: 'Copyright © UZH',
+            text: "Authors:\n" +
+                "Taylor McCants (MS Student, University of Zurich): " + "taylor.mccants@uzh.ch" + "\n" +
+                "Dario Bugmann (MS Student, University of Zurich): " + "dario.bugmann@uzh.ch" + "\n" +
+                "Lutharsanen Kunam (MS Student, University of Zurich): " + "lutharsanen.kunam@uzh.ch" + "\n" +
+                "\n" +
+                "Releases:\n" +
+                "https://github.com/bugii/ExMan/releases" + "\n" +
+                "\n" +
+                "Privacy Statement:\n" +
+                "Participation Consent Form - https://drive.google.com/file/d/11LHyJ4bB6ESbk6xAEyCjNcZ-MlwAK8CP/view?usp=sharing" + "\n" +
+                "\n" +
+                "Credits:\n" +
+                "?????\n"
+          });
+        },
+      },
       { type: "separator" },
       { role: "services" },
       { type: "separator" },
