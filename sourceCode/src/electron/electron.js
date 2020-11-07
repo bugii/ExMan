@@ -85,11 +85,11 @@ mainMenu = Menu.buildFromTemplate([
         click: () => {
           showAboutWindow({
             icon: path.join(__dirname, './assets/icon.png'),
-            copyright: 'Copyright © UZH',
+            copyright: 'Copyright © University of Zurich',
             text: "Authors:\n" +
-                "Taylor McCants (MS Student, University of Zurich): " + "taylor.mccants@uzh.ch" + "\n" +
-                "Dario Bugmann (MS Student, University of Zurich): " + "dario.bugmann@uzh.ch" + "\n" +
-                "Lutharsanen Kunam (MS Student, University of Zurich): " + "lutharsanen.kunam@uzh.ch" + "\n" +
+                "Taylor McCants (MS Student, UZH): " + "taylor.mccants@uzh.ch" + "\n" +
+                "Dario Bugmann (MS Student, UZH): " + "dario.bugmann@uzh.ch" + "\n" +
+                "Lutharsanen Kunam (MS Student, UZH): " + "lutharsanen.kunam@uzh.ch" + "\n" +
                 "\n" +
                 "Releases:\n" +
                 "https://github.com/bugii/ExMan/releases" + "\n" +

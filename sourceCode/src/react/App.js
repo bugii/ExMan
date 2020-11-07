@@ -121,7 +121,7 @@ function App() {
     });
     ipcRenderer.on("notification-focus-reminder", (e) => {
       const n = new Notification("ExMan", {
-        body: "Feel like focssing? Click to start a focus session!",
+        body: "Feel like focusing? Click to start a focus session!",
         silent: true,
       });
       n.onclick = () => {
