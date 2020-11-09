@@ -42,13 +42,7 @@ const {
 } = require("./db/db");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 
-const {
-  storeMainWindow,
-  getMainWindow,
-  getFocus,
-  storeIntervallRef,
-  storeTimeoutRef,
-} = require("./db/memoryDb");
+const { storeMainWindow, storeTimeoutRef } = require("./db/memoryDb");
 
 const exportDb = require("./utils/exportDb");
 const { showAboutWindow } = require("electron-util");
@@ -60,7 +54,6 @@ const scheduleRandomPopup = require("./utils/scheduleRandomPopup");
 const updater = require("./utils/updater");
 
 const createTray = require("./utils/createTray");
-const activeWin = require("active-win");
 const updateFrontend = require("./utils/updateFrontend");
 const reminderLoop = require("./utils/reminderLoop");
 const windowTrackerLoop = require("./utils/windowTrackerLoop");
@@ -125,6 +118,7 @@ mainMenu = Menu.buildFromTemplate([
   {
     label: "File",
     submenu: [
+      isMac ? { role: "close" } : { role: "quit" },
       {
         label: "Export",
         click: () => {
@@ -133,10 +127,12 @@ mainMenu = Menu.buildFromTemplate([
       },
     ],
   },
+  { role: "fileMenu" },
   {
     label: "Edit",
     role: "editMenu",
   },
+  { role: "windowMenu" },
   {
     label: "Dev",
     submenu: [{ role: "reload" }, { role: "forceReload" }],
