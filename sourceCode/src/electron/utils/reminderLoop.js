@@ -14,7 +14,7 @@ module.exports = () => {
     reminderLoop();
   }, 60000);
 
-  storeIntervallRef(ref);
+  return ref;
 };
 
 const reminderLoop = () => {

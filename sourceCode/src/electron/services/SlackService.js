@@ -18,9 +18,14 @@ module.exports = class SlackService extends Service {
     console.log("unread loop start", this.name);
 
     this.unreadLoopRef = setInterval(async () => {
-      const unreadChats = await webContents
-        .fromId(this.webContentsId)
-        .executeJavaScript("window.getUnreadChats()");
+      let unreadChats;
+      try {
+        unreadChats = await webContents
+          .fromId(this.webContentsId)
+          .executeJavaScript("window.getUnreadChats()");
+      } catch (error) {
+        unreadChats = 0;
+      }
 
       this.unreadCount = unreadChats;
       // set in db

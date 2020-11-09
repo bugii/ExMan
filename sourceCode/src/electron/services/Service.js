@@ -68,14 +68,6 @@ module.exports = class Service {
     }
   }
 
-  // endLoop() {
-  //   // this.loopStarted = false;
-  //   // Clear all the intervals
-  //   this.intervallRefs.forEach((intervallRef) => {
-  //     clearInterval(intervallRef);
-  //   });
-  // }
-
   endAuthLoop() {
     clearInterval(this.authLoopRef);
   }

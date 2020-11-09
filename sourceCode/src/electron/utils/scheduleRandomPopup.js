@@ -18,7 +18,7 @@ module.exports = scheduleRandomPopup = () => {
       scheduleRandomPopup();
     }
   }, timeUntilPopup * 60 * 1000);
-  storeTimeoutRef(ref);
+  return ref;
 };
 
 function randomIntFromInterval(min, max) {
