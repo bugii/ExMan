@@ -47,10 +47,18 @@ function BarChart(props) {
     return countingArray;
   };
 
+  const noMessages = (array) => {
+    for (let k = 0; k < array.length; k++) {
+      if (array[k] !== 0) return false;
+    }
+    return true;
+  };
+
   //const [startTime, setStartTime] = useState(true);
   //const [endTime, setEndTime] = useState(true);
   const [label, setlabel] = useState([]);
   const [frequency, setfrequency] = useState([]);
+  const [noMessageChecker, setNoMessageChecker] = useState(true);
 
   useEffect(() => {
     const focusSession = props.data;
@@ -76,6 +84,11 @@ function BarChart(props) {
       })
     );
     setfrequency(dataCreator(timestampArray.sort(), bins));
+    console.log("freq: ", dataCreator(timestampArray.sort(), bins));
+    const checker = noMessages(dataCreator(timestampArray.sort(), bins));
+    console.log("first checker: ", checker);
+    setNoMessageChecker(checker);
+    console.log("checker: ", noMessageChecker);
   }, []);
 
   const data = {
@@ -89,16 +102,9 @@ function BarChart(props) {
     ],
   };
 
-  const noMessages = (array) => {
-    for (let k = 0; k > array.length; k++) {
-      if (array[k] !== 0) return false;
-    }
-    return true;
-  };
-
   return (
     <CustomBar>
-      {noMessages(frequency) === false ? (
+      {noMessageChecker === false ? (
         <Bar data={data} />
       ) : (
         <PlaceHolder>
