@@ -50,6 +50,21 @@ function MenuBoxes(props) {
     ipcRenderer.send("google-cal-register-start");
   };
 
+  const handleRemoveCalendarClick = () => {
+    ipcRenderer.once("tokens", (e, tokens) => {
+      if (tokens.google) {
+        setCalendarRegistered("google");
+        ipcRenderer.send("get-all-future-focus-sessions");
+      } else if (tokens.microsoft) {
+        setCalendarRegistered("microsoft");
+        ipcRenderer.send("get-all-future-focus-sessions");
+      } else {
+        setCalendarRegistered(null);
+      }
+    });
+    ipcRenderer.send("remove-calendar");
+  };
+
   useEffect(() => {
     ipcRenderer.once("calendar-successfully-added", (e, type) => {
       setCalendarRegistered(type);
@@ -81,8 +96,13 @@ function MenuBoxes(props) {
         </MenuIcon>
         {calendarRegistered ? (
           <div style={{ textAlign: "center" }}>
-            You are connected to your {calendarRegistered} calendar, schedule
-            events with the subject: "Focus"
+            <div>
+              You are connected to your {calendarRegistered} calendar, schedule
+              events with the subject: "Focus"
+            </div>
+            <Button onClick={handleRemoveCalendarClick}>
+              Remove/Change Calendar
+            </Button>
           </div>
         ) : (
           <div style={{ textAlign: "center" }}>
