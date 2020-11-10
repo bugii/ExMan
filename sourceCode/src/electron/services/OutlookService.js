@@ -1,4 +1,4 @@
-const { webContents, session } = require("electron");
+const { webContents } = require("electron");
 
 const Service = require("../services/Service");
 const { setUnreadChats } = require("../db/db");
@@ -13,9 +13,14 @@ module.exports = class OutlookService extends Service {
     console.log("unread loop start", this.name);
 
     this.unreadLoopRef = setInterval(async () => {
-      const unreadChats = await webContents
-        .fromId(this.webContentsId)
-        .executeJavaScript("window.getUnreadChats()");
+      let unreadChats;
+      try {
+        unreadChats = await webContents
+          .fromId(this.webContentsId)
+          .executeJavaScript("window.getUnreadChats()");
+      } catch (error) {
+        unreadChats = 0;
+      }
 
       this.unreadCount = unreadChats;
       // set in db
@@ -27,9 +32,14 @@ module.exports = class OutlookService extends Service {
     console.log("auth loop start", this.name);
 
     this.authLoopRef = setInterval(async () => {
-      const isAuth = await webContents
-        .fromId(this.webContentsId)
-        .executeJavaScript("window.isAuth()");
+      let isAuth;
+      try {
+        isAuth = await webContents
+          .fromId(this.webContentsId)
+          .executeJavaScript("window.isAuth()");
+      } catch (error) {
+        isAuth = false;
+      }
 
       this.setAuthed(isAuth);
     }, 1000);

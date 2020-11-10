@@ -10,7 +10,7 @@ const { getOutlookAuthWindow } = require("../electron/auth/outlookOAuth");
 const { getGoogleAuthWindow } = require("../electron/auth/googleOAuth");
 
 const app = express();
-const { PORT: port } = require("../electron/db/memoryDb");
+const { storePORT, getPORT } = require("../electron/db/memoryDb");
 const { calendarSuccessfullyAdded } = require("../electron/ipc/calendar");
 app.use(express.json());
 
@@ -22,7 +22,7 @@ app.get("/oauth/google", async (req, res) => {
       "826944190379-4ollq01hentnf2ilduosida4g647a005.apps.googleusercontent.com",
     scope: "https://www.googleapis.com/auth/calendar",
     code: code,
-    redirect_uri: `http://localhost:${port}/oauth/google`,
+    redirect_uri: `http://localhost:${getPORT()}/oauth/google`,
 
     client_secret: "lyPQ5PC-xdNFM7cs828Tvqhd",
     grant_type: "authorization_code",
@@ -57,7 +57,7 @@ app.get("/oauth/microsoft", async (req, res) => {
     client_id: "164e0e9e-6497-4810-8e72-a6ffd8b6ba62",
     scope: "offline_access https://graph.microsoft.com/Calendars.ReadWrite",
     code: code,
-    redirect_uri: `http://localhost:${port}/oauth/microsoft`,
+    redirect_uri: `http://localhost:${getPORT()}/oauth/microsoft`,
     grant_type: "authorization_code",
   });
 
@@ -85,10 +85,8 @@ app.get("/oauth/microsoft", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+const server = app.listen(0, () => {
+  const port = server.address().port;
   console.log(`Local webserver running on port: ${port}`);
+  storePORT(port);
 });
-
-module.exports = {
-  PORT: port,
-};

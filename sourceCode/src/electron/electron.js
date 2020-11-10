@@ -42,16 +42,10 @@ const {
 } = require("./db/db");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 
-const {
-  storeMainWindow,
-  getMainWindow,
-  getFocus,
-  storeIntervallRef,
-  storeTimeoutRef,
-} = require("./db/memoryDb");
+const { storeMainWindow, storeTimeoutRef } = require("./db/memoryDb");
 
 const exportDb = require("./utils/exportDb");
-const {showAboutWindow} = require('electron-util');
+const { showAboutWindow } = require("electron-util");
 const servicesManager = require("./services/ServicesManger");
 const eventEmitter = require("./utils/eventEmitter");
 const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
@@ -60,9 +54,9 @@ const scheduleRandomPopup = require("./utils/scheduleRandomPopup");
 const updater = require("./utils/updater");
 
 const createTray = require("./utils/createTray");
-const activeWin = require("active-win");
 const updateFrontend = require("./utils/updateFrontend");
 const reminderLoop = require("./utils/reminderLoop");
+const windowTrackerLoop = require("./utils/windowTrackerLoop");
 
 const isMac = process.platform === "darwin";
 
@@ -84,21 +78,30 @@ mainMenu = Menu.buildFromTemplate([
         label: "About",
         click: () => {
           showAboutWindow({
-            icon: path.join(__dirname, './assets/icon.png'),
-            copyright: 'Copyright © University of Zurich',
-            text: "Authors:\n" +
-                "Taylor McCants (MS Student, UZH): " + "taylor.mccants@uzh.ch" + "\n" +
-                "Dario Bugmann (MS Student, UZH): " + "dario.bugmann@uzh.ch" + "\n" +
-                "Lutharsanen Kunam (MS Student, UZH): " + "lutharsanen.kunam@uzh.ch" + "\n" +
-                "\n" +
-                "Releases:\n" +
-                "https://github.com/bugii/ExMan/releases" + "\n" +
-                "\n" +
-                "Privacy Statement:\n" +
-                "Participation Consent Form - https://drive.google.com/file/d/11LHyJ4bB6ESbk6xAEyCjNcZ-MlwAK8CP/view?usp=sharing" + "\n" +
-                "\n" +
-                "Credits:\n" +
-                "?????\n"
+            icon: path.join(__dirname, "./assets/icon.png"),
+            copyright: "Copyright © University of Zurich",
+            text:
+              "Authors:\n" +
+              "Taylor McCants (MS Student, UZH): " +
+              "taylor.mccants@uzh.ch" +
+              "\n" +
+              "Dario Bugmann (MS Student, UZH): " +
+              "dario.bugmann@uzh.ch" +
+              "\n" +
+              "Lutharsanen Kunam (MS Student, UZH): " +
+              "lutharsanen.kunam@uzh.ch" +
+              "\n" +
+              "\n" +
+              "Releases:\n" +
+              "https://github.com/bugii/ExMan/releases" +
+              "\n" +
+              "\n" +
+              "Privacy Statement:\n" +
+              "Participation Consent Form - https://drive.google.com/file/d/11LHyJ4bB6ESbk6xAEyCjNcZ-MlwAK8CP/view?usp=sharing" +
+              "\n" +
+              "\n" +
+              "Credits:\n" +
+              "?????\n",
           });
         },
       },
@@ -115,6 +118,7 @@ mainMenu = Menu.buildFromTemplate([
   {
     label: "File",
     submenu: [
+      isMac ? { role: "close" } : { role: "quit" },
       {
         label: "Export",
         click: () => {
@@ -123,10 +127,12 @@ mainMenu = Menu.buildFromTemplate([
       },
     ],
   },
+  { role: "fileMenu" },
   {
     label: "Edit",
     role: "editMenu",
   },
+  { role: "windowMenu" },
   {
     label: "Dev",
     submenu: [{ role: "reload" }, { role: "forceReload" }],
@@ -201,23 +207,12 @@ async function createWindow() {
 app.whenReady().then(async () => {
   await createWindow();
   createTray();
-  reminderLoop();
-
-  scheduleRandomPopup();
+  updateFrontend();
+  setTimeout(updater, 10000);
+  windowTrackerLoop();
   servicesManager.clearSessions();
 
-  getMainWindow().send("update-frontend", {
-    services: servicesManager.getServices(),
-    currentFocusSession: getCurrentFocusSession(),
-  });
-
-  //Update renderer loop
-  console.log("update loop start");
-  const ref = setInterval(async () => {
-    updateFrontend();
-    servicesManager.updateUnreadMessages();
-  }, 1000);
-  storeIntervallRef(ref);
+  mainWindowUpdateLoop();
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {
@@ -231,32 +226,6 @@ app.whenReady().then(async () => {
     storeTimeoutRef(ref);
   }
 
-  setTimeout(updater, 10000);
-  const windowTrackerIntervall = setInterval(async () => {
-    const activeWindow = await activeWin();
-    if (activeWindow) {
-      if (getFocus()) {
-        storeActiveWindowInCurrentFocus({
-          name: activeWindow.owner.name,
-          title: activeWindow.title,
-        });
-      } else {
-        storeActiveWindowInArchive({
-          name: activeWindow.owner.name,
-          title: activeWindow.title,
-        });
-      }
-    }
-  }, 10000);
-  storeIntervallRef(windowTrackerIntervall);
-
-  getMainWindow().on("close", (e) => {
-    console.log(
-      "close window, deleting all the timeouts and intervalls in memory"
-    );
-    handleWindowClose();
-  });
-
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
@@ -265,5 +234,46 @@ app.whenReady().then(async () => {
 });
 
 app.on("window-all-closed", function () {
-  app.quit();
+  mainWindowClose();
+  if (!isMac) {
+    app.quit();
+  }
 });
+
+app.on("quit", function () {
+  console.log(
+    "quitting app, deleting all the timeouts and intervalls in memory"
+  );
+  handleWindowClose();
+});
+
+let reminderRef;
+let popupRef;
+let updateFrontendRef;
+
+function mainWindowUpdateLoop() {
+  reminderRef = reminderLoop();
+  popupRef = scheduleRandomPopup();
+
+  //Update renderer loop
+  console.log("update loop start");
+  updateFrontendRef = setInterval(async () => {
+    try {
+      updateFrontend();
+      servicesManager.updateUnreadMessages();
+    } catch (error) {}
+  }, 1000);
+}
+
+function mainWindowClose() {
+  clearInterval(reminderRef);
+  clearInterval(popupRef);
+  clearInterval(updateFrontendRef);
+
+  const services = servicesManager.getServicesComplete();
+  services.forEach((service) => {
+    service.endAuthLoop();
+    service.endMessagesLoop();
+    service.endUnreadLoop();
+  });
+}

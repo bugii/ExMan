@@ -2,7 +2,7 @@ const { BrowserWindow } = require("electron");
 const axios = require("axios");
 const { getTokens, storeTokens } = require("../db/db");
 const qs = require("querystring");
-const { PORT: port } = require("../db/memoryDb");
+const { getPORT } = require("../db/memoryDb");
 
 let authWindow;
 
@@ -10,8 +10,21 @@ const outlookAuthRequest = () => {
   console.log("auth request");
 
   authWindow = new BrowserWindow();
+
+  const url = qs.stringify({
+    scope: "offline_access https://graph.microsoft.com/Calendars.ReadWrite",
+    response_type: "code",
+    response_mode: "query",
+    redirect_uri: `http://localhost:${getPORT()}/oauth/microsoft`,
+    client_id: "164e0e9e-6497-4810-8e72-a6ffd8b6ba62",
+  });
+
+  console.log(
+    "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?" + url
+  );
+
   authWindow.loadURL(
-    "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=164e0e9e-6497-4810-8e72-a6ffd8b6ba62&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A4000%2Foauth%2Fmicrosoft&response_mode=query&scope=offline_access%20https%3A%2F%2Fgraph.microsoft.com%2FCalendars.ReadWrite"
+    "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?" + url
   );
 };
 
@@ -28,7 +41,7 @@ const refreshToken = async () => {
     const data = qs.stringify({
       client_id: "164e0e9e-6497-4810-8e72-a6ffd8b6ba62",
       scope: "offline_access https://graph.microsoft.com/Calendars.ReadWrite",
-      redirect_uri: `http://localhost:${port}/oauth/microsoft`,
+      redirect_uri: `http://localhost:${getPORT()}/oauth/microsoft`,
       grant_type: "refresh_token",
       refresh_token,
     });

@@ -20,13 +20,18 @@ module.exports = class TeamsService extends Service {
     console.log("unread loop start", this.name);
 
     this.unreadLoopRef = setInterval(async () => {
-      const unreadChats = await webContents
-        .fromId(this.webContentsId)
-        .executeJavaScript("window.getUnreadChats()");
-      // function check for call from preload
-      this.checkForCall = await webContents
-        .fromId(this.webContentsId)
-        .executeJavaScript(`window.checkForCall(${this.checkForCall})`);
+      let unreadChats;
+      try {
+        unreadChats = await webContents
+          .fromId(this.webContentsId)
+          .executeJavaScript("window.getUnreadChats()");
+        // function check for call from preload
+        this.checkForCall = await webContents
+          .fromId(this.webContentsId)
+          .executeJavaScript(`window.checkForCall(${this.checkForCall})`);
+      } catch (error) {
+        unreadChats = 0;
+      }
 
       this.unreadCount = unreadChats;
       // set in db
@@ -230,9 +235,14 @@ module.exports = class TeamsService extends Service {
 
   async getToken() {
     // execute getToken funtion in the slack renderer to get token from localStorage
-    const tokens = await webContents
-      .fromId(this.webContentsId)
-      .executeJavaScript("window.getTokens()");
+    let tokens;
+    try {
+      tokens = await webContents
+        .fromId(this.webContentsId)
+        .executeJavaScript("window.getTokens()");
+    } catch (error) {
+      tokens = [];
+    }
 
     return tokens;
   }

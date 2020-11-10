@@ -141,6 +141,10 @@ function deleteFutureFocusSession(id) {
   db.get("futureFocusSessions").remove({ id }).write();
 }
 
+function deleteAllFutureFocusSessions() {
+  db.set("futureFocusSessions", []).write();
+}
+
 function getPreviousFocusSession() {
   return db.get("pastFocusSessions").last().value();
 }
@@ -447,6 +451,9 @@ function getTokens() {
 function setGoalFocusDuration(duration) {
   db.get("settings").assign({ focusGoalDuration: duration }).write();
 }
+function deleteTokens() {
+  db.set("tokens", {}).write();
+}
 
 module.exports = {
   init,
@@ -459,6 +466,7 @@ module.exports = {
   getCurrentFocusSession,
   endCurrentFocusSession,
   deleteFutureFocusSession,
+  deleteAllFutureFocusSessions,
   getSingleFutureFocusSession,
   getPreviousFocusSession,
   getAllFocusSessions,
@@ -496,4 +504,5 @@ module.exports = {
   getAppUsedData,
   moveFutureSessionToCurrent,
   getLastAppStartTime,
+  deleteTokens,
 };

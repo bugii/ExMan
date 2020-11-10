@@ -4,6 +4,7 @@ const futureFocusSessionsRefs = {};
 let focusEndRef = null;
 let mainWindow = null;
 let isFocus = false;
+let PORT;
 
 function storeMainWindow(window) {
   mainWindow = window;
@@ -57,6 +58,22 @@ function getFutureFocusRef(id) {
   }
 }
 
+function getAllFutureFocusRefs() {
+  const array = [];
+  for (futureSessionRef in futureFocusSessionsRefs) {
+    array.push(futureFocusSessionsRefs[futureSessionRef]);
+  }
+  return array;
+}
+
+function getPORT() {
+  return PORT;
+}
+
+function storePORT(port) {
+  PORT = port;
+}
+
 module.exports = {
   storeMainWindow,
   getMainWindow,
@@ -70,5 +87,7 @@ module.exports = {
   setFocus,
   storeFutureFocusRef,
   getFutureFocusRef,
-  PORT: 4000,
+  getAllFutureFocusRefs,
+  getPORT,
+  storePORT,
 };
