@@ -41,6 +41,7 @@ function init() {
       shortFocusDuration: 15,
       mediumFocusDuration: 25,
       longFocusDuration: 40,
+      focusGoalDuration: 120,
     }).write();
   }
 
@@ -443,6 +444,10 @@ function getTokens() {
   return db.get("tokens").value();
 }
 
+function setGoalFocusDuration(duration) {
+  db.get("settings").assign({ focusGoalDuration: duration }).write();
+}
+
 module.exports = {
   init,
   getDb,
@@ -466,6 +471,7 @@ module.exports = {
   setCompletedGoalsAfterSession,
   setRating,
   setChatWorkRelated,
+  setGoalFocusDuration,
   toggleAutoResponseAvailablity,
   storeNotification,
   storeNotificationInArchive,
