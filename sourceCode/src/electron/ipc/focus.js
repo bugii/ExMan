@@ -7,6 +7,7 @@ const {
   deleteFutureFocusSession,
   storeBreakFocusClicks,
   getSettings,
+  storeDefaultFocusSession,
 } = require("../db/db");
 const { getFocus, getFutureFocusRef } = require("../db/memoryDb");
 const extendFocusDuration = require("../utils/extendFocusDuration");

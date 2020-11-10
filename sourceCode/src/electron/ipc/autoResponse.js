@@ -1,5 +1,6 @@
 const { ipcMain } = require("electron");
 const servicesManager = require("../services/ServicesManger");
+const { updateAutoresponse } = require("../db/db");
 
 ipcMain.on("updateAutoResponse", (e, message) => {
   updateAutoresponse(message);
