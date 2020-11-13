@@ -9,12 +9,18 @@ import TodoList from "../TodoList";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Switch from "@material-ui/core/Switch";
+import FormControl from "@material-ui/core/FormControl";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 export const PostFocusDiv = styled.div`
-  height: 460px;
+  height: 600px;
   width: 850px;
   background: ${Colors.snow};
   display: flex;
@@ -23,11 +29,20 @@ export const PostFocusDiv = styled.div`
   align-items: center;
 `;
 
+function LikertLabel(rating, text) {
+  return (
+      <div style={{textAlign: "center"}}>
+        <Typography variant="title"> {rating} </Typography>
+        <br/>
+        <Typography variant="title"> {text} </Typography>
+      </div>
+  );
+}
+
 function PostFocusPopup(props) {
   const [rating, setRating] = useState(null);
   const [todoList] = useState(props.goals);
   const [completedList, setCompletedList] = useState(props.completedGoals);
-  const [chatWorkRelated, setChatWorkRelated] = useState(false);
 
   const deleteTodos = (index, task) => {
     todoList.splice(index, 1);
@@ -40,7 +55,6 @@ function PostFocusPopup(props) {
     ipcRenderer.send("previous-session-update", {
       completedGoals: completedList,
       rating: rating,
-      chatWorkRelated: chatWorkRelated,
     });
     props.close();
   };
@@ -53,11 +67,6 @@ function PostFocusPopup(props) {
     } else {
       setCompletedList(completedList.filter((v) => v !== value));
     }
-  };
-
-  const handleSwitch = (event) => {
-    setChatWorkRelated(event.target.checked);
-    console.log("Chats were work related: ", event.target.checked);
   };
 
   return (
@@ -75,19 +84,54 @@ function PostFocusPopup(props) {
           </IconButton>
         </div>
         <p>How productive were you during this focus session?</p>
-        <Rating
-          name="simple-controlled"
-          value={rating}
-          onChange={(event, newValue) => {
-            setRating(newValue);
-          }}
-        />
-
-        <p>
-          Did you need to use your chat applications to accomplish this task?
-        </p>
-        <Switch checked={chatWorkRelated} onChange={handleSwitch} />
-
+        <FormControl component="fieldset">
+          <RadioGroup row aria-label="position"
+                      onChange={(event, newValue) => {setRating(newValue);}}>
+            <FormControlLabel
+                value="1"
+                control={<Radio/>}
+                label={ LikertLabel(1, "not at all productive")}
+                labelPlacement="bottom"
+            />
+            <FormControlLabel
+                value="2"
+                control={<Radio/>}
+                label="2"
+                labelPlacement="bottom"
+            />
+            <FormControlLabel
+                value="3"
+                control={<Radio/>}
+                label="3"
+                labelPlacement="bottom"
+            />
+            <FormControlLabel
+                value="4"
+                control={<Radio/>}
+                label={LikertLabel(4, "moderately productive")}
+                labelPlacement="bottom"
+            />
+            <FormControlLabel
+              value="5"
+              control={<Radio/>}
+              label="5"
+              labelPlacement="bottom"
+            />
+            <FormControlLabel
+                value="6"
+                control={<Radio/>}
+                label="6"
+                labelPlacement="bottom"
+            />
+            <FormControlLabel
+                value="7"
+                control={<Radio/>}
+                label={LikertLabel(7, "very productive")}
+                labelPlacement="bottom"
+            />
+          </RadioGroup>
+        </FormControl>
+        <br/>
         <p>Did you accomplish your goals? Mark them off here.</p>
         <TodoList
           todoList={todoList}
@@ -96,6 +140,17 @@ function PostFocusPopup(props) {
           handleToggle={handleToggle}
           hideDelete={true}
         />
+        <br/>
+        <p>Do you have any comments on your last session?</p>
+        <div>
+          <TextField
+              label="Comments"
+              multiline
+              rows={4}
+              variant="outlined"
+              style={{width: 400}}
+          />
+        </div>
         <Button
           style={{
             backgroundColor: Colors.navy,
