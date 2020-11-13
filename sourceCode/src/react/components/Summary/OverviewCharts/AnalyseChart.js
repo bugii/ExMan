@@ -12,6 +12,7 @@ export const Container = styled.div`
   color: black;
   background-color: white;
   height: 300px;
+  margin-right: 40px;
 `;
 
 export const AdditionalText = styled.div`

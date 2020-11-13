@@ -6,7 +6,7 @@ import GoalsChart from "../components/Summary/OverviewCharts/GoalsChart";
 import AnalyseChart from "../components/Summary/OverviewCharts/AnalyseChart";
 import RatingChart from "../components/Summary/OverviewCharts/RatingChart";
 import UsageChart from "../components/Summary/OverviewCharts/UsageChart";
-//import ComparisonChart from "../components/Summary/OverviewCharts/ComparisonChart";
+import StackedBarChart from "../components/Summary/OverviewCharts/StackedBarChart";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -55,6 +55,7 @@ function Dashboard(props) {
         </div>
         <div style={{ marginTop: "20px" }}>
           <UsageChart data={pastFocusSessions} />
+          <StackedBarChart data={pastFocusSessions} />
         </div>
       </div>
     );

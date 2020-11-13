@@ -29,6 +29,7 @@ function Settings(props) {
   const [shortFocus, setShortFocus] = useState(null);
   const [mediumFocus, setMediumFocus] = useState(null);
   const [longFocus, setLongFocus] = useState(null);
+  const [durationGoal, setDurationGoal] = useState(null);
 
   useEffect(() => {
     ipcRenderer.on("get-settings", (e, settings) => {
@@ -36,6 +37,7 @@ function Settings(props) {
       setMediumFocus(settings.mediumFocusDuration);
       setLongFocus(settings.longFocusDuration);
       setAutoReply(settings.autoReply);
+      setDurationGoal(settings.focusGoalDuration);
     });
     ipcRenderer.send("get-settings");
   }, []);
@@ -71,6 +73,16 @@ function Settings(props) {
   const handleAutoResponseUpdate = (e) => {
     // send ipc message to main process to start session there too (db etc)
     ipcRenderer.send("updateAutoResponse", autoReply);
+  };
+
+  const handleMinimumFocusGoal = (val) => {
+    // send ipc message to main process to change value in db
+    setDurationGoal(val);
+  };
+
+  const handleMinimumFocusGoalUpdate = () => {
+    // send ipc message to main process to change value in db
+    ipcRenderer.send("updateFocusDurationGoal", parseInt(durationGoal));
   };
 
   return (
@@ -122,6 +134,29 @@ function Settings(props) {
             value={longFocus}
             onChange={(e) => handleLongFocus(e.target.value)}
           />
+        </div>
+      </Settingsbox>
+      <Settingsbox>
+        <h4> Focus Goal duration</h4>
+        <p>How long do you want to focus per day at minimum</p>
+        <div>
+          <span style={{ "padding-right": "1rem" }}>
+            current focus duration goal
+          </span>
+          <input
+            value={durationGoal}
+            onChange={(e) => handleMinimumFocusGoal(e.target.value)}
+          />
+          <div>
+            <Button
+              style={{ marginTop: "10px" }}
+              variant="contained"
+              color="primary"
+              onClick={() => handleMinimumFocusGoalUpdate()}
+            >
+              {" save auto-response"}
+            </Button>
+          </div>
         </div>
       </Settingsbox>
     </SettingsDiv>
