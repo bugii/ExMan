@@ -54,15 +54,6 @@ function StackedBarChart(props) {
   };
 
   useEffect(() => {
-    ipcRenderer.send("get-settings");
-    ipcRenderer.on("get-settings", (e, settings) => {
-      let goalArray = [];
-      console.log("settings: ", settings.focusGoalDuration);
-      goalArray.push(settings.focusGoalDuration);
-      console.log("goal array", goalArray);
-      setGoal(goalArray);
-    });
-
     let serviceIndex;
 
     let servicesTempBreakArray = [];
@@ -82,12 +73,21 @@ function StackedBarChart(props) {
       }
     }
 
-    timeinFocus = trueFocus(pastSession);
+    timeinFocus = Math.round(trueFocus(pastSession));
     console.log("time in focus", timeinFocus);
     servicesTempBreakArray.push(timeinFocus);
     console.log("service break array", servicesTempBreakArray);
 
     setFocus(servicesTempBreakArray);
+
+    ipcRenderer.send("get-settings");
+    ipcRenderer.on("get-settings", (e, settings) => {
+      let goalArray = [];
+      console.log("settings: ", settings.focusGoalDuration);
+      goalArray.push(settings.focusGoalDuration - timeinFocus);
+      console.log("goal array", goalArray);
+      setGoal(goalArray);
+    });
   }, []);
 
   //console.log("focus", focus);
