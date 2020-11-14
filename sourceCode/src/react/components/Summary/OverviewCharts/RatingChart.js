@@ -44,6 +44,7 @@ function RatingChart(props) {
           precision={0.25}
           readOnly
           style={{ marginLeft: 10 }}
+          max={7}
         />
       </RatingDiv>
     </Custom>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import styled from "styled-components";
+import DailyFeedback from "./DailyFeedback";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -94,12 +95,13 @@ function StackedBarChart(props) {
 
   const arbitraryStackKey = "stack1";
   const data = {
+    labels: ["Daily focus timer"],
     datasets: [
       // These two will be in the same stack.
       {
         stack: arbitraryStackKey,
         label: "time in focus",
-        backgroundColor: "blue",
+        backgroundColor: "green",
         data: focus,
         barThickness: 100,
       },
@@ -114,6 +116,10 @@ function StackedBarChart(props) {
   };
 
   const options = {
+    title: {
+      display: true,
+      text: "daily focus timer",
+    },
     scales: {
       xAxes: [
         {
@@ -131,7 +137,11 @@ function StackedBarChart(props) {
   };
   return (
     <Container>
-      <Bar data={data} options={options} />
+      {goal[0] > 0 ? (
+        <Bar data={data} options={options} />
+      ) : (
+        <DailyFeedback data={focus[0]} />
+      )}
     </Container>
   );
 }
