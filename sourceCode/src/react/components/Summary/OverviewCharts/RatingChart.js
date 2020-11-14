@@ -27,7 +27,7 @@ function RatingChart(props) {
     const nrFocusSessions = focusSession.length;
     for (let i = 0; i < focusSession.length; i++) {
       if (focusSession[i].rating !== null) {
-        ratingTemp += focusSession[i].rating;
+        ratingTemp += parseInt(focusSession[i].rating);
       }
     }
 
