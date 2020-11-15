@@ -21,6 +21,7 @@ require("./ipc/settings");
 require("./ipc/goals");
 require("./ipc/dashboard");
 require("./ipc/auth");
+require("./ipc/export");
 
 require("../express/express");
 
@@ -42,7 +43,6 @@ const insertWebviewCss = require("./utils/insertWebviewCss");
 
 const { storeMainWindow, storeTimeoutRef } = require("./db/memoryDb");
 
-const exportDb = require("./utils/exportDb");
 const { showAboutWindow } = require("electron-util");
 const servicesManager = require("./services/ServicesManger");
 const eventEmitter = require("./utils/eventEmitter");
@@ -54,6 +54,7 @@ const createTray = require("./utils/createTray");
 const updateFrontend = require("./utils/updateFrontend");
 const reminderLoop = require("./utils/reminderLoop");
 const windowTrackerLoop = require("./utils/windowTrackerLoop");
+const { createExportWindow } = require("./utils/exportHelper");
 
 const isMac = process.platform === "darwin";
 
@@ -119,7 +120,7 @@ mainMenu = Menu.buildFromTemplate([
       {
         label: "Export",
         click: () => {
-          exportDb();
+          createExportWindow();
         },
       },
     ],

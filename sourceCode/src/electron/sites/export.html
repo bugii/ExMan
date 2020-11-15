@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Export</title>
+    <style>
+      * {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+
+        background-color: #fcf7f8;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Exporting your data</h1>
+    <p>
+      Note that any personal data that we have collected will be
+      anoymized/hashed during this exporting process. This includes content and
+      sender name of messages and active window titles. Furthermore, after the
+      export has completed, the file will be opened and you have the chance of
+      removing information that you do not want to share with us.
+    </p>
+    <button class="export">Export and open file</button>
+
+    <script>
+      const { ipcRenderer } = require("electron");
+      const button = document.querySelector(".export");
+      button.addEventListener("click", (e) => {
+        console.log("clicked");
+        ipcRenderer.send("export-db");
+      });
+    </script>
+  </body>
+</html>

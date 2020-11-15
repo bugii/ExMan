@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { dialog, app } = require("electron");
+const { dialog, app, shell } = require("electron");
 const path = require("path");
 
 const {
@@ -10,6 +10,7 @@ const {
   getSettings,
 } = require("../db/db");
 const { getMainWindow } = require("../db/memoryDb");
+const { destroyExportWindow } = require("./exportHelper");
 
 module.exports = async () => {
   const outOfFocusMessages = getOutOfFocusMessages();
@@ -72,6 +73,9 @@ module.exports = async () => {
       if (err) console.log(err);
       else {
         console.log(`successfully saved ${res.filePath} to disk`);
+        // Open the file for them to review
+        shell.openExternal("file://" + res.filePath);
+        destroyExportWindow();
       }
     });
   }

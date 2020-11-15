@@ -15,7 +15,6 @@ import ErrorNotAuthed from "./components/Error/ErrorNotAuthed";
 import ErrorAlreadyInFocus from "./components/Error/ErrorAlreadyInFocus";
 import ErrorFocusOverlap from "./components/Error/ErrorFocusOverlap";
 import ErrorWrongFocusDuration from "./components/Error/ErrorWrongFocusDuration";
-import RandomProductivityPopup from "./components/Main/RandomProductivityPopup";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -31,8 +30,6 @@ function App() {
   const [activeService, setActiveService] = useState(null);
   const [isOnService, setIsOnService] = useState(false);
   const [currentFocusSession, setCurrentFocusSession] = useState(null);
-  const [showRandomPopUp, setShowRandomPopUp] = useState(false);
-  const [wasMinimized, setWasMinimized] = useState(false);
 
   const addApp = (name) => {
     ipcRenderer.send("add-service", name);
@@ -171,12 +168,6 @@ function App() {
           currentPath={location.pathname}
         />
       ) : null}
-
-      <RandomProductivityPopup
-        open={showRandomPopUp}
-        close={() => setShowRandomPopUp(false)}
-        wasMinimized={wasMinimized}
-      />
 
       <div className="main-content">
         <Route path="/" exact>
