@@ -17,15 +17,17 @@ module.exports = () => {
     const currentTime = new Date().getTime();
     if (activeWindow) {
       const isDistraction = checkForDistractingApps(
-        activeWindow.owner.name,
+        activeWindow.title,
         activeWindow.url
       );
 
       if (getFocus()) {
-        // Discourage the user from continuing on this website by showing him a notification
-        if (!lastReminded || lastReminded + 10 * 60000 < currentTime) {
-          getMainWindow().send("distraction-notification");
-          lastReminded = currentTime;
+        if (isDistraction) {
+          // Discourage the user from continuing on this website by showing him a notification
+          if (!lastReminded || lastReminded + 10 * 60000 < currentTime) {
+            getMainWindow().send("distraction-notification");
+            lastReminded = currentTime;
+          }
         }
 
         storeActiveWindowInCurrentFocus({
@@ -118,10 +120,85 @@ const distractingWebsites = [
   "skype.com",
 ];
 
-const distractingApps = ["netflix", "teams", "slack", "skype"];
+const distractingApps = [
+  "netflix",
+  "teams",
+  "slack",
+  "skype",
+  "youtube",
+  "facebook",
+  "twitter",
+  "pinterest",
+  "tumblr",
+  "instagram",
+  "flickr",
+  "meetup",
+  "ask.fm",
+  "hulu",
+  "imgur",
+  "vimeo",
+  "ted",
+  "blogger",
+  "imdb",
+  "deviantart",
+  "break",
+  "collegehumor",
+  "funnyordie",
+  "liveleak",
+  "twitch.tv",
+  "theonion",
+  "cracked",
+  "tmz",
+  "vice",
+  "rottentomatoes",
+  "ebay",
+  "craigslist",
+  "etsy",
+  "ricardo",
+  "tutti",
+  "bbc",
+  "forbes",
+  "economist",
+  "nbcnews",
+  "cnn",
+  "foxnews",
+  "msnbc",
+  "huffingtonpost",
+  "businessinsider",
+  "buzzfeed",
+  "yahoo",
+  "nytimes",
+  "bloomberg",
+  "usatoday",
+  "washingtonpost",
+  "theguardian",
+  "npr.org",
+  "wsj",
+  "time",
+  "news.google",
+  "cnet",
+  "cnbc",
+  "reddit",
+  "nzz",
+  "zalando",
+  "whatsapp",
+  "microsoft teams",
+  "slack",
+  "telegram",
+  "20min",
+  "blick",
+  "amazon",
+  "aboutyou",
+  "asos",
+  "na-kd",
+  "tiktok",
+  "skype",
+];
 
-const checkForDistractingApps = (application, url) => {
-  const lowerCaseApp = application.toLowerCase();
+const checkForDistractingApps = (title, url) => {
+  //console.log("title", title, "url", url);
+  const lowerCaseTitle = title.toLowerCase();
+
   if (url) {
     // Is browser, check url
     for (const distractingWebsite of distractingWebsites) {
@@ -131,9 +208,9 @@ const checkForDistractingApps = (application, url) => {
     }
     return false;
   } else {
-    //no website, handle distracting applications
+    // no url, handle distracting applications/websites via title property
     for (const distractingApp of distractingApps) {
-      if (lowerCaseApp.includes(distractingApp)) {
+      if (lowerCaseTitle.includes(distractingApp)) {
         return true;
       }
     }
