@@ -3,6 +3,7 @@ const {
   getDb,
   setUnreadChats,
   storeNotificationInArchive,
+  updateWorkspaceName,
 } = require("../db/db");
 const axios = require("axios");
 const Service = require("../services/Service");
@@ -19,13 +20,18 @@ module.exports = class SlackService extends Service {
 
     this.unreadLoopRef = setInterval(async () => {
       let unreadChats;
+      let workspaceName;
       try {
         unreadChats = await webContents
           .fromId(this.webContentsId)
           .executeJavaScript("window.getUnreadChats()");
+        workspaceName = await webContents
+          .fromId(this.webContentsId)
+          .executeJavaScript("window.getWorkspaceName()");
       } catch (error) {
         unreadChats = 0;
       }
+      this.customName = workspaceName;
 
       this.unreadCount = unreadChats;
       // set in db

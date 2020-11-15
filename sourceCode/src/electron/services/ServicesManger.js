@@ -120,6 +120,7 @@ class ServicesManager {
       authed: service.authed,
       unreadCount: service.unreadCount,
       autoResponse: service.autoResponse,
+      customName: service.customName,
     }));
   }
 

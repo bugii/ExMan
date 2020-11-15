@@ -101,16 +101,16 @@ function StackedBarChart(props) {
       {
         stack: arbitraryStackKey,
         label: "time in focus",
-        backgroundColor: "green",
+        backgroundColor: "#39FF14",
         data: focus,
-        barThickness: 100,
+        barThickness: 50,
       },
       {
         stack: arbitraryStackKey,
         label: "goal per day",
-        backgroundColor: "red",
+        backgroundColor: "lightgrey",
         data: goal,
-        barThickness: 100,
+        barThickness: 50,
       },
     ],
   };

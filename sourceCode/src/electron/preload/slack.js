@@ -18,6 +18,15 @@ function getToken() {
 
 window.getToken = getToken;
 
+function getWorkspaceName() {
+  // scrape workspace name from slack website
+  var name = document.querySelector(".p-ia__sidebar_header__team_name_text")
+    .innerText;
+  return name;
+}
+
+window.getWorkspaceName = getWorkspaceName;
+
 function getUserID() {
   var security_objects = JSON.parse(localStorage.getItem("localConfig_v2"))[
     "teams"

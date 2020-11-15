@@ -12,7 +12,7 @@ export default function SwitchesSize(props) {
   };
 
   const serviceCheckers = props.services.map((service) => {
-    if (service.name === "teams" || service.name === "slack") {
+    if (service.name === "teams") {
       return (
         <FormControlLabel
           control={
@@ -23,7 +23,21 @@ export default function SwitchesSize(props) {
             />
           }
           label={service.name}
-        />
+        ></FormControlLabel>
+      );
+    } else if (service.name === "slack") {
+      console.log(service.customName);
+      return (
+        <FormControlLabel
+          control={
+            <Switch
+              color="primary"
+              checked={service.autoResponse}
+              onChange={() => toggleChecked(service.id)}
+            />
+          }
+          label={service.customName}
+        ></FormControlLabel>
       );
     }
   });

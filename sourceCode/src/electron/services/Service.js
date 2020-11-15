@@ -26,6 +26,7 @@ module.exports = class Service {
     this.name = name;
     this.autoResponse = autoResponse;
     this.checkIfAllAuthed = checkIfAllAuthed;
+    this.customName = null;
   }
 
   isInFocusSession() {
