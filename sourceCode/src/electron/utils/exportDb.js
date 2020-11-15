@@ -5,7 +5,6 @@ const path = require("path");
 const {
   getAllFocusSessions,
   getOutOfFocusMessages,
-  getRandomSurveyResults,
   getDb,
   getSettings,
 } = require("../db/db");
@@ -14,7 +13,6 @@ const { destroyExportWindow } = require("./exportHelper");
 
 module.exports = async () => {
   const outOfFocusMessages = getOutOfFocusMessages();
-  const randomSurveyResults = getRandomSurveyResults();
   const outOfFocusInteractions = getDb().get("outOfFocusInteractions").value();
   const outOfFocusActiveWindows = getDb()
     .get("outOfFocusActiveWindows")
@@ -25,13 +23,15 @@ module.exports = async () => {
   const hashedOutOfFocusMessages = hashOutOfFocusMessageTitles(
     outOfFocusMessages
   );
+  const hashedOutOfFocusActiveWindows = hashActiveWindowTitles(
+    outOfFocusActiveWindows
+  );
 
   const output = {
     focusSessions: [],
     outOfFocusMessages: hashedOutOfFocusMessages,
-    randomSurveyResults,
     outOfFocusInteractions,
-    outOfFocusActiveWindows,
+    outOfFocusActiveWindows: hashedOutOfFocusActiveWindows,
     appUsage,
     settings,
   };
@@ -39,9 +39,18 @@ module.exports = async () => {
   const focusSessions = getAllFocusSessions();
 
   focusSessions.forEach((focusSession) => {
+    const hashedActiveWindows = hashActiveWindowTitles(
+      focusSession.activeWindows
+    );
+    const hashedGoals = hashGoals(focusSession.goals);
+    const hashedCompletedGoals = hashGoals(focusSession.completedGoals);
+
     const anonymizedVersion = {
       ...focusSession,
       services: [],
+      activeWindows: hashedActiveWindows,
+      goals: hashedGoals,
+      completedGoals: hashedCompletedGoals,
     };
 
     focusSession.services.forEach((service) => {
@@ -95,6 +104,19 @@ const hashInFocusMessageTitles = (messages) => {
   return hashedMessages;
 };
 
+const hashActiveWindowTitles = (activeWindows) => {
+  const hashedActiveWindows = [];
+  activeWindows.forEach((activeWindow) => {
+    const hashedTitle = hashCode(activeWindow.title);
+
+    hashedActiveWindows.push({
+      ...activeWindow,
+      title: hashedTitle,
+    });
+  });
+  return hashedActiveWindows;
+};
+
 const hashOutOfFocusMessageTitles = (servicesMessages) => {
   const hashedMessages = {};
   for (service in servicesMessages) {
@@ -114,4 +136,12 @@ const hashOutOfFocusMessageTitles = (servicesMessages) => {
     });
   }
   return hashedMessages;
+};
+
+const hashGoals = (goals) => {
+  hashedGoals = [];
+  goals.forEach((goal) => {
+    hashedGoals.push(hashCode(goal));
+  });
+  return hashedGoals;
 };

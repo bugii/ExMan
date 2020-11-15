@@ -29,10 +29,6 @@ function init() {
     db.set("outOfFocusMessages", {}).write();
   }
 
-  if (!db.has("randomSurveyResults").value()) {
-    db.set("randomSurveyResults", []).write();
-  }
-
   // set default auto-response message, if not present
   if (!db.has("settings").value()) {
     db.set("settings", {

@@ -118,11 +118,10 @@ const distractingWebsites = [
   "skype.com",
 ];
 
-const distractingApp = ["netflix", "teams", "slack", "skype"];
+const distractingApps = ["netflix", "teams", "slack", "skype"];
 
 const checkForDistractingApps = (application, url) => {
   const lowerCaseApp = application.toLowerCase();
-  console.log(url);
   if (url) {
     // Is browser, check url
     for (const distractingWebsite of distractingWebsites) {
