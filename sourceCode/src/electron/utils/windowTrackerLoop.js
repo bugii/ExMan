@@ -3,24 +3,141 @@ const {
   storeActiveWindowInArchive,
   storeActiveWindowInCurrentFocus,
 } = require("../db/db");
-const { storeIntervallRef, getFocus } = require("../db/memoryDb");
+const {
+  storeIntervallRef,
+  getFocus,
+  getMainWindow,
+} = require("../db/memoryDb");
+
+let lastReminded;
 
 module.exports = () => {
   const windowTrackerIntervall = setInterval(async () => {
     const activeWindow = await activeWin();
+    const currentTime = new Date().getTime();
     if (activeWindow) {
+      const isDistraction = checkForDistractingApps(
+        activeWindow.owner.name,
+        activeWindow.url
+      );
+
       if (getFocus()) {
+        // Discourage the user from continuing on this website by showing him a notification
+        if (!lastReminded || lastReminded + 10 * 60000 < currentTime) {
+          getMainWindow().send("distraction-notification");
+          lastReminded = currentTime;
+        }
+
         storeActiveWindowInCurrentFocus({
           name: activeWindow.owner.name,
           title: activeWindow.title,
+          isDistraction,
         });
       } else {
         storeActiveWindowInArchive({
           name: activeWindow.owner.name,
           title: activeWindow.title,
+          isDistraction,
         });
       }
     }
   }, 10000);
   storeIntervallRef(windowTrackerIntervall);
+};
+
+const distractingWebsites = [
+  "youtube.com",
+  "netflix.com",
+  "facebook.com",
+  "twitter.com",
+  "pinterest.com",
+  "tumblr.com",
+  "instagram.com",
+  "flickr.com",
+  "meetup.com",
+  "ask.fm",
+  "hulu.com",
+  "imgur.com",
+  "vimeo.com",
+  "ted.com",
+  "blogger.com",
+  "imdb.com",
+  "deviantart.com",
+  "break.com",
+  "collegehumor.com",
+  "funnyordie.com",
+  "liveleak.com",
+  "twitch.tv",
+  "theonion.com",
+  "cracked.com",
+  "tmz.com",
+  "vice.com",
+  "rottentomatoes.com",
+  "ebay.com",
+  "craigslist.org",
+  "etsy.com",
+  "ricardo.ch",
+  "tutti.ch",
+  "bbc.com",
+  "forbes.com",
+  "economist.com",
+  "nbcnews.com",
+  "cnn.com",
+  "foxnews.com",
+  "msnbc.com",
+  "huffingtonpost.com",
+  "businessinsider.com",
+  "buzzfeed.com",
+  "yahoo.com",
+  "nytimes.com",
+  "bloomberg.com",
+  "usatoday.com",
+  "washingtonpost.com",
+  "theguardian.com",
+  "npr.org",
+  "wsj.com",
+  "time.com",
+  "news.google.com",
+  "cnet.com",
+  "cnbc.com",
+  "reddit.com",
+  "nzz.ch",
+  "zalando.ch",
+  "web.whatsapp.com",
+  "teams.microsoft.com",
+  "slack.com",
+  "telegram.com",
+  "20min.ch",
+  "blick.ch",
+  "amazon.com",
+  "amazon.de",
+  "aboutyou.ch",
+  "asos.com",
+  "na-kd.com",
+  "tiktok.com",
+  "skype.com",
+];
+
+const distractingApp = ["netflix", "teams", "slack", "skype"];
+
+const checkForDistractingApps = (application, url) => {
+  const lowerCaseApp = application.toLowerCase();
+  console.log(url);
+  if (url) {
+    // Is browser, check url
+    for (const distractingWebsite of distractingWebsites) {
+      if (url.includes(distractingWebsite)) {
+        return true;
+      }
+    }
+    return false;
+  } else {
+    //no website, handle distracting applications
+    for (const distractingApp of distractingApps) {
+      if (lowerCaseApp.includes(distractingApp)) {
+        return true;
+      }
+    }
+    return false;
+  }
 };

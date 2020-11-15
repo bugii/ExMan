@@ -351,7 +351,7 @@ function getLastAppStartTime() {
   return db.get("appUsage").last().value()[0];
 }
 
-function storeActiveWindowInCurrentFocus({ name, title }) {
+function storeActiveWindowInCurrentFocus({ name, title, isDistraction }) {
   // get the last entry and check if anything has changed.. if not -> don't add another entry
   const lastWindow = db
     .get("currentFocusSession")
@@ -362,7 +362,7 @@ function storeActiveWindowInCurrentFocus({ name, title }) {
   if (!lastWindow) {
     db.get("currentFocusSession")
       .get("activeWindows")
-      .push({ timestamp: new Date().getTime(), name, title })
+      .push({ timestamp: new Date().getTime(), name, title, isDistraction })
       .write();
     return;
   }
@@ -370,25 +370,25 @@ function storeActiveWindowInCurrentFocus({ name, title }) {
   if (lastWindow.name !== name || lastWindow.title !== title) {
     db.get("currentFocusSession")
       .get("activeWindows")
-      .push({ timestamp: new Date().getTime(), name, title })
+      .push({ timestamp: new Date().getTime(), name, title, isDistraction })
       .write();
   }
 }
 
-function storeActiveWindowInArchive({ name, title }) {
+function storeActiveWindowInArchive({ name, title, isDistraction }) {
   // get the last entry and check if anything has changed.. if not -> don't add another entry
   const lastWindow = db.get("outOfFocusActiveWindows").last().value();
 
   if (!lastWindow) {
     db.get("outOfFocusActiveWindows")
-      .push({ timestamp: new Date().getTime(), name, title })
+      .push({ timestamp: new Date().getTime(), name, title, isDistraction })
       .write();
     return;
   }
 
   if (lastWindow.name !== name || lastWindow.title !== title) {
     db.get("outOfFocusActiveWindows")
-      .push({ timestamp: new Date().getTime(), name, title })
+      .push({ timestamp: new Date().getTime(), name, title, isDistraction })
       .write();
   }
 }

@@ -125,6 +125,12 @@ function App() {
         ipcRenderer.send("default-focus-start-request");
       };
     });
+    ipcRenderer.on("distraction-notification", () => {
+      new Notification("ExMan", {
+        body: "Didn't you want to focus? You can still do it!",
+        silent: true,
+      });
+    });
   }, []);
 
   useEffect(() => {
