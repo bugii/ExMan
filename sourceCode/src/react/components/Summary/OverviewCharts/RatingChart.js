@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 //import Colors from "../../Colors";
 import Rating from "@material-ui/lab/Rating";
+import Box from "@material-ui/core/Box";
 
 export const RatingDiv = styled.div`
   background-color: white;
@@ -21,6 +22,7 @@ function RatingChart(props) {
   let ratingTemp = 0;
 
   const [rating, setRating] = useState(0);
+  const [label, setLabel] = useState(0);
 
   useEffect(() => {
     const focusSession = props.data;
@@ -31,8 +33,22 @@ function RatingChart(props) {
       }
     }
 
+    const labels = {
+      1: "terrible",
+      2: "bad",
+      3: "not good",
+      4: "fine",
+      5: "good",
+      6: "great",
+      7: "fantastic",
+    };
+
+    setLabel(labels);
+
     setRating(ratingTemp / nrFocusSessions);
   }, []);
+
+  console.log(label[rating]);
 
   return (
     <Custom>
@@ -46,6 +62,7 @@ function RatingChart(props) {
           style={{ marginLeft: 10 }}
           max={7}
         />
+        <Box>{label[rating]}</Box>
       </RatingDiv>
     </Custom>
   );
