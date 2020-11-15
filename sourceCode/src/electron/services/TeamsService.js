@@ -160,6 +160,7 @@ module.exports = class TeamsService extends Service {
             "Content-Type": "application/json",
           },
         });
+
         // get new syncToken
         this.syncToken = new_res.data["_metadata"]["syncState"];
 
@@ -170,6 +171,8 @@ module.exports = class TeamsService extends Service {
           const timestamp = new Date(
             channel.lastMessage.originalarrivaltime
           ).getTime();
+
+          //console.log(channel);
 
           if (username !== "" && username !== this.username) {
             console.log("message:", content);

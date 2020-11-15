@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Colors from "../../Colors";
+//import Colors from "../../Colors";
 import Rating from "@material-ui/lab/Rating";
 
 export const RatingDiv = styled.div`

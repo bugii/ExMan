@@ -19,8 +19,6 @@ function StackedBarChart(props) {
   const [focus, setFocus] = useState([]);
   const [goal, setGoal] = useState([]);
 
-  let servicesTempBreakArray = [];
-
   const breakFocusUsage = (breakArray) => {
     let duration = 0;
     for (let i = 0; i < breakArray.length; i++) {
@@ -141,6 +139,13 @@ function StackedBarChart(props) {
         <Bar data={data} options={options} />
       ) : (
         <DailyFeedback data={focus[0]} />
+      )}
+      {goal[0] > 0 ? (
+        <h4 style={{ textAlign: "center" }}>
+          You have {goal[0]} minutes to go to reach your goal!
+        </h4>
+      ) : (
+        <p></p>
       )}
     </Container>
   );

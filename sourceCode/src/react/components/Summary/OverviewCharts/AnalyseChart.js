@@ -3,7 +3,7 @@ import { Doughnut } from "react-chartjs-2";
 import styled from "styled-components";
 import Colors from "../../Colors";
 
-const electron = window.require("electron");
+//const electron = window.require("electron");
 
 export const Container = styled.div`
   float: right;

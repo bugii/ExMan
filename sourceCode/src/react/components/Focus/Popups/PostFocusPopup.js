@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Colors from "../../Colors";
-import Rating from "@material-ui/lab/Rating";
+//import Rating from "@material-ui/lab/Rating";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import Button from "@material-ui/core/Button";
 import TodoList from "../TodoList";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import Switch from "@material-ui/core/Switch";
+//import Switch from "@material-ui/core/Switch";
 import FormControl from "@material-ui/core/FormControl";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -31,11 +31,11 @@ export const PostFocusDiv = styled.div`
 
 function LikertLabel(rating, text) {
   return (
-      <div style={{textAlign: "center"}}>
-        <Typography variant="title"> {rating} </Typography>
-        <br/>
-        <Typography variant="title"> {text} </Typography>
-      </div>
+    <div style={{ textAlign: "center" }}>
+      <Typography variant="title"> {rating} </Typography>
+      <br />
+      <Typography variant="title"> {text} </Typography>
+    </div>
   );
 }
 
@@ -85,53 +85,58 @@ function PostFocusPopup(props) {
         </div>
         <p>How productive were you during this focus session?</p>
         <FormControl component="fieldset">
-          <RadioGroup row aria-label="position"
-                      onChange={(event, newValue) => {setRating(newValue);}}>
+          <RadioGroup
+            row
+            aria-label="position"
+            onChange={(event, newValue) => {
+              setRating(newValue);
+            }}
+          >
             <FormControlLabel
-                value="1"
-                control={<Radio/>}
-                label={ LikertLabel(1, "not at all productive")}
-                labelPlacement="bottom"
+              value="1"
+              control={<Radio />}
+              label={LikertLabel(1, "not at all productive")}
+              labelPlacement="bottom"
             />
             <FormControlLabel
-                value="2"
-                control={<Radio/>}
-                label="2"
-                labelPlacement="bottom"
+              value="2"
+              control={<Radio />}
+              label="2"
+              labelPlacement="bottom"
             />
             <FormControlLabel
-                value="3"
-                control={<Radio/>}
-                label="3"
-                labelPlacement="bottom"
+              value="3"
+              control={<Radio />}
+              label="3"
+              labelPlacement="bottom"
             />
             <FormControlLabel
-                value="4"
-                control={<Radio/>}
-                label={LikertLabel(4, "moderately productive")}
-                labelPlacement="bottom"
+              value="4"
+              control={<Radio />}
+              label={LikertLabel(4, "moderately productive")}
+              labelPlacement="bottom"
             />
             <FormControlLabel
               value="5"
-              control={<Radio/>}
+              control={<Radio />}
               label="5"
               labelPlacement="bottom"
             />
             <FormControlLabel
-                value="6"
-                control={<Radio/>}
-                label="6"
-                labelPlacement="bottom"
+              value="6"
+              control={<Radio />}
+              label="6"
+              labelPlacement="bottom"
             />
             <FormControlLabel
-                value="7"
-                control={<Radio/>}
-                label={LikertLabel(7, "very productive")}
-                labelPlacement="bottom"
+              value="7"
+              control={<Radio />}
+              label={LikertLabel(7, "very productive")}
+              labelPlacement="bottom"
             />
           </RadioGroup>
         </FormControl>
-        <br/>
+        <br />
         <p>Did you accomplish your goals? Mark them off here.</p>
         <TodoList
           todoList={todoList}
@@ -140,15 +145,15 @@ function PostFocusPopup(props) {
           handleToggle={handleToggle}
           hideDelete={true}
         />
-        <br/>
+        <br />
         <p>Do you have any comments on your last session?</p>
         <div>
           <TextField
-              label="Comments"
-              multiline
-              rows={4}
-              variant="outlined"
-              style={{width: 400}}
+            label="Comments"
+            multiline
+            rows={4}
+            variant="outlined"
+            style={{ width: 400 }}
           />
         </div>
         <Button

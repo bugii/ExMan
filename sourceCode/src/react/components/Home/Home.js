@@ -26,7 +26,7 @@ function Home(props) {
     false
   );
   const [
-    scheduleFocusSessionDialogOpen,
+    //scheduleFocusSessionDialogOpen,
     setScheduleFocusSessionDialogOpen,
   ] = useState(false);
   const [pastFocusSessions, setPastFocusSessions] = useState([]);

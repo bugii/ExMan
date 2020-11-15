@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Colors from "../Colors";
 import Grid from "@material-ui/core/Grid";
 import Accordion from "@material-ui/core/Accordion";
