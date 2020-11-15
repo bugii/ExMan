@@ -37,8 +37,6 @@ const {
   init: db_init,
   getCurrentFocusSession,
   storeAppStart,
-  storeActiveWindowInArchive,
-  storeActiveWindowInCurrentFocus,
 } = require("./db/db");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 
@@ -50,7 +48,6 @@ const servicesManager = require("./services/ServicesManger");
 const eventEmitter = require("./utils/eventEmitter");
 const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
 const handleWindowClose = require("./utils/handleWindowClose");
-const scheduleRandomPopup = require("./utils/scheduleRandomPopup");
 const updater = require("./utils/updater");
 
 const createTray = require("./utils/createTray");
@@ -248,12 +245,10 @@ app.on("quit", function () {
 });
 
 let reminderRef;
-let popupRef;
 let updateFrontendRef;
 
 function mainWindowUpdateLoop() {
   reminderRef = reminderLoop();
-  popupRef = scheduleRandomPopup();
 
   //Update renderer loop
   console.log("update loop start");
@@ -267,7 +262,6 @@ function mainWindowUpdateLoop() {
 
 function mainWindowClose() {
   clearInterval(reminderRef);
-  clearInterval(popupRef);
   clearInterval(updateFrontendRef);
 
   const services = servicesManager.getServicesComplete();

@@ -128,16 +128,6 @@ function App() {
         ipcRenderer.send("default-focus-start-request");
       };
     });
-
-    ipcRenderer.on("random-popup-survey", (e, wasMinimized) => {
-      if (wasMinimized) {
-        console.log(
-          "window was minimized, bring to front for random popup survey. Minimize again after answering"
-        );
-      }
-      setWasMinimized(wasMinimized);
-      setShowRandomPopUp(true);
-    });
   }, []);
 
   useEffect(() => {
