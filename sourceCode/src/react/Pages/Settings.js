@@ -171,7 +171,7 @@ function Settings(props) {
               color="primary"
               onClick={() => handleMinimumFocusGoalUpdate()}
             >
-              {" save auto-response"}
+              {" change minimal focus duration goal"}
             </Button>
           </div>
         </div>
@@ -194,7 +194,7 @@ function Settings(props) {
               color="primary"
               onClick={() => handleGoalTargetUpdate()}
             >
-              {" save auto-response"}
+              {" change goal target"}
             </Button>
           </div>
         </div>
