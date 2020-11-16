@@ -38,6 +38,8 @@ function init() {
       mediumFocusDuration: 25,
       longFocusDuration: 40,
       focusGoalDuration: 120,
+      teamsCallFocusAbility: false,
+      minimumGoalsPerDay: 5,
     }).write();
   }
 
@@ -67,6 +69,7 @@ function addService(service) {
       id: service.id,
       name: service.name,
       autoResponse: service.autoResponse,
+      customName: null,
     })
     .write();
 }
@@ -447,8 +450,21 @@ function getTokens() {
 function setGoalFocusDuration(duration) {
   db.get("settings").assign({ focusGoalDuration: duration }).write();
 }
+
+function setGoalperDay(goals) {
+  db.get("settings").assign({ minimumGoalsPerDay: goals }).write();
+}
+
 function deleteTokens() {
   db.set("tokens", {}).write();
+}
+
+function updateTeamsCall(newResponse) {
+  db.get("settings").assign({ teamsCallFocusAbility: !newResponse }).write();
+}
+
+function updateWorkspaceName(id, customName) {
+  db.get("services").find({ id }).assign({ customName: customName }).write();
 }
 
 module.exports = {
@@ -501,4 +517,7 @@ module.exports = {
   moveFutureSessionToCurrent,
   getLastAppStartTime,
   deleteTokens,
+  updateTeamsCall,
+  updateWorkspaceName,
+  setGoalperDay,
 };
