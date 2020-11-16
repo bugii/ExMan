@@ -42,10 +42,18 @@ export default function AddService(props) {
         close
       </div>
       {services.map((service) => (
-        <div key={service} onClick={() => props.addApp(service)}>
+        <div
+          key={service}
+          onClick={() =>
+            props.addApp({ name: service, url: null, isOther: false })
+          }
+        >
           {service}
         </div>
       ))}
+      <div onClick={() => history.push("/add-other-service")}>
+        Other service
+      </div>
     </AddServiceDiv>
   );
 }

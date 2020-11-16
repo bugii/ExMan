@@ -38,7 +38,11 @@ function Webview(props) {
         src={props.url}
         useragent={props.useragent}
         partition={`persist:${props.id}`}
-        preload={`file://${remote.app.dirname}/preload/${props.name}.js`}
+        preload={
+          !props.isOther
+            ? `file://${remote.app.dirname}/preload/${props.name}.js`
+            : `file://${remote.app.dirname}/preload/default.js`
+        }
       />
     </div>
   );

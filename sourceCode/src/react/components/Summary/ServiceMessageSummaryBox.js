@@ -22,16 +22,29 @@ export default function ServiceMessageSummaryBox(props) {
             }}
           >
             <td style={{ width: 150 }}>
-              <Service
-                key={service.id}
-                id={service.id}
-                setActiveService={props.setActiveService}
-                name={service.name}
-                unreadCount={service.unreadCount}
-                icon={props.offeredServices[service.name].icon}
-                deleteApp={props.deleteApp}
-                showBubble={false}
-              />
+              {!service.isOther ? (
+                <Service
+                  key={service.id}
+                  id={service.id}
+                  setActiveService={props.setActiveService}
+                  name={service.name}
+                  unreadCount={service.unreadCount}
+                  icon={props.offeredServices[service.name].icon}
+                  deleteApp={props.deleteApp}
+                  showBubble={false}
+                />
+              ) : (
+                <Service
+                  key={service.id}
+                  id={service.id}
+                  setActiveService={props.setActiveService}
+                  name={service.name}
+                  unreadCount={service.unreadCount}
+                  icon={`http://icons.duckduckgo.com/ip2/${service.url}.ico`}
+                  deleteApp={props.deleteApp}
+                  showBubble={false}
+                />
+              )}
             </td>
             <td>
               <b>{service.messages.length}</b> missed notifications from{" "}

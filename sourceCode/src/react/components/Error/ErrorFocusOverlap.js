@@ -27,9 +27,7 @@ function ErrorNotAuthed(props) {
 
   return (
     <ErrorDiv>
-      <BackButton onClick={() => history.push("/home")}>
-        back to home
-      </BackButton>
+      <BackButton onClick={() => history.push("/")}>back to home</BackButton>
       <h1>Error</h1>
       <p>
         Overlapping focus periods - Make sure your focus session request does

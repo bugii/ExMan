@@ -40,23 +40,47 @@ function Navbar(props) {
           onClick={() => history.push("/")}
           style={{ color: Colors.snow, fontSize: 50, margin: "0.5rem 1rem" }}
         />
-        {props.services.map((service) => (
-          <Service
-            key={service.id}
-            id={service.id}
-            setActiveService={props.setActiveService}
-            name={service.name}
-            unreadCount={service.unreadCount}
-            isReady={service.ready}
-            isAuthed={service.authed}
-            icon={props.offeredServices[service.name].icon}
-            deleteApp={props.deleteApp}
-            currentFocusSession={props.currentFocusSession}
-            webContentsId={service.webContentsId}
-            refreshApp={props.refreshApp}
-            showBubble={true}
-          />
-        ))}
+        {props.services.map((service) => {
+          if (!service.isOther) {
+            return (
+              <Service
+                key={service.id}
+                id={service.id}
+                setActiveService={props.setActiveService}
+                name={service.name}
+                unreadCount={service.unreadCount}
+                isReady={service.ready}
+                isAuthed={service.authed}
+                icon={props.offeredServices[service.name].icon}
+                deleteApp={props.deleteApp}
+                currentFocusSession={props.currentFocusSession}
+                webContentsId={service.webContentsId}
+                refreshApp={props.refreshApp}
+                showBubble={true}
+              />
+            );
+          } else {
+            return (
+              <Service
+                key={service.id}
+                id={service.id}
+                setActiveService={props.setActiveService}
+                name={service.name}
+                unreadCount={service.unreadCount}
+                isReady={service.ready}
+                isAuthed={service.authed}
+                icon={`http://icons.duckduckgo.com/ip2/${service.url
+                  .replace("https://", "")
+                  .replace("www.", "")}.ico`}
+                deleteApp={props.deleteApp}
+                currentFocusSession={props.currentFocusSession}
+                webContentsId={service.webContentsId}
+                refreshApp={props.refreshApp}
+                showBubble={true}
+              />
+            );
+          }
+        })}
       </div>
 
       <div style={{ display: "flex", flexDirection: "column" }}>

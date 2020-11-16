@@ -3,12 +3,14 @@ const openService = require("../utils/openService");
 const updateFrontend = require("../utils/updateFrontend");
 const servicesManager = require("../services/ServicesManger");
 
-ipcMain.on("add-service", (event, name) => {
+ipcMain.on("add-service", (event, { name, url, isOther }) => {
   console.log("add service", name);
   const id = servicesManager.addService({
     id: null,
     name,
     autoResponse: false,
+    isOther,
+    url,
   });
 
   updateFrontend();

@@ -27,9 +27,7 @@ function ErrorWrongFocusDuration(props) {
 
   return (
     <ErrorDiv>
-      <BackButton onClick={() => history.push("/home")}>
-        back to home
-      </BackButton>
+      <BackButton onClick={() => history.push("/")}>back to home</BackButton>
       <h1>Error</h1>
       <p>
         You can't specify a negative focus duration or a duration over 600

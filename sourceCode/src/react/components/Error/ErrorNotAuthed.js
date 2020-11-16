@@ -27,9 +27,7 @@ function ErrorNotAuthed(props) {
 
   return (
     <ErrorDiv>
-      <BackButton onClick={() => history.push("/home")}>
-        back to home
-      </BackButton>
+      <BackButton onClick={() => history.push("/")}>back to home</BackButton>
       <h1>Error</h1>
       <p>
         One or more of your services is not yet ready. Check your services

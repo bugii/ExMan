@@ -15,6 +15,7 @@ import ErrorNotAuthed from "./components/Error/ErrorNotAuthed";
 import ErrorAlreadyInFocus from "./components/Error/ErrorAlreadyInFocus";
 import ErrorFocusOverlap from "./components/Error/ErrorFocusOverlap";
 import ErrorWrongFocusDuration from "./components/Error/ErrorWrongFocusDuration";
+import AddOtherService from "./Pages/AddOtherService";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -155,17 +156,32 @@ function App() {
       {/* For the services we don't use the exact prop -> this way it is always rendered. If you just want to show the services and not Home for example -> use history.push("/services/${id}") */}
       <div className="services" style={{ zIndex: isOnService ? 1 : -1 }}>
         <Route path="/">
-          {services.map((service) => (
-            <Webview
-              isActive={activeService === service.id}
-              key={service.id}
-              id={service.id}
-              name={service.name}
-              useragent={offeredServices[service.name].useragent}
-              url={offeredServices[service.name].url}
-              icon={offeredServices[service.name].icon}
-            />
-          ))}
+          {services.map((service) => {
+            if (!service.isOther) {
+              return (
+                <Webview
+                  isActive={activeService === service.id}
+                  key={service.id}
+                  id={service.id}
+                  name={service.name}
+                  useragent={offeredServices[service.name].useragent}
+                  url={offeredServices[service.name].url}
+                  isOther={false}
+                />
+              );
+            } else {
+              return (
+                <Webview
+                  isActive={activeService === service.id}
+                  key={service.id}
+                  id={service.id}
+                  name={service.name}
+                  url={service.url}
+                  isOther={true}
+                />
+              );
+            }
+          })}
         </Route>
       </div>
 
@@ -187,6 +203,10 @@ function App() {
 
         <Route path="/add-service">
           <AddService addApp={addApp} />
+        </Route>
+
+        <Route path="/add-other-service">
+          <AddOtherService />
         </Route>
 
         <Route path="/settings">

@@ -69,6 +69,8 @@ function addService(service) {
       id: service.id,
       name: service.name,
       autoResponse: service.autoResponse,
+      url: service.url,
+      isOther: service.isOther,
       customName: null,
     })
     .write();
@@ -88,8 +90,7 @@ function createNewFocusSession(startTime, endTime) {
   let services = getServices();
   // add additional fields to each service: 'lastUpdated', 'autoReplied', and a 'messages' array to store new messages that arrive during focus mode
   services = services.map((service) => ({
-    id: service.id,
-    name: service.name,
+    ...service,
     unreadCount: 0,
     autoReplied: [],
     messages: [],
@@ -176,8 +177,7 @@ function moveFutureSessionToCurrent(id) {
   let services = getServices();
   // add additional fields to each service: 'lastUpdated', 'autoReplied', and a 'messages' array to store new messages that arrive during focus mode
   services = services.map((service) => ({
-    id: service.id,
-    name: service.name,
+    ...service,
     unreadCount: 0,
     autoReplied: [],
     messages: [],

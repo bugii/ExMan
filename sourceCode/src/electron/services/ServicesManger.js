@@ -15,6 +15,7 @@ const { getMainWindow, getFocus } = require("../db/memoryDb");
 const TelegramService = require("./TelegramService");
 const GmailService = require("./GmailService");
 const OutlookService = require("./OutlookService");
+const DefaultService = require("./DefaultService");
 
 const isMac = process.platform === "darwin";
 const isWindows = process.platform === "win32";
@@ -36,7 +37,7 @@ class ServicesManager {
     });
   }
 
-  addService({ id, name, autoResponse }) {
+  addService({ id, name, autoResponse, url, isOther }) {
     let s;
     let uuid = id;
 
@@ -44,57 +45,68 @@ class ServicesManager {
       uuid = uuidv4();
     }
 
-    switch (name) {
-      case "whatsapp":
-        s = new WhatsappService(
-          uuid,
-          autoResponse,
-          this.checkIfAllAuthed.bind(this)
-        );
-        break;
+    if (!isOther) {
+      switch (name) {
+        case "whatsapp":
+          s = new WhatsappService(
+            uuid,
+            autoResponse,
+            this.checkIfAllAuthed.bind(this)
+          );
+          break;
 
-      case "slack":
-        s = new SlackService(
-          uuid,
-          autoResponse,
-          this.checkIfAllAuthed.bind(this)
-        );
-        break;
+        case "slack":
+          s = new SlackService(
+            uuid,
+            autoResponse,
+            this.checkIfAllAuthed.bind(this)
+          );
+          break;
 
-      case "teams":
-        s = new TeamsService(
-          uuid,
-          autoResponse,
-          this.checkIfAllAuthed.bind(this)
-        );
-        break;
+        case "teams":
+          s = new TeamsService(
+            uuid,
+            autoResponse,
+            this.checkIfAllAuthed.bind(this)
+          );
+          break;
 
-      case "telegram":
-        s = new TelegramService(
-          uuid,
-          autoResponse,
-          this.checkIfAllAuthed.bind(this)
-        );
-        break;
+        case "telegram":
+          s = new TelegramService(
+            uuid,
+            autoResponse,
+            this.checkIfAllAuthed.bind(this)
+          );
+          break;
 
-      case "gmail":
-        s = new GmailService(
-          uuid,
-          autoResponse,
-          this.checkIfAllAuthed.bind(this)
-        );
-        break;
+        case "gmail":
+          s = new GmailService(
+            uuid,
+            autoResponse,
+            this.checkIfAllAuthed.bind(this)
+          );
+          break;
 
-      case "outlook":
-        s = new OutlookService(
-          uuid,
-          autoResponse,
-          this.checkIfAllAuthed.bind(this)
-        );
-        break;
+        case "outlook":
+          s = new OutlookService(
+            uuid,
+            autoResponse,
+            this.checkIfAllAuthed.bind(this)
+          );
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
+    } else {
+      // is custom/other service (could be any website really)
+      s = new DefaultService(
+        uuid,
+        name,
+        url,
+        autoResponse,
+        this.checkIfAllAuthed.bind(this)
+      );
     }
 
     this.services.push(s);
@@ -104,6 +116,8 @@ class ServicesManager {
         id: uuid,
         name: name,
         autoResponse: autoResponse,
+        url,
+        isOther,
       });
     }
 
@@ -115,6 +129,8 @@ class ServicesManager {
     return this.services.map((service) => ({
       id: service.id,
       name: service.name,
+      url: service.url,
+      isOther: service.isOther,
       webContentsId: service.webContentsId,
       ready: service.ready,
       authed: service.authed,
