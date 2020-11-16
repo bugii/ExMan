@@ -104,21 +104,21 @@ function App() {
       };
     });
     ipcRenderer.on("notification-scheduled-start", (e) => {
-      new Notification("ExMan", {
+      new Notification("Started scheduled focus session", {
         body:
           "Your scheduled focus session (from calendar) has just started. Set your goals now!",
         silent: true,
       });
     });
     ipcRenderer.on("notification-focus-resumed", (e) => {
-      new Notification("ExMan", {
-        body: "We resumed a previous focus sessions, keep focusing!",
+      new Notification("Resumed previous focus session, ", {
+        body: "Keep focusing!",
         silent: true,
       });
     });
     ipcRenderer.on("notification-focus-reminder", (e) => {
-      const n = new Notification("ExMan", {
-        body: "Feel like focusing? Click to start a focus session!",
+      const n = new Notification("Feel like focusing?", {
+        body: "Click to start a focus session!",
         silent: true,
       });
       n.onclick = () => {
@@ -126,9 +126,10 @@ function App() {
       };
     });
     ipcRenderer.on("distraction-notification", () => {
-      new Notification("ExMan", {
-        body: "Didn't you want to focus? You can still do it!",
+      new Notification("Didn't you want to focus?", {
+        body: "You can still do it, close this app and keep going!",
         silent: true,
+        icon: `${process.env.PUBLIC_URL}/icons/warning.png`,
       });
     });
   }, []);
