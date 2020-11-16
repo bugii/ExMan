@@ -1,63 +1,122 @@
 import React, { useState, useEffect } from "react";
+import { Bar } from "react-chartjs-2";
 import styled from "styled-components";
 import Colors from "../../Colors";
+import GoalsFeedback from "./GoalsFeedback";
 
-export const Circle = styled.div`
+const electron = window.require("electron");
+const ipcRenderer = electron.ipcRenderer;
+
+export const Container = styled.div`
   padding: 2rem;
-  width: 10%;
-  height: 10%;
-  display: inline;
-  background-color: ${Colors.turquoise};
-  border-radius: 50%;
-  text-align: center;
-  color: white;
-  font-weight: bold;
-`;
-
-export const Goals = styled.div`
+  color: black;
   background-color: white;
-  width: 40%;
-  text-align: center;
-  float: left;
-  height: 300px;
-  margin-left: 40px;
-`;
-
-export const Text = styled.div`
-  background-color: white;
-  margin-top: 40px;
-  font-weight: bold;
+  margin: auto;
+  height: 50vh;
 `;
 
 function GoalsChart(props) {
-  let goalTemp = 0;
-  let achievedgoalTemp = 0;
-
-  const [goals, setgoals] = useState(0);
-  const [reachedGoals, setreachedGoals] = useState(0);
+  const [goal, setGoal] = useState([]);
+  const [goalTarget, setGoalTarget] = useState([]);
 
   useEffect(() => {
+    let goalTemp = [];
+    let achievedgoalTemp;
+
     const focusSession = props.data;
-    const nrFocusSessions = focusSession.length;
+
+    // get the completed goals of today and push it to an array //
+    const d = new Date();
+    d.setHours(0);
+    d.setMinutes(0);
+    d.setSeconds(0);
+
+    let doneGoalsPerSession;
+    let allCompletedGoals = 0;
     for (let i = 0; i < focusSession.length; i++) {
-      goalTemp += focusSession[i].goals.length;
-      achievedgoalTemp += focusSession[i].completedGoals.length;
+      if (focusSession[i].startTime > d.getTime()) {
+        doneGoalsPerSession = focusSession[i].completedGoals.length;
+        allCompletedGoals += doneGoalsPerSession;
+      }
     }
 
-    setgoals(goalTemp);
-    setreachedGoals(achievedgoalTemp);
+    goalTemp.push(allCompletedGoals);
+
+    ////////////////////////////////////////////////////////////
+
+    setGoal(goalTemp);
+
+    ipcRenderer.send("get-settings");
+    ipcRenderer.on("get-settings", (e, settings) => {
+      let goalArray = [];
+      //console.log("settings: ", settings.minimumGoalsPerDay);
+      goalArray.push(settings.minimumGoalsPerDay - allCompletedGoals);
+      //console.log("goal array", goalArray);
+      setGoalTarget(goalArray);
+    });
+    setGoalTarget(achievedgoalTemp);
   }, []);
 
+  const arbitraryStackKey = "stack1";
+  const data = {
+    type: "horizontalBar",
+    labels: ["Daily focus timer"],
+    datasets: [
+      // These two will be in the same stack.
+      {
+        stack: arbitraryStackKey,
+        label: "goals done today",
+        backgroundColor: "#39FF14",
+        data: goal,
+        barThickness: 50,
+      },
+      {
+        stack: arbitraryStackKey,
+        label: "goal target",
+        backgroundColor: "lightgrey",
+        data: goalTarget,
+        barThickness: 50,
+      },
+    ],
+  };
+
+  const options = {
+    title: {
+      display: true,
+      text: "daily goals target",
+    },
+    scales: {
+      xAxes: [
+        {
+          stacked: true,
+          display: false,
+        },
+      ],
+      yAxes: [
+        {
+          stacked: true,
+          display: false,
+        },
+      ],
+    },
+  };
+
   return (
-    <Goals>
-      <h3 style={{ marginBottom: "40px" }}> Goals: </h3>
-      <Circle>{((reachedGoals / goals) * 100).toFixed(2)}%</Circle>
-      <Text>
-        <p>total goals: {goals}</p>
-        <p>achieved goals: {reachedGoals}</p>
-      </Text>
-    </Goals>
+    <Container>
+      {goalTarget > 0 ? (
+        <Bar data={data} options={options} />
+      ) : (
+        <GoalsFeedback data={goal[0]} />
+      )}
+      {goalTarget > 0 ? (
+        <h4 style={{ textAlign: "center" }}>
+          You have {goalTarget[0]} tasks to do till you reach your goal.
+        </h4>
+      ) : (
+        <p></p>
+      )}
+    </Container>
   );
 }
-
+//<p>You have {goalTarget} goals to do to reach your goal!</p>;
 export default GoalsChart;

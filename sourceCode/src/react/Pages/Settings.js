@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Colors from "../components/Colors";
 import Button from "@material-ui/core/Button";
 import ResponseSwitch from "./ResponseSwitch";
+import TeamsSwitch from "./TeamsSwitch";
 import { useEffect } from "react";
 
 const electron = window.require("electron");
@@ -30,6 +31,8 @@ function Settings(props) {
   const [mediumFocus, setMediumFocus] = useState(null);
   const [longFocus, setLongFocus] = useState(null);
   const [durationGoal, setDurationGoal] = useState(null);
+  const [callsEnabled, setCallsEnabled] = useState(null);
+  const [goalsTarget, setGoalsTarget] = useState(null);
 
   useEffect(() => {
     ipcRenderer.on("get-settings", (e, settings) => {
@@ -38,6 +41,8 @@ function Settings(props) {
       setLongFocus(settings.longFocusDuration);
       setAutoReply(settings.autoReply);
       setDurationGoal(settings.focusGoalDuration);
+      setCallsEnabled(settings.teamsCallFocusAbility);
+      setGoalsTarget(settings.minimumGoalsPerDay);
     });
     ipcRenderer.send("get-settings");
   }, []);
@@ -80,10 +85,22 @@ function Settings(props) {
     setDurationGoal(val);
   };
 
+  const handleGoalTarget = (val) => {
+    // send ipc message to main process to change value in db
+    setGoalsTarget(val);
+  };
+
   const handleMinimumFocusGoalUpdate = () => {
     // send ipc message to main process to change value in db
     ipcRenderer.send("updateFocusDurationGoal", parseInt(durationGoal));
   };
+
+  const handleGoalTargetUpdate = () => {
+    // send ipc message to main process to change value in db
+    ipcRenderer.send("updateGoalTarget", parseInt(goalsTarget));
+  };
+
+  //console.log(props);
 
   return (
     <SettingsDiv>
@@ -158,6 +175,33 @@ function Settings(props) {
             </Button>
           </div>
         </div>
+      </Settingsbox>
+      <Settingsbox>
+        <h4> Goals per day</h4>
+        <p>How many goals do you want to accomplish per day at minimum?</p>
+        <div>
+          <span style={{ "padding-right": "1rem" }}>
+            current goal target per day
+          </span>
+          <input
+            value={goalsTarget}
+            onChange={(e) => handleGoalTarget(e.target.value)}
+          />
+          <div>
+            <Button
+              style={{ marginTop: "10px" }}
+              variant="contained"
+              color="primary"
+              onClick={() => handleGoalTargetUpdate()}
+            >
+              {" save auto-response"}
+            </Button>
+          </div>
+        </div>
+      </Settingsbox>
+      <Settingsbox>
+        <h4> Enable teams calls during focus sessions</h4>
+        <TeamsSwitch state={callsEnabled} />
       </Settingsbox>
     </SettingsDiv>
   );

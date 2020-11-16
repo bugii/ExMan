@@ -7,7 +7,6 @@ import Box from "@material-ui/core/Box";
 export const RatingDiv = styled.div`
   background-color: white;
   padding: 2rem;
-  width: 40%;
   height: 100%;
   text-align: center;
 `;
@@ -24,6 +23,10 @@ function RatingChart(props) {
   const [rating, setRating] = useState(0);
   const [label, setLabel] = useState(0);
 
+  const roundHalf = (num) => {
+    return Math.round(num * 2) / 2;
+  };
+
   useEffect(() => {
     const focusSession = props.data;
     const nrFocusSessions = focusSession.length;
@@ -35,11 +38,17 @@ function RatingChart(props) {
 
     const labels = {
       1: "terrible",
+      1.5: "terrible",
       2: "bad",
+      2.5: "bad",
       3: "not good",
+      3.5: "not good",
       4: "fine",
+      4.5: "fine",
       5: "good",
+      5.5: "good",
       6: "great",
+      6.5: "great",
       7: "fantastic",
     };
 
@@ -48,8 +57,6 @@ function RatingChart(props) {
     setRating(ratingTemp / nrFocusSessions);
   }, []);
 
-  console.log(label[rating]);
-
   return (
     <Custom>
       <RatingDiv>
@@ -57,12 +64,12 @@ function RatingChart(props) {
         <Rating
           name="read-only"
           value={rating}
-          precision={0.25}
+          precision={0.5}
           readOnly
           style={{ marginLeft: 10 }}
           max={7}
         />
-        <Box>{label[rating]}</Box>
+        <Box>{label[roundHalf(rating)]}</Box>
       </RatingDiv>
     </Custom>
   );

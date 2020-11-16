@@ -22,6 +22,18 @@ export const LoadingDiv = styled.div`
   background: ${Colors.snow};
 `;
 
+export const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 20px;
+  padding: 10px;
+`;
+
+export const GridItem = styled.div`
+  text-align: center;
+  padding: 20px 10px;
+`;
+
 function Dashboard(props) {
   const [pastFocusSessions, setPastFocusSessions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,15 +60,20 @@ function Dashboard(props) {
         <div>
           <RatingChart style={{ margin: "20px" }} data={pastFocusSessions} />
         </div>
-        <div style={{ margin: "20px", height: "300px" }}>
-          <GoalsChart data={pastFocusSessions} />
-
-          <AnalyseChart data={pastFocusSessions} />
-        </div>
-        <div style={{ marginTop: "20px" }}>
-          <UsageChart data={pastFocusSessions} />
-          <StackedBarChart data={pastFocusSessions} />
-        </div>
+        <GridContainer>
+          <GridItem>
+            <GoalsChart data={pastFocusSessions} />
+          </GridItem>
+          <GridItem>
+            <AnalyseChart data={pastFocusSessions} />
+          </GridItem>
+          <GridItem>
+            <UsageChart data={pastFocusSessions} />
+          </GridItem>
+          <GridItem>
+            <StackedBarChart data={pastFocusSessions} />
+          </GridItem>
+        </GridContainer>
       </div>
     );
 }
