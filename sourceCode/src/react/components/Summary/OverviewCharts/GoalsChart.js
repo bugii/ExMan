@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Bar } from "react-chartjs-2";
+import { HorizontalBar } from "react-chartjs-2";
 import styled from "styled-components";
 import Colors from "../../Colors";
 import GoalsFeedback from "./GoalsFeedback";
@@ -104,7 +104,7 @@ function GoalsChart(props) {
   return (
     <Container>
       {goalTarget > 0 ? (
-        <Bar data={data} options={options} />
+        <HorizontalBar data={data} options={options} />
       ) : (
         <GoalsFeedback data={goal[0]} />
       )}
