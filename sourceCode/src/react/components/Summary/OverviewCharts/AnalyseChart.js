@@ -6,13 +6,11 @@ import Colors from "../../Colors";
 //const electron = window.require("electron");
 
 export const Container = styled.div`
-  float: right;
-  width: 40%;
   padding: 4rem;
   color: black;
   background-color: white;
-  height: 300px;
-  margin-right: 40px;
+  height: 50vh;
+  margin: auto;
 `;
 
 export const AdditionalText = styled.div`

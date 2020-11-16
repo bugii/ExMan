@@ -7,12 +7,11 @@ const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 export const Container = styled.div`
-  width: 40%;
   padding: 2rem;
   color: black;
   background-color: white;
-  margin: 40px;
-  float: right;
+  margin: auto;
+  height: 50vh;
 `;
 
 function StackedBarChart(props) {
@@ -73,18 +72,18 @@ function StackedBarChart(props) {
     }
 
     timeinFocus = Math.round(trueFocus(pastSession));
-    console.log("time in focus", timeinFocus);
+    //console.log("time in focus", timeinFocus);
     servicesTempBreakArray.push(timeinFocus);
-    console.log("service break array", servicesTempBreakArray);
+    //console.log("service break array", servicesTempBreakArray);
 
     setFocus(servicesTempBreakArray);
 
     ipcRenderer.send("get-settings");
     ipcRenderer.on("get-settings", (e, settings) => {
       let goalArray = [];
-      console.log("settings: ", settings.focusGoalDuration);
+      //console.log("settings: ", settings.focusGoalDuration);
       goalArray.push(settings.focusGoalDuration - timeinFocus);
-      console.log("goal array", goalArray);
+      //console.log("goal array", goalArray);
       setGoal(goalArray);
     });
   }, []);

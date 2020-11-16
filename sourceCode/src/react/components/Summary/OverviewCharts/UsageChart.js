@@ -7,13 +7,11 @@ const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 export const Container = styled.div`
-  width: 40%;
   padding: 2rem;
   color: black;
   background-color: white;
-  margin: 40px;
-  height: 40vh;
-  float: left;
+  height: 50vh;
+  margin: auto;
 `;
 
 export const AdditionalText = styled.div`
