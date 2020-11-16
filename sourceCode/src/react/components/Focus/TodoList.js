@@ -12,7 +12,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: 300,
-        height: 200,
+        height: 350,
         overflow: 'auto',
         backgroundColor: 'white',
         textAlign: 'center',

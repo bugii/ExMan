@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import Colors from "../../Colors";
 //import Rating from "@material-ui/lab/Rating";
@@ -27,150 +27,152 @@ export const PostFocusDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
 `;
 
-function LikertLabel(rating, text) {
-  return (
-    <div style={{ textAlign: "center" }}>
-      <Typography variant="title"> {rating} </Typography>
-      <br />
-      <Typography variant="title"> {text} </Typography>
-    </div>
-  );
-}
+const QuestionsText = styled.p`
+  margin-top: 2em;
+  font-weight: bold;
+  color: ${Colors.navy};
+`;
 
 function PostFocusPopup(props) {
-  const [rating, setRating] = useState(null);
-  const [todoList] = useState(props.goals);
-  const [completedList, setCompletedList] = useState(props.completedGoals);
+    const [rating, setRating] = useState(null);
+    const [comments, setComments] = useState(null);
+    const [todoList] = useState(props.goals);
+    const [completedList, setCompletedList] = useState(props.completedGoals);
 
-  const deleteTodos = (index, task) => {
-    todoList.splice(index, 1);
-    if (completedList.indexOf(task) !== -1)
-      completedList.splice(completedList.indexOf(task), 1);
-  };
+    const deleteTodos = (index, task) => {
+        todoList.splice(index, 1);
+        if (completedList.indexOf(task) !== -1)
+            completedList.splice(completedList.indexOf(task), 1);
+    };
 
-  const handleSubmit = () => {
-    console.log("Completed on submit: ", completedList);
-    ipcRenderer.send("previous-session-update", {
-      completedGoals: completedList,
-      rating: rating,
-    });
-    props.close();
-  };
+    const handleSubmit = () => {
+        console.log("Completed on submit: ", completedList);
+        console.log("Comments: ", comments);
+        ipcRenderer.send("previous-session-update", {
+            rating: rating,
+            completedGoals: completedList,
+            comments: comments,
+        });
+        props.close();
+    };
 
-  const handleToggle = (value) => () => {
-    const currentIndex = completedList.indexOf(value);
+    const handleToggle = (value) => () => {
+        const currentIndex = completedList.indexOf(value);
 
-    if (currentIndex === -1) {
-      setCompletedList([...completedList, value]);
-    } else {
-      setCompletedList(completedList.filter((v) => v !== value));
-    }
-  };
+        if (currentIndex === -1) {
+            setCompletedList([...completedList, value]);
+        } else {
+            setCompletedList(completedList.filter((v) => v !== value));
+        }
+    };
 
-  return (
-    <Dialog
-      aria-labelledby="simple-dialog-title"
-      open={props.open}
-      maxWidth={"lg"}
-      onClose={handleSubmit}
-    >
-      <DialogTitle id="simple-dialog-title">Focus Goals</DialogTitle>
-      <PostFocusDiv>
-        <div style={{ position: "absolute", top: 0, right: 0 }}>
-          <IconButton onClick={handleSubmit}>
-            <CloseIcon fontSize="large" />
-          </IconButton>
-        </div>
-        <p>How productive were you during this focus session?</p>
-        <FormControl component="fieldset">
-          <RadioGroup
-            row
-            aria-label="position"
-            onChange={(event, newValue) => {
-              setRating(newValue);
-            }}
-          >
-            <FormControlLabel
-              value="1"
-              control={<Radio />}
-              label={LikertLabel(1, "not at all productive")}
-              labelPlacement="bottom"
-            />
-            <FormControlLabel
-              value="2"
-              control={<Radio />}
-              label="2"
-              labelPlacement="bottom"
-            />
-            <FormControlLabel
-              value="3"
-              control={<Radio />}
-              label="3"
-              labelPlacement="bottom"
-            />
-            <FormControlLabel
-              value="4"
-              control={<Radio />}
-              label={LikertLabel(4, "moderately productive")}
-              labelPlacement="bottom"
-            />
-            <FormControlLabel
-              value="5"
-              control={<Radio />}
-              label="5"
-              labelPlacement="bottom"
-            />
-            <FormControlLabel
-              value="6"
-              control={<Radio />}
-              label="6"
-              labelPlacement="bottom"
-            />
-            <FormControlLabel
-              value="7"
-              control={<Radio />}
-              label={LikertLabel(7, "very productive")}
-              labelPlacement="bottom"
-            />
-          </RadioGroup>
-        </FormControl>
-        <br />
-        <p>Did you accomplish your goals? Mark them off here.</p>
-        <TodoList
-          todoList={todoList}
-          completedList={completedList}
-          deleteTodos={deleteTodos}
-          handleToggle={handleToggle}
-          hideDelete={true}
-        />
-        <br />
-        <p>Do you have any comments on your last session?</p>
-        <div>
-          <TextField
-            label="Comments"
-            multiline
-            rows={4}
-            variant="outlined"
-            style={{ width: 400 }}
-          />
-        </div>
-        <Button
-          style={{
-            backgroundColor: Colors.navy,
-            color: "white",
-            width: "200px",
-            textAlign: "center",
-            margin: "10px",
-          }}
-          onClick={handleSubmit}
+    return (
+        <Dialog
+            aria-labelledby="simple-dialog-title"
+            open={props.open}
+            maxWidth={"lg"}
+            onClose={handleSubmit}
         >
-          submit
-        </Button>
-      </PostFocusDiv>
-    </Dialog>
-  );
-}
+            <DialogTitle id="simple-dialog-title">Focus Goals</DialogTitle>
+            <PostFocusDiv>
+                <div style={{position: "absolute", top: 0, right: 0}}>
+                    <IconButton onClick={handleSubmit}>
+                        <CloseIcon fontSize="large"/>
+                    </IconButton>
+                </div>
+                <QuestionsText>How productive were you during this focus session?</QuestionsText>
+                <FormControl style={{alignItems: "center"}}>
+                    <RadioGroup row aria-label="position"
+                                onChange={(event, newValue) => {
+                                    setRating(newValue);
+                                }}
+                                style={{backgroundColor: "white", padding: 5, justifyContent: "space-around", width: "80%"}}>
+                        <FormControlLabel
+                            value="1"
+                            control={<Radio/>}
+                            label="1"
+                            labelPlacement="bottom"
+                        />
+                        <FormControlLabel
+                            value="2"
+                            control={<Radio/>}
+                            label="2"
+                            labelPlacement="bottom"
+                        />
+                        <FormControlLabel
+                            value="3"
+                            control={<Radio/>}
+                            label="3"
+                            labelPlacement="bottom"
+                        />
+                        <FormControlLabel
+                            value="4"
+                            control={<Radio/>}
+                            label="4"
+                            labelPlacement="bottom"
+                        />
+                        <FormControlLabel
+                            value="5"
+                            control={<Radio/>}
+                            label="5"
+                            labelPlacement="bottom"
+                        />
+                        <FormControlLabel
+                            value="6"
+                            control={<Radio/>}
+                            label="6"
+                            labelPlacement="bottom"
+                        />
+                        <FormControlLabel
+                            value="7"
+                            control={<Radio/>}
+                            label="7"
+                            labelPlacement="bottom"
+                        />
+                      <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%"}}>
+                        <span>not at all productive</span>
+                        <span>moderately productive</span>
+                        <span>very productive</span>
+                      </div>
+                    </RadioGroup>
+                </FormControl>
+                <QuestionsText>Did you accomplish your goals? Mark them off here. </QuestionsText>
+                <TodoList
+                    todoList={todoList}
+                    completedList={completedList}
+                    deleteTodos={deleteTodos}
+                    handleToggle={handleToggle}
+                    hideDelete={true}
+                />
+                <QuestionsText>Do you have any comments on your last session?</QuestionsText>
+                <TextField
+                    label="Comments"
+                    multiline
+                    rows={3}
+                    variant="outlined"
+                    onChange={(e) => {
+                        setComments(e.target.value);
+                    }}
+                    style={{width: "400px", backgroundColor: "white"}}
+                />
+                <Button
+                    style={{
+                        backgroundColor: Colors.navy,
+                        color: "white",
+                        width: "200px",
+                        textAlign: "center",
+                        margin: "10px",
+                    }}
+                    onClick={handleSubmit}
+                >
+                    submit
+                </Button>
+            </PostFocusDiv>
+            </Dialog>
+                );
+                }
 
-export default PostFocusPopup;
+                export default PostFocusPopup;

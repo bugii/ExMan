@@ -109,8 +109,8 @@ function createNewFocusSession(startTime, endTime) {
     goals: [],
     completedGoals: [],
     rating: null,
+    comments: null,
     scheduled: false,
-    chatWorkRelated: false,
     activeWindows: [],
   }).write();
 }
@@ -195,7 +195,7 @@ function moveFutureSessionToCurrent(id) {
     goals: [],
     completedGoals: [],
     rating: null,
-    chatWorkRelated: false,
+    comments: null,
     activeWindows: [],
   }).write();
 }
@@ -220,8 +220,8 @@ function setRating(rating) {
   db.get("pastFocusSessions").last().assign({ rating }).write();
 }
 
-function setChatWorkRelated(chatWorkRelated) {
-  db.get("pastFocusSessions").last().assign({ chatWorkRelated }).write();
+function setComments(comments) {
+  db.get("pastFocusSessions").last().assign({ comments }).write();
 }
 
 function storeBreakFocusClicks(breakFocusEnd) {
@@ -490,7 +490,7 @@ module.exports = {
   setCompletedGoals,
   setCompletedGoalsAfterSession,
   setRating,
-  setChatWorkRelated,
+  setComments,
   setGoalFocusDuration,
   toggleAutoResponseAvailablity,
   storeNotification,
