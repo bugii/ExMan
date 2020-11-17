@@ -20,6 +20,13 @@ export const GoalsList = styled.ul`
   width: 50%;
 `;
 
+export const GoalsDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  text-align: left;
+  justify-content: space-evenly;
+`;
+
 export const CompletedListItem = styled.li`
   &:before {
     content: "✓  ";
@@ -95,37 +102,34 @@ function PastAndScheduledSessions(props) {
                   max={7}
                 />
               </AccordionSummary>
-              <AccordionDetails
-                style={{
-                  flexDirection: "row",
-                  textAlign: "left",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <GoalsList>
-                  {focusSession.completedGoals.length > 0 ? (
-                    focusSession.completedGoals.map((goal) => (
-                      <CompletedListItem>{goal}</CompletedListItem>
-                    ))
-                  ) : (
-                    <div style={{ color: "gray" }}>No completed goals</div>
-                  )}
-                </GoalsList>
-                <GoalsList>
-                  {focusSession.goals.filter(
-                    (goal) => !focusSession.completedGoals.includes(goal)
-                  ).length > 0 ? (
-                    focusSession.goals
-                      .filter(
+              <AccordionDetails style={{flexDirection: "column"}}>
+                <GoalsDiv>
+                  <GoalsList>
+                    {focusSession.completedGoals.length > 0 ? (
+                        focusSession.completedGoals.map((goal) => (
+                            <CompletedListItem>{goal}</CompletedListItem>
+                        ))
+                    ) : (
+                        <div style={{ color: "gray" }}>No completed goals</div>
+                    )}
+                  </GoalsList>
+                  <GoalsList>
+                    {focusSession.goals.filter(
                         (goal) => !focusSession.completedGoals.includes(goal)
-                      )
-                      .map((goal) => (
-                        <IncompleteListItem>{goal}</IncompleteListItem>
-                      ))
-                  ) : (
-                    <div style={{ color: "gray" }}>No incomplete goals</div>
-                  )}
-                </GoalsList>
+                    ).length > 0 ? (
+                        focusSession.goals
+                            .filter(
+                                (goal) => !focusSession.completedGoals.includes(goal)
+                            )
+                            .map((goal) => (
+                                <IncompleteListItem>{goal}</IncompleteListItem>
+                            ))
+                    ) : (
+                        <div style={{ color: "gray" }}>No incomplete goals</div>
+                    )}
+                  </GoalsList>
+                </GoalsDiv>
+                {focusSession.comments ? <div style={{textAlign: "left"}}> Comments: {focusSession.comments}</div> : null}
               </AccordionDetails>
             </Accordion>
           ))}
