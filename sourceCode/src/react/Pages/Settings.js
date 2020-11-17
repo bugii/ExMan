@@ -199,12 +199,13 @@ function Settings(props) {
           </div>
         </div>
       </Settingsbox>
-      <Settingsbox>
-        <h4> Enable teams calls during focus sessions</h4>
-        <TeamsSwitch state={callsEnabled} />
-      </Settingsbox>
     </SettingsDiv>
   );
 }
+
+//<Settingsbox>
+//  <h4> Enable teams calls during focus sessions</h4>
+//  <TeamsSwitch state={callsEnabled} />
+//</Settingsbox>;
 
 export default Settings;
