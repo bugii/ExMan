@@ -26,7 +26,7 @@ export default function SwitchesSize(props) {
         ></FormControlLabel>
       );
     } else if (service.name === "slack") {
-      console.log(service.customName);
+      //console.log(service.customName);
       return (
         <FormControlLabel
           control={
