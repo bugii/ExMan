@@ -41,6 +41,14 @@ function init() {
       teamsCallFocusAbility: false,
       minimumGoalsPerDay: 5,
     }).write();
+  } else {
+    // settings exist, but some fields are missing. Required for backwards compatibiltiy
+    if (!db.get("settings").get("teamsCallFocusAbility").value()) {
+      db.get("settings").assign({ teamsCallFocusAbility: false }).write();
+    }
+    if (!db.get("settings").get("minimumGoalsPerDay").value()) {
+      db.get("settings").assign({ minimumGoalsPerDay: 5 }).write();
+    }
   }
 
   if (!db.has("appUsage").value()) {
