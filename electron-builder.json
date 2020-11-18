@@ -23,6 +23,9 @@
       "NSMicrophoneUsageDescription": "This app requires microphone access for voice chats"
     }
   },
+  "dmg": {
+    "sign": false
+  },
   "win": {},
   "linux": {
     "category": "Utility"
