@@ -8,7 +8,7 @@ ipcRenderer.on("id", (e, id) => {
 
   const interval = setInterval(() => {
     const titleEl = document.querySelector(".window-title");
-    if (titleEl && titleEl.innerHTML.includes("Google Chrome 49+")) {
+    if (titleEl && titleEl.innerHTML.includes("Google Chrome 60+")) {
       // reloading
       window.location.reload();
     } else clearInterval(interval);
