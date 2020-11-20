@@ -32,7 +32,6 @@ module.exports = class SlackService extends Service {
         unreadChats = 0;
       }
       this.customName = workspaceName;
-
       this.unreadCount = unreadChats;
       // set in db
       setUnreadChats(this.id, unreadChats);

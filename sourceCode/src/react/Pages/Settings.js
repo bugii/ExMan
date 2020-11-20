@@ -125,6 +125,7 @@ function Settings(props) {
               onChange={handleChange}
               style={{ width: "500px", height: "30px" }}
             ></input>
+            <br></br>
             <Button
               style={{ marginTop: "10px" }}
               variant="contained"
