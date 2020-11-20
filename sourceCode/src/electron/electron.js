@@ -153,6 +153,8 @@ ipcMain.on("update-frontend-sync", (e) => {
   e.returnValue = { services, currentFocusSession };
 });
 
+const webviewsRendered = [];
+
 ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
   console.log("webview rendered", id);
   const service = servicesManager.getService(id);
@@ -164,14 +166,18 @@ ipcMain.on("webview-rendered", (event, { id, webContentsId }) => {
   // Insert Css to make screensharing polyfill work
   insertWebviewCss(webContent, webContentsId);
   if (isDev) webContent.openDevTools();
-  // If a user clicks on a link, picture, etc.. open it with the default application, not inside our applicatoin
-  webContent.on("new-window", (e, url) => {
-    e.preventDefault();
-    shell.openExternal(url);
-  });
 
   service.setWebcontentsId(webContentsId);
   service.startLoop();
+
+  if (!webviewsRendered.find((el) => el === webContentsId)) {
+    // If a user clicks on a link, picture, etc.. open it with the default application, not inside our application
+    webContent.on("new-window", (e, url) => {
+      e.preventDefault();
+      shell.openExternal(url);
+    });
+    webviewsRendered.push(webContentsId);
+  }
 });
 
 async function createWindow() {
@@ -209,7 +215,6 @@ app.whenReady().then(async () => {
   setTimeout(updater, 10000);
   windowTrackerLoop();
   servicesManager.clearSessions();
-
   mainWindowUpdateLoop();
 
   // ask for permissions (mic, camera and screen capturing) on a mac
