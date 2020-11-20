@@ -40,7 +40,9 @@ export default function ServiceMessageSummaryBox(props) {
                   setActiveService={props.setActiveService}
                   name={service.name}
                   unreadCount={service.unreadCount}
-                  icon={`http://icons.duckduckgo.com/ip2/${service.url}.ico`}
+                  icon={`http://icons.duckduckgo.com/ip2/${
+                    new URL(service.url).hostname
+                  }.ico`}
                   deleteApp={props.deleteApp}
                   showBubble={false}
                 />

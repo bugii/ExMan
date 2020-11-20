@@ -69,9 +69,9 @@ function Navbar(props) {
                 unreadCount={service.unreadCount}
                 isReady={service.ready}
                 isAuthed={service.authed}
-                icon={`http://icons.duckduckgo.com/ip2/${service.url
-                  .replace("https://", "")
-                  .replace("www.", "")}.ico`}
+                icon={`http://icons.duckduckgo.com/ip2/${new URL(
+                  service.url
+                ).hostname.replace("www.", "")}.ico`}
                 deleteApp={props.deleteApp}
                 currentFocusSession={props.currentFocusSession}
                 webContentsId={service.webContentsId}
