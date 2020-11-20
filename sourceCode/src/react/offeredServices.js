@@ -33,12 +33,6 @@ export default {
     useragent:
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36",
   },
-  // skype: {
-  //   url: "https://web.skype.com/",
-  //   icon: skypeIcon,
-  //   useragent:
-  //     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36",
-  // },
   outlook: {
     url: "https://outlook.live.com/mail/",
     icon: outlookIcon,
@@ -50,5 +44,11 @@ export default {
     icon: gmailIcon,
     useragent:
       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:72.0) Gecko/20100101 Firefox/72.0",
+  },
+  outlook365: {
+    url: "https://outlook.office.com/mail",
+    icon: outlookIcon,
+    useragent:
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
   },
 };

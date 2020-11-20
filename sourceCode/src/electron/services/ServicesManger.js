@@ -15,6 +15,7 @@ const { getMainWindow, getFocus } = require("../db/memoryDb");
 const TelegramService = require("./TelegramService");
 const GmailService = require("./GmailService");
 const OutlookService = require("./OutlookService");
+const Outlook365Service = require("./Outlook365Service");
 const DefaultService = require("./DefaultService");
 
 const isMac = process.platform === "darwin";
@@ -94,6 +95,13 @@ class ServicesManager {
             this.checkIfAllAuthed.bind(this)
           );
           break;
+
+        case "outlook365":
+          s = new Outlook365Service(
+            uuid,
+            autoResponse,
+            this.checkIfAllAuthed.bind(this)
+          );
 
         default:
           break;
