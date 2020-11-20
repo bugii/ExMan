@@ -2,6 +2,7 @@ const {
   toggleAutoResponseAvailablity,
   storeNotificationInArchive,
   storeNotification,
+  getSettings,
 } = require("../db/db");
 
 const { webContents, session } = require("electron");
@@ -81,7 +82,9 @@ module.exports = class Service {
 
   focusStart() {
     console.log("starting focus in", this.name);
-    webContents.fromId(this.webContentsId).setAudioMuted(true);
+    if (getSettings().appVersion === "exman") {
+      webContents.fromId(this.webContentsId).setAudioMuted(true);
+    }
     this.setDnd();
   }
 
