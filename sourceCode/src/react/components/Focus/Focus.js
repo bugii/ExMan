@@ -8,6 +8,7 @@ import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import ListAltIcon from "@material-ui/icons/ListAlt";
 import FocusGoalsPopup from "./Popups/FocusGoalsPopup";
 import BreakFocusPopup from "./Popups/BreakFocusPopup";
+import { useHistory } from "react-router-dom";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -54,6 +55,8 @@ const IncreaseDiv = styled.div`
 `;
 
 function Focus(props) {
+  const history = useHistory();
+
   const [showFocusGoalsPopup, setShowFocusGoalsPopup] = useState(
     props.currentFocusSession.goals.length <= 0
   );
@@ -71,6 +74,15 @@ function Focus(props) {
 
   const handleIncreaseEndTimeClick = (minutes) => {
     ipcRenderer.send("focus-end-change-request", minutes);
+  };
+
+  const handleFocusChange = () => {
+    console.log(props.currentFocusSession.appVersion);
+    if (props.currentFocusSession.appVersion === "exman") {
+      setShowBreakFocusPopup(true);
+    } else {
+      history.push("/");
+    }
   };
 
   return (
@@ -134,7 +146,7 @@ function Focus(props) {
         </Tooltip>
         <Tooltip title="Break focus to see chat" arrow placement="top">
           <QuestionAnswerIcon
-            onClick={() => setShowBreakFocusPopup(true)}
+            onClick={handleFocusChange}
             style={{ color: Colors.snow, fontSize: 80, margin: "2rem" }}
           />
         </Tooltip>

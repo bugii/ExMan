@@ -129,6 +129,7 @@ function createNewFocusSession(startTime, endTime) {
     comments: null,
     scheduled: false,
     activeWindows: [],
+    appVersion: getSettings().appVersion,
   }).write();
 }
 
@@ -214,6 +215,7 @@ function moveFutureSessionToCurrent(id) {
     rating: null,
     comments: null,
     activeWindows: [],
+    appVersion: getSettings().appVersion,
   }).write();
 }
 

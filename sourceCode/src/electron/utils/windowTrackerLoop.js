@@ -2,6 +2,7 @@ const activeWin = require("active-win");
 const {
   storeActiveWindowInArchive,
   storeActiveWindowInCurrentFocus,
+  getSettings,
 } = require("../db/db");
 const {
   storeIntervallRef,
@@ -22,7 +23,7 @@ module.exports = () => {
       );
 
       if (getFocus()) {
-        if (isDistraction) {
+        if (isDistraction && getSettings().appVersion === "exman") {
           // Discourage the user from continuing on this website by showing him a notification
           if (!lastReminded || lastReminded + 10 * 60000 < currentTime) {
             getMainWindow().send("distraction-notification");
