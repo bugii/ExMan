@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import styled from "styled-components";
 import Colors from "../components/Colors";
 import Button from "@material-ui/core/Button";
@@ -114,30 +114,38 @@ function Settings(props) {
   return (
     <SettingsDiv>
       <h1>SETTINGS</h1>
-      <Settingsbox>
-        <h4>Customize Auto-response</h4>
-        <p>Set your customized auto-response message:</p>
-        <input
-          value={autoReply}
-          onChange={handleChange}
-          style={{ width: "500px", height: "30px" }}
-        ></input>
-        <div>
-          <Button
-            style={{ marginTop: "10px" }}
-            variant="contained"
-            color="primary"
-            onClick={handleAutoResponseUpdate}
-          >
-            {" save auto-response"}
-          </Button>
-        </div>
-      </Settingsbox>
-      <Settingsbox>
-        <h4>Auto-responding platforms</h4>
-        <p> Choose which communication platform should do an auto response</p>
-        <ResponseSwitch services={props.services} />
-      </Settingsbox>
+
+      {applicationVersion === "exman" ? (
+        <Fragment>
+          <Settingsbox>
+            <h4>Customize Auto-response</h4>
+            <p>Set your customized auto-response message:</p>
+            <input
+              value={autoReply}
+              onChange={handleChange}
+              style={{ width: "500px", height: "30px" }}
+            ></input>
+            <Button
+              style={{ marginTop: "10px" }}
+              variant="contained"
+              color="primary"
+              onClick={handleAutoResponseUpdate}
+            >
+              {" save auto-response"}
+            </Button>
+          </Settingsbox>
+
+          <Settingsbox>
+            <h4>Auto-responding platforms</h4>
+            <p>
+              {" "}
+              Choose which communication platform should do an auto response
+            </p>
+            <ResponseSwitch services={props.services} />
+          </Settingsbox>
+        </Fragment>
+      ) : null}
+
       <Settingsbox>
         <h4>Default focus times</h4>
         <div>
@@ -210,29 +218,29 @@ function Settings(props) {
       </Settingsbox>
       <Settingsbox>
         <h4> App Version</h4>
+        <span style={{ "padding-right": "1rem" }}>
+          Current application version (either 'exman' or 'pomodoro'):
+        </span>
+        <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+          <b>{applicationVersion}</b>
+        </div>
         <div>
-          <span style={{ "padding-right": "1rem" }}>
-            current application version (either 'exman' or 'pomodoro'):
-          </span>
-          <div>{applicationVersion}</div>
-          <div>
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password to change the application version"
-            />
-          </div>
-
-          <div>
-            <Button
-              style={{ marginTop: "10px" }}
-              variant="contained"
-              color="primary"
-              onClick={() => changeApplicationVersion(password)}
-            >
-              change application version
-            </Button>
-          </div>
+          <input
+            style={{ width: "20rem" }}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter password to change the application version"
+          />
+        </div>
+        <div>
+          <Button
+            style={{ marginTop: "10px" }}
+            variant="contained"
+            color="primary"
+            onClick={() => changeApplicationVersion(password)}
+          >
+            change application version
+          </Button>
         </div>
       </Settingsbox>
     </SettingsDiv>
