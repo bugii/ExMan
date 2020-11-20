@@ -33,6 +33,8 @@ function Settings(props) {
   const [durationGoal, setDurationGoal] = useState(null);
   const [callsEnabled, setCallsEnabled] = useState(null);
   const [goalsTarget, setGoalsTarget] = useState(null);
+  const [password, setPassword] = useState("");
+  const [applicationVersion, setApplicationVersion] = useState(null);
 
   useEffect(() => {
     ipcRenderer.on("get-settings", (e, settings) => {
@@ -43,6 +45,7 @@ function Settings(props) {
       setDurationGoal(settings.focusGoalDuration);
       setCallsEnabled(settings.teamsCallFocusAbility);
       setGoalsTarget(settings.minimumGoalsPerDay);
+      setApplicationVersion(settings.appVersion);
     });
     ipcRenderer.send("get-settings");
   }, []);
@@ -98,6 +101,12 @@ function Settings(props) {
   const handleGoalTargetUpdate = () => {
     // send ipc message to main process to change value in db
     ipcRenderer.send("updateGoalTarget", parseInt(goalsTarget));
+  };
+
+  const changeApplicationVersion = (password) => {
+    ipcRenderer.send("application-update-request", password);
+    // Update frontend with new settings
+    ipcRenderer.send("get-settings");
   };
 
   //console.log(props);
@@ -195,6 +204,33 @@ function Settings(props) {
               onClick={() => handleGoalTargetUpdate()}
             >
               {" change goal target"}
+            </Button>
+          </div>
+        </div>
+      </Settingsbox>
+      <Settingsbox>
+        <h4> App Version</h4>
+        <div>
+          <span style={{ "padding-right": "1rem" }}>
+            current application version (either 'exman' or 'pomodoro'):
+          </span>
+          <div>{applicationVersion}</div>
+          <div>
+            <input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password to change the application version"
+            />
+          </div>
+
+          <div>
+            <Button
+              style={{ marginTop: "10px" }}
+              variant="contained"
+              color="primary"
+              onClick={() => changeApplicationVersion(password)}
+            >
+              change application version
             </Button>
           </div>
         </div>

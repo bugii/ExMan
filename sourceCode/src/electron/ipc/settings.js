@@ -4,6 +4,7 @@ const {
   setGoalFocusDuration,
   updateTeamsCall,
   setGoalperDay,
+  changeAppVersion,
 } = require("../db/db");
 
 ipcMain.on("get-settings", (e) => {
@@ -20,4 +21,9 @@ ipcMain.on("updateTeamsCall", (e, state) => {
 
 ipcMain.on("updateGoalTarget", (e, goals) => {
   setGoalperDay(goals);
+});
+
+ipcMain.on("application-update-request", (e, password) => {
+  console.log("application version change request with pw", password);
+  changeAppVersion(password);
 });

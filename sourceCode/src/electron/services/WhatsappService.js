@@ -38,6 +38,7 @@ module.exports = class WhatsappService extends Service {
           .fromId(this.webContentsId)
           .executeJavaScript("window.isAuth()");
       } catch (error) {
+        console.log(error);
         isAuth = false;
       }
 

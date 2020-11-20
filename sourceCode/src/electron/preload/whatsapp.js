@@ -59,7 +59,7 @@ window.getUnreadChats = () => {
 };
 
 window.isAuth = () => {
-  const el = document.querySelector("._1BjNO");
+  const el = document.querySelector("._3t3gU");
 
   if (el) {
     return true;

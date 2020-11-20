@@ -40,6 +40,7 @@ function init() {
       focusGoalDuration: 120,
       teamsCallFocusAbility: false,
       minimumGoalsPerDay: 5,
+      appVersion: Math.random() < 0.5 ? "pomodoro" : "exman",
     }).write();
   } else {
     // settings exist, but some fields are missing. Required for backwards compatibiltiy
@@ -48,6 +49,14 @@ function init() {
     }
     if (!db.get("settings").get("minimumGoalsPerDay").value()) {
       db.get("settings").assign({ minimumGoalsPerDay: 5 }).write();
+    }
+    if (!db.get("settings").get("appVersion").value()) {
+      const randomNr = Math.random();
+      if (randomNr < 0.5) {
+        db.get("settings").assign({ appVersion: "pomodoro" }).write();
+      } else {
+        db.get("settings").assign({ appVersion: "exman" }).write();
+      }
     }
   }
 
@@ -475,6 +484,30 @@ function updateWorkspaceName(id, customName) {
   db.get("services").find({ id }).assign({ customName: customName }).write();
 }
 
+const hashCode = (s) =>
+  s.split("").reduce((a, b) => ((a << 5) - a + b.charCodeAt(0)) | 0, 0);
+
+function changeAppVersion(pw) {
+  const hashedPw = hashCode(pw);
+
+  if (hashedPw === -2030221294) {
+    const settings = getSettings();
+
+    switch (settings.appVersion) {
+      case "pomodoro":
+        db.get("settings").assign({ appVersion: "exman" }).write();
+        break;
+
+      case "exman":
+        db.get("settings").assign({ appVersion: "pomodoro" }).write();
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+
 module.exports = {
   init,
   getDb,
@@ -528,4 +561,5 @@ module.exports = {
   updateTeamsCall,
   updateWorkspaceName,
   setGoalperDay,
+  changeAppVersion,
 };
