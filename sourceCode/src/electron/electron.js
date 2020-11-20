@@ -50,7 +50,7 @@ const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
 const handleWindowClose = require("./utils/handleWindowClose");
 const updater = require("./utils/updater");
 
-const createTray = require("./utils/createTray");
+const createOrUpdateTray = require("./utils/createOrUpdateTray");
 const updateFrontend = require("./utils/updateFrontend");
 const reminderLoop = require("./utils/reminderLoop");
 const windowTrackerLoop = require("./utils/windowTrackerLoop");
@@ -210,7 +210,7 @@ async function createWindow() {
 
 app.whenReady().then(async () => {
   await createWindow();
-  createTray();
+  createOrUpdateTray();
   updateFrontend();
   setTimeout(updater, 10000);
   windowTrackerLoop();
