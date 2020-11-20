@@ -6,7 +6,7 @@ module.exports = async (type) => {
   let timeMax = new Date(timeMin);
   timeMax.setDate(timeMax.getDate() + 1);
 
-  console.log(timeMin, timeMax);
+  console.log("UTC time string", timeMin.toISOString(), timeMax.toISOString());
 
   const tokens = getTokens();
 
@@ -14,7 +14,7 @@ module.exports = async (type) => {
     case "google":
       const configGoogle = {
         method: "get",
-        url: `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMax=${timeMax.toISOString()}&timeMin=${timeMin.toISOString()}&q=Focus&singleEvents=true`,
+        url: `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMax=${timeMax.toISOString()}&timeMin=${timeMin.toISOString()}&q=Focus&singleEvents=true&timeZone=UTC`,
         headers: {
           Authorization: `Bearer ${tokens.google.access_token}`,
         },
@@ -26,9 +26,10 @@ module.exports = async (type) => {
           return [];
         }
         let items = responseGoogle.data.items;
+        console.log(items);
         items = items.map((event) => ({
-          start: new Date(event.start.dateTime).getTime(),
-          end: new Date(event.end.dateTime).getTime(),
+          start: Date.parse(event.start.dateTime),
+          end: Date.parse(event.end.dateTime),
           id: event.id,
         }));
         return items;
@@ -54,8 +55,8 @@ module.exports = async (type) => {
         }
         let items = responseMS.data.value;
         items = items.map((event) => ({
-          start: new Date(event.start.dateTime).getTime(),
-          end: new Date(event.end.dateTime).getTime(),
+          start: Date.parse(event.start.dateTime + "Z"),
+          end: Date.parse(event.end.dateTime + "Z"),
           id: event.id,
         }));
         return items;
