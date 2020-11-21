@@ -136,7 +136,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    ipcRenderer.send("route-changed", location);
+    ipcRenderer.send("route-changed", {
+      location,
+      isFocus: currentFocusSession,
+    });
     setIsOnService(location.pathname.includes("services"));
   }, [location]);
 

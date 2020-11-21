@@ -21,8 +21,6 @@ const calendarLoop = async () => {
   } else if (tokens.microsoft) {
     const msCal = await getCalendarFocus24h("microsoft");
     checkFocusEvents(msCal);
-  } else {
-    console.log("no cal registered");
   }
 };
 

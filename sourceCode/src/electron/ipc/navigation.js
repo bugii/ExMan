@@ -9,12 +9,12 @@ const { getFocus } = require("../db/memoryDb");
 
 let lastId = null;
 
-ipcMain.on("route-changed", (e, location) => {
+ipcMain.on("route-changed", (e, { location, isFocus }) => {
   if (location.pathname.includes("/services")) {
     // navigated to service route
     const splitArray = location.pathname.split("/");
     const id = splitArray[splitArray.length - 1];
-    if (getFocus()) {
+    if (isFocus) {
       storeServiceInteractionStartInCurrentFocus(id);
       if (lastId !== null) {
         storeServiceInteractionEndInCurrentFocus(lastId);
@@ -28,7 +28,7 @@ ipcMain.on("route-changed", (e, location) => {
     lastId = id;
   } else {
     // navigated to non-service page
-    if (getFocus()) {
+    if (isFocus) {
       if (lastId !== null) {
         storeServiceInteractionEndInCurrentFocus(lastId);
       }

@@ -26,7 +26,6 @@ module.exports = async (type) => {
           return [];
         }
         let items = responseGoogle.data.items;
-        console.log(items);
         items = items.map((event) => ({
           start: Date.parse(event.start.dateTime),
           end: Date.parse(event.end.dateTime),
