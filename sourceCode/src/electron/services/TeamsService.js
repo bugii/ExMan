@@ -21,10 +21,14 @@ module.exports = class TeamsService extends Service {
 
     this.unreadLoopRef = setInterval(async () => {
       let unreadChats;
+      let workspaceName;
       try {
         unreadChats = await webContents
           .fromId(this.webContentsId)
           .executeJavaScript("window.getUnreadChats()");
+        workspaceName = await webContents
+          .fromId(this.webContentsId)
+          .executeJavaScript("window.getWorkspaceName()");
         // function check for call from preload
         this.checkForCall = await webContents
           .fromId(this.webContentsId)
@@ -33,6 +37,8 @@ module.exports = class TeamsService extends Service {
         unreadChats = 0;
       }
 
+      this.customName = workspaceName;
+      //console.log("display: ", this.customName);
       this.unreadCount = unreadChats;
       // set in db
       setUnreadChats(this.id, unreadChats);
@@ -44,6 +50,12 @@ module.exports = class TeamsService extends Service {
 
     this.authLoopRef = setInterval(async () => {
       try {
+        //if (this.username === null) {
+        //  this.username = await webContents
+        //    .fromId(this.webContentsId)
+        //    .executeJavaScript("window.getUsername()");
+        //  console.log("teams username", this.username);
+        //}
         const tokens = await this.getToken();
         const teamsResponse = {
           method: "get",

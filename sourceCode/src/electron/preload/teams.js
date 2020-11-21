@@ -63,6 +63,27 @@ class newNotification extends window.Notification {
 
 window.Notification = newNotification;
 
+function getWorkspaceName() {
+  // scrape workspace name from slack website
+  var name = document.querySelector(".user-picture").getAttribute("upn");
+  //console.log("workspace name:", name);
+  return name;
+}
+
+window.getWorkspaceName = getWorkspaceName;
+
+function getUsername() {
+  let username;
+  document.getElementById("personDropdown").click();
+  setTimeout(() => {
+    username = document.querySelector(".profile-name-text").innerText;
+    console.log(username);
+    return username;
+  }, 5000);
+}
+
+window.getUsername = getUsername;
+
 // Polyfill taken from https://github.com/electron/electron/issues/16513
 window.navigator.mediaDevices.getDisplayMedia = () => {
   return new Promise(async (resolve, reject) => {
