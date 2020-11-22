@@ -22,7 +22,7 @@ export default function SwitchesSize(props) {
     ipcRenderer.send("updateTeamsCall", state);
   };
 
-  console.log("teams call: ", teamsCall);
+  //console.log("teams call: ", teamsCall);
 
   return (
     <SettingContainer>

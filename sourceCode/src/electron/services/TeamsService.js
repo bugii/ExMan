@@ -22,10 +22,11 @@ module.exports = class TeamsService extends (
   unReadLoop() {
     console.log("unread loop start", this.name);
 
-    let teamscall = getTeamsCall();
     this.unreadLoopRef = setInterval(async () => {
       let unreadChats;
       let workspaceName;
+      let teamscall = getTeamsCall();
+      //console.log("test:", teamscall);
       try {
         unreadChats = await webContents
           .fromId(this.webContentsId)
