@@ -482,6 +482,10 @@ function updateTeamsCall(newResponse) {
   db.get("settings").assign({ teamsCallFocusAbility: !newResponse }).write();
 }
 
+function getTeamsCall() {
+  return db.get("settings").get("teamsCallFocusAbility").value();
+}
+
 function updateWorkspaceName(id, customName) {
   db.get("services").find({ id }).assign({ customName: customName }).write();
 }
@@ -561,6 +565,7 @@ module.exports = {
   getLastAppStartTime,
   deleteTokens,
   updateTeamsCall,
+  getTeamsCall,
   updateWorkspaceName,
   setGoalperDay,
   changeAppVersion,

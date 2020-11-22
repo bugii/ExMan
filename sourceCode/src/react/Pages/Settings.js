@@ -31,7 +31,6 @@ function Settings(props) {
   const [mediumFocus, setMediumFocus] = useState(null);
   const [longFocus, setLongFocus] = useState(null);
   const [durationGoal, setDurationGoal] = useState(null);
-  const [callsEnabled, setCallsEnabled] = useState(null);
   const [goalsTarget, setGoalsTarget] = useState(null);
   const [password, setPassword] = useState("");
   const [applicationVersion, setApplicationVersion] = useState(null);
@@ -43,7 +42,6 @@ function Settings(props) {
       setLongFocus(settings.longFocusDuration);
       setAutoReply(settings.autoReply);
       setDurationGoal(settings.focusGoalDuration);
-      setCallsEnabled(settings.teamsCallFocusAbility);
       setGoalsTarget(settings.minimumGoalsPerDay);
       setApplicationVersion(settings.appVersion);
     });
@@ -109,12 +107,9 @@ function Settings(props) {
     ipcRenderer.send("get-settings");
   };
 
-  //console.log(props);
-
   return (
     <SettingsDiv>
       <h1>SETTINGS</h1>
-
       {applicationVersion === "exman" ? (
         <Fragment>
           <Settingsbox>
@@ -139,16 +134,14 @@ function Settings(props) {
           <Settingsbox>
             <h4>Auto-responding platforms</h4>
             <p>
-              {" "}
               Choose which communication platform should do an auto response
             </p>
             <ResponseSwitch services={props.services} />
           </Settingsbox>
         </Fragment>
       ) : null}
-
       <Settingsbox>
-        <h4>Default focus times</h4>
+        <h4>Default focus times (in minutes)</h4>
         <div>
           <span style={{ "padding-right": "1rem" }}>Short focus</span>
           <input
@@ -176,7 +169,7 @@ function Settings(props) {
         <p>How long do you want to focus per day at minimum</p>
         <div>
           <span style={{ "padding-right": "1rem" }}>
-            current focus duration goal
+            current focus duration goal (in minutes)
           </span>
           <input
             value={durationGoal}
@@ -218,6 +211,10 @@ function Settings(props) {
         </div>
       </Settingsbox>
       <Settingsbox>
+        <h4> Enable teams calls during focus sessions</h4>
+        <TeamsSwitch />
+      </Settingsbox>
+      <Settingsbox>
         <h4> App Version</h4>
         <span style={{ "padding-right": "1rem" }}>
           Current application version (either 'exman' or 'pomodoro'):
@@ -247,10 +244,5 @@ function Settings(props) {
     </SettingsDiv>
   );
 }
-
-//<Settingsbox>
-//  <h4> Enable teams calls during focus sessions</h4>
-//  <TeamsSwitch state={callsEnabled} />
-//</Settingsbox>;
 
 export default Settings;

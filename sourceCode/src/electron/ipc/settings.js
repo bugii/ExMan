@@ -16,6 +16,7 @@ ipcMain.on("updateFocusDurationGoal", (e, duration) => {
 });
 
 ipcMain.on("updateTeamsCall", (e, state) => {
+  // db function updateTeamsCall changes boolean of state
   updateTeamsCall(state);
 });
 

@@ -72,14 +72,25 @@ function getWorkspaceName() {
 
 window.getWorkspaceName = getWorkspaceName;
 
+function getRegionName() {
+  var oid = localStorage.getItem("ts.latestOid");
+  var requestID = `ts.${oid}.auth.gtm.table`;
+  var fullrequest = JSON.parse(localStorage.getItem(requestID));
+  var regionID = fullrequest["regionName"];
+  return regionID;
+}
+
+window.getRegionName = getRegionName;
+
 function getUsername() {
-  let username;
-  document.getElementById("personDropdown").click();
-  setTimeout(() => {
-    username = document.querySelector(".profile-name-text").innerText;
-    console.log(username);
-    return username;
-  }, 5000);
+  // scrape workspace name from slack website
+  var name = document.querySelector(".user-picture").getAttribute("alt");
+  var split = name
+    .slice(0, name.length - 1)
+    .split(" ")
+    .slice(2);
+  var username = split[0] + " " + split[1];
+  return username;
 }
 
 window.getUsername = getUsername;

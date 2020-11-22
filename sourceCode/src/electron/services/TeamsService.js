@@ -2,11 +2,13 @@ const { webContents } = require("electron");
 const { getDb, storeNotificationInArchive } = require("../db/db");
 const axios = require("axios");
 const Service = require("../services/Service");
-const { setUnreadChats } = require("../db/db");
+const { setUnreadChats, getTeamsCall } = require("../db/db");
 const fillAutoresponseTemplate = require("../utils/fillAutoresponseTemplate");
 const { setcallincoming } = require("../db/memoryDb");
 
-module.exports = class TeamsService extends Service {
+module.exports = class TeamsService extends (
+  Service
+) {
   constructor(id, autoResponse, checkIfAllAuthed) {
     // clear session storage
     console.log("creating teams service");
@@ -14,11 +16,13 @@ module.exports = class TeamsService extends Service {
     this.syncToken = null;
     this.username = null;
     this.checkForCall = null;
+    this.regionID = null;
   }
 
   unReadLoop() {
     console.log("unread loop start", this.name);
 
+    let teamscall = getTeamsCall();
     this.unreadLoopRef = setInterval(async () => {
       let unreadChats;
       let workspaceName;
@@ -30,9 +34,11 @@ module.exports = class TeamsService extends Service {
           .fromId(this.webContentsId)
           .executeJavaScript("window.getWorkspaceName()");
         // function check for call from preload
-        this.checkForCall = await webContents
-          .fromId(this.webContentsId)
-          .executeJavaScript(`window.checkForCall(${this.checkForCall})`);
+        if (teamscall) {
+          this.checkForCall = await webContents
+            .fromId(this.webContentsId)
+            .executeJavaScript(`window.checkForCall(${this.checkForCall})`);
+        }
       } catch (error) {
         unreadChats = 0;
       }
@@ -57,9 +63,10 @@ module.exports = class TeamsService extends Service {
         //  console.log("teams username", this.username);
         //}
         const tokens = await this.getToken();
+        const regionID = await this.getRegionName();
         const teamsResponse = {
           method: "get",
-          url: "https://emea.ng.msg.teams.microsoft.com/v1/users/ME/properties",
+          url: `https://${regionID}.ng.msg.teams.microsoft.com/v1/users/ME/properties`,
           headers: {
             Authentication: `skypetoken=${tokens[1]}`,
           },
@@ -134,13 +141,14 @@ module.exports = class TeamsService extends Service {
 
   async getMessages() {
     const tokens = await this.getToken();
+    const regionID = await this.getRegionName();
 
     // No synctoken provided => first request of focus session
     if (!this.syncToken) {
       console.log("first message loop, teams");
       try {
         const res = await axios.get(
-          "https://emea.ng.msg.teams.microsoft.com/v1/users/ME/conversations/",
+          `https://${regionID}.ng.msg.teams.microsoft.com/v1/users/ME/conversations/`,
           {
             headers: {
               Authentication: `skypetoken=${tokens[1]}`,
@@ -177,6 +185,7 @@ module.exports = class TeamsService extends Service {
         this.syncToken = new_res.data["_metadata"]["syncState"];
 
         new_res.data.conversations.forEach(async (channel) => {
+          //console.log(channel);
           const single_channel = channel.id;
           const content = channel.lastMessage.content;
           const username = channel.lastMessage.imdisplayname;
@@ -226,9 +235,10 @@ module.exports = class TeamsService extends Service {
 
   async sendMessage(channel) {
     const tokens = await this.getToken();
+    const regionID = await this.getRegionName();
 
     console.log("Send auto-response to:", channel);
-    const url = `https://emea.ng.msg.teams.microsoft.com/v1/users/ME/conversations/${channel}/messages`;
+    const url = `https://${regionID}.ng.msg.teams.microsoft.com/v1/users/ME/conversations/${channel}/messages`;
     try {
       await axios.post(
         url,
@@ -249,7 +259,7 @@ module.exports = class TeamsService extends Service {
   }
 
   async getToken() {
-    // execute getToken funtion in the slack renderer to get token from localStorage
+    // execute getToken function in the teams renderer to get token from localStorage
     let tokens;
     try {
       tokens = await webContents
@@ -260,6 +270,20 @@ module.exports = class TeamsService extends Service {
     }
 
     return tokens;
+  }
+
+  async getRegionName() {
+    // execute getRegionName function in the teams renderer to get regionID from localStorage
+    let regionName;
+    try {
+      regionName = await webContents
+        .fromId(this.webContentsId)
+        .executeJavaScript("window.getRegionName()");
+    } catch (error) {
+      regionName = [];
+    }
+
+    return regionName;
   }
 
   isReplied(Replied, channel) {
