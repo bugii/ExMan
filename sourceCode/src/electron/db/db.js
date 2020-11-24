@@ -247,11 +247,18 @@ function storeBreakFocusClicks(breakFocusEnd) {
   if (!breakFocusEnd) {
     db.get("currentFocusSession").get("brokenFocus").push([Date.now()]).write();
   } else {
-    db.get("currentFocusSession")
+    const brokenFocus = db
+      .get("currentFocusSession")
       .get("brokenFocus")
       .last()
-      .push(Date.now())
-      .write();
+      .value();
+    if (brokenFocus && brokenFocus.length === 1) {
+      db.get("currentFocusSession")
+        .get("brokenFocus")
+        .last()
+        .push(Date.now())
+        .write();
+    }
   }
 }
 
@@ -514,6 +521,75 @@ function changeAppVersion(pw) {
   }
 }
 
+function closeAnyOpenInteractionArray() {
+  const currentFocusSession = getCurrentFocusSession();
+  if (currentFocusSession) {
+    currentFocusSession.services.forEach((service) => {
+      const lastInteraction =
+        service.interactions[service.interactions.length - 1];
+      if (lastInteraction && lastInteraction.length === 1) {
+        lastInteraction.push(new Date().getTime());
+      }
+    });
+  } else {
+    const outOfFocusInteractions = db.get("outOfFocusInteractions").value();
+
+    for (const service in outOfFocusInteractions) {
+      if (outOfFocusInteractions.hasOwnProperty(service)) {
+        const interactions = outOfFocusInteractions[service].interactions;
+        const lastInteraction = interactions[interactions.length - 1];
+        if (lastInteraction.length === 1) {
+          lastInteraction.push(new Date().getTime());
+        }
+      }
+    }
+  }
+
+  db.write();
+}
+
+function checkForInteractionCloseByServiceId(id) {
+  const currentFocusSession = getCurrentFocusSession();
+  if (currentFocusSession) {
+    const service = currentFocusSession.services.find(
+      (service) => service.id === id
+    );
+    const lastInteraction =
+      service.interactions[service.interactions.length - 1];
+    if (lastInteraction && lastInteraction.length === 1) {
+      lastInteraction.push(new Date().getTime());
+    }
+  }
+
+  const outOfFocusInteractions = db
+    .get("outOfFocusInteractions")
+    .get(id)
+    .value();
+  if (outOfFocusInteractions) {
+    const lastInteraction =
+      outOfFocusInteractions.interactions[
+        outOfFocusInteractions.interactions.length - 1
+      ];
+    if (lastInteraction.length === 1) {
+      lastInteraction.push(new Date().getTime());
+    }
+  }
+
+  const lastPastFocusSession = db.get("pastFocusSessions").last().value();
+  if (lastPastFocusSession) {
+    const service = lastPastFocusSession.services.find(
+      (service) => service.id === id
+    );
+    const lastInteraction =
+      service.interactions[service.interactions.length - 1];
+    if (lastInteraction && lastInteraction.length === 1) {
+      lastInteraction.push(new Date().getTime());
+    }
+  }
+
+  db.write();
+}
+
 module.exports = {
   init,
   getDb,
@@ -569,4 +645,6 @@ module.exports = {
   updateWorkspaceName,
   setGoalperDay,
   changeAppVersion,
+  closeAnyOpenInteractionArray,
+  checkForInteractionCloseByServiceId,
 };

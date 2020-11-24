@@ -72,6 +72,8 @@ function App() {
     ipcRenderer.send("update-frontend");
 
     ipcRenderer.on("focus-start-successful", (e, { startTime, endTime }) => {
+      // update tray after successful focus start
+      ipcRenderer.send("update-tray");
       const { services, currentFocusSession } = ipcRenderer.sendSync(
         "update-frontend-sync"
       );
@@ -138,7 +140,6 @@ function App() {
   useEffect(() => {
     ipcRenderer.send("route-changed", {
       location,
-      isFocus: currentFocusSession,
     });
     setIsOnService(location.pathname.includes("services"));
   }, [location]);

@@ -25,7 +25,6 @@ module.exports = createOrUpdateTray = () => {
         click: () => {
           const start = new Date().getTime();
           focusStart(start);
-          createOrUpdateTray();
         },
       },
       {
@@ -34,7 +33,6 @@ module.exports = createOrUpdateTray = () => {
           const start = new Date().getTime();
           const settings = getSettings();
           focusStart(start, start + settings.shortFocusDuration * 60 * 1000);
-          createOrUpdateTray();
         },
       },
       {
@@ -43,7 +41,6 @@ module.exports = createOrUpdateTray = () => {
           const start = new Date().getTime();
           const settings = getSettings();
           focusStart(start, start + settings.mediumFocusDuration * 60 * 1000);
-          createOrUpdateTray();
         },
       },
       {
@@ -52,7 +49,6 @@ module.exports = createOrUpdateTray = () => {
           const start = new Date().getTime();
           const settings = getSettings();
           focusStart(start, start + settings.longFocusDuration * 60 * 1000);
-          createOrUpdateTray();
         },
       },
       { type: "separator" },
@@ -73,12 +69,16 @@ module.exports = createOrUpdateTray = () => {
         label: "End focus",
         click: () => {
           focusEnd();
-          createOrUpdateTray();
         },
       },
       { type: "separator" },
       { role: "hide" },
-      { role: "unhide" },
+      {
+        label: "Open exman",
+        click: () => {
+          getMainWindow().show();
+        },
+      },
       { role: "front" },
       { type: "separator" },
       { role: "quit" },

@@ -6,7 +6,7 @@ module.exports = async (type) => {
   let timeMax = new Date(timeMin);
   timeMax.setDate(timeMax.getDate() + 1);
 
-  console.log("UTC time string", timeMin.toISOString(), timeMax.toISOString());
+  // console.log("UTC time string", timeMin.toISOString(), timeMax.toISOString());
 
   const tokens = getTokens();
 

@@ -2,7 +2,7 @@ const { ipcMain } = require("electron");
 const { getMainWindow, getFocus } = require("../db/memoryDb");
 const openService = require("../utils/openService");
 const servicesManager = require("../services/ServicesManger");
-const { getSettings } = require("../db/db");
+const { getSettings, storeBreakFocusClicks } = require("../db/db");
 
 ipcMain.on("notification", (event, { id, title, body }) => {
   if (!getFocus()) {

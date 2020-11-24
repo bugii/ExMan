@@ -22,6 +22,7 @@ require("./ipc/goals");
 require("./ipc/dashboard");
 require("./ipc/auth");
 require("./ipc/export");
+require("./ipc/tray");
 
 require("../express/express");
 
@@ -38,6 +39,9 @@ const {
   init: db_init,
   getCurrentFocusSession,
   storeAppStart,
+  storeAppEnd,
+  closeAnyOpenInteractionArray,
+  storeBreakFocusClicks,
 } = require("./db/db");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 
@@ -51,7 +55,6 @@ const { showAboutWindow } = require("electron-util");
 const servicesManager = require("./services/ServicesManger");
 const eventEmitter = require("./utils/eventEmitter");
 const allServicesAuthedHandler = require("./utils/allServicesAuthedHandler");
-const handleWindowClose = require("./utils/handleWindowClose");
 const updater = require("./utils/updater");
 
 const createOrUpdateTray = require("./utils/createOrUpdateTray");
@@ -133,7 +136,6 @@ mainMenu = Menu.buildFromTemplate([
       },
     ],
   },
-  { role: "fileMenu" },
   {
     label: "Edit",
     role: "editMenu",
@@ -296,4 +298,8 @@ function mainWindowQuit() {
     service.endMessagesLoop();
     service.endUnreadLoop();
   });
+
+  storeAppEnd();
+  closeAnyOpenInteractionArray();
+  storeBreakFocusClicks(true);
 }
