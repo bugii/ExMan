@@ -100,42 +100,22 @@ module.exports = class TeamsService extends (
 
   async setDnd() {
     const tokens = await this.getToken();
-    let teamscall = getTeamsCall();
 
-    if (teamscall) {
-      try {
-        await axios.put(
-          "https://presence.teams.microsoft.com/v1/me/forceavailability/",
-          {
-            availability: "Busy",
+    try {
+      await axios.put(
+        "https://presence.teams.microsoft.com/v1/me/forceavailability/",
+        {
+          availability: "Busy",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${tokens[0]}`,
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              Authorization: `Bearer ${tokens[0]}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      try {
-        await axios.put(
-          "https://presence.teams.microsoft.com/v1/me/forceavailability/",
-          {
-            availability: "DoNotDisturb",
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${tokens[0]}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-      } catch (error) {
-        console.log(error);
-      }
+        }
+      );
+    } catch (error) {
+      console.log(error);
     }
   }
 

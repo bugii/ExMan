@@ -79,7 +79,8 @@ function BarChart(props) {
     //setEndTime(focusEnd);
     setlabel(
       bins.map(function (d) {
-        d = new Date(d).toLocaleTimeString();
+        const options = { hour12: false, hour: "2-digit", minute: "2-digit" };
+        d = new Date(d).toLocaleTimeString("en-GB", options);
         return d;
       })
     );

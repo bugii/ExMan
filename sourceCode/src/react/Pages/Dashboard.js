@@ -24,9 +24,13 @@ export const LoadingDiv = styled.div`
 
 export const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: 30% 30% 30%;
+  grid-template-columns: 32% 32% 32%;
   grid-gap: 20px;
-  padding: 10px;
+  padding: 5px;
+  @media only screen and (max-width: 1028px) {
+    grid-gap: 10px;
+    grid-template: 45% 45%;
+  }
 `;
 
 export const GridItem = styled.div`
