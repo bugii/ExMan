@@ -40,7 +40,7 @@ const isPinnedIcon = (element) => element.classList.contains("_1EFSv");
 window.getUnreadChats = () => {
   // Taken from Franz
   const elements = document.querySelectorAll(
-    ".CxUIE, .unread, ._0LqQ, .m61XR .ZKn2B "
+    ".CxUIE, .unread, ._0LqQ, .m61XR .ZKn2B, .VOr2j"
   );
 
   let count = 0;
