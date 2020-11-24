@@ -32,6 +32,7 @@ function focusStart(startTime, endTime = null, id = null) {
   });
 
   setFocus(true);
+  getMainWindow().show();
 
   // schedule automatic focus end if endTime is specified
   if (endTime) {

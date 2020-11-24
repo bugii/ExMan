@@ -3,7 +3,7 @@ const { Tray, nativeImage, Menu } = require("electron");
 const path = require("path");
 const focusStart = require("./focusStart");
 const focusEnd = require("./focusEnd");
-const { getFocus } = require("../db/memoryDb");
+const { getFocus, getMainWindow } = require("../db/memoryDb");
 
 let tray = null;
 
@@ -57,7 +57,12 @@ module.exports = createOrUpdateTray = () => {
       },
       { type: "separator" },
       { role: "hide" },
-      { role: "unhide" },
+      {
+        label: "Open exman",
+        click: () => {
+          getMainWindow().show();
+        },
+      },
       { role: "front" },
       { type: "separator" },
       { role: "quit" },

@@ -41,7 +41,11 @@ const {
 } = require("./db/db");
 const insertWebviewCss = require("./utils/insertWebviewCss");
 
-const { storeMainWindow, storeTimeoutRef } = require("./db/memoryDb");
+const {
+  storeMainWindow,
+  storeTimeoutRef,
+  getMainWindow,
+} = require("./db/memoryDb");
 
 const { showAboutWindow } = require("electron-util");
 const servicesManager = require("./services/ServicesManger");
@@ -61,6 +65,10 @@ const isMac = process.platform === "darwin";
 console.log = log.log;
 
 console.log("starting app");
+// Automatically start app on login
+app.setLoginItemSettings({
+  openAtLogin: true,
+});
 // Initialize db
 db_init();
 storeAppStart();
@@ -208,14 +216,35 @@ async function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 
+let isQuiting;
+
+app.on("before-quit", (e) => {
+  console.log("before quit");
+  isQuiting = true;
+});
+
+app.on("quit", function () {
+  console.log(
+    "quitting app, deleting all the timeouts and intervalls in memory"
+  );
+  mainWindowQuit();
+});
+
 app.whenReady().then(async () => {
   await createWindow();
   createOrUpdateTray();
   updateFrontend();
+  windowLoopStart();
   setTimeout(updater, 10000);
-  windowTrackerLoop();
   servicesManager.clearSessions();
-  mainWindowUpdateLoop();
+
+  getMainWindow().on("close", (e) => {
+    if (!isQuiting) {
+      e.preventDefault();
+      getMainWindow().hide();
+      console.log("minimizing app to system tray");
+    }
+  });
 
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {
@@ -232,31 +261,20 @@ app.whenReady().then(async () => {
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+      return;
+    }
+    getMainWindow().show();
   });
-});
-
-app.on("window-all-closed", function () {
-  mainWindowClose();
-  if (!isMac) {
-    app.quit();
-  }
-});
-
-app.on("quit", function () {
-  console.log(
-    "quitting app, deleting all the timeouts and intervalls in memory"
-  );
-  handleWindowClose();
 });
 
 let reminderRef;
 let updateFrontendRef;
 
-function mainWindowUpdateLoop() {
+function windowLoopStart() {
   reminderRef = reminderLoop();
 
-  //Update renderer loop
   console.log("update loop start");
   updateFrontendRef = setInterval(async () => {
     try {
@@ -264,9 +282,11 @@ function mainWindowUpdateLoop() {
       servicesManager.updateUnreadMessages();
     } catch (error) {}
   }, 1000);
+
+  windowTrackerLoop();
 }
 
-function mainWindowClose() {
+function mainWindowQuit() {
   clearInterval(reminderRef);
   clearInterval(updateFrontendRef);
 
