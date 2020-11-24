@@ -5,7 +5,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import GoalsChart from "../components/Summary/OverviewCharts/GoalsChart";
 import AnalyseChart from "../components/Summary/OverviewCharts/AnalyseChart";
 import RatingChart from "../components/Summary/OverviewCharts/RatingChart";
-import UsageChart from "../components/Summary/OverviewCharts/UsageChart";
+//import UsageChart from "../components/Summary/OverviewCharts/UsageChart";
 import StackedBarChart from "../components/Summary/OverviewCharts/StackedBarChart";
 
 const electron = window.require("electron");
@@ -24,14 +24,14 @@ export const LoadingDiv = styled.div`
 
 export const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 30% 30% 30%;
   grid-gap: 20px;
   padding: 10px;
 `;
 
 export const GridItem = styled.div`
   text-align: center;
-  padding: 20px 10px;
+  padding: 15px 10px;
 `;
 
 function Dashboard(props) {
@@ -66,9 +66,6 @@ function Dashboard(props) {
           </GridItem>
           <GridItem>
             <AnalyseChart data={pastFocusSessions} />
-          </GridItem>
-          <GridItem>
-            <UsageChart data={pastFocusSessions} />
           </GridItem>
           <GridItem>
             <StackedBarChart data={pastFocusSessions} />

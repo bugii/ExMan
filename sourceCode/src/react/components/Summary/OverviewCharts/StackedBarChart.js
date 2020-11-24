@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Bar } from "react-chartjs-2";
+import { HorizontalBar } from "react-chartjs-2";
 import styled from "styled-components";
 import DailyFeedback from "./DailyFeedback";
 
@@ -7,7 +7,7 @@ const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 export const Container = styled.div`
-  padding: 2rem;
+  padding: 2rem 1rem 0 1rem;
   color: black;
   background-color: white;
   margin: auto;
@@ -135,12 +135,12 @@ function StackedBarChart(props) {
   return (
     <Container>
       {goal[0] > 0 ? (
-        <Bar data={data} options={options} />
+        <HorizontalBar data={data} options={options} />
       ) : (
         <DailyFeedback data={focus[0]} />
       )}
       {goal[0] > 0 ? (
-        <h4 style={{ textAlign: "center" }}>
+        <h4 style={{ textAlign: "center", marginTop: "40px" }}>
           You have {goal[0]} minutes to go to reach your goal!
         </h4>
       ) : (

@@ -6,7 +6,8 @@ import Colors from "../../Colors";
 //const electron = window.require("electron");
 
 export const Container = styled.div`
-  padding: 4rem;
+  padding-top: 1.5rem;
+  padding-bottom: 4rem;
   color: black;
   background-color: white;
   height: 50vh;

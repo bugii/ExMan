@@ -8,10 +8,10 @@ const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
 
 export const Container = styled.div`
-  padding: 2rem;
+  padding: 2rem 1rem 0rem 1rem;
   color: black;
   background-color: white;
-  margin: auto;
+  margin: auto auto 0 auto;
   height: 50vh;
 `;
 
@@ -109,8 +109,8 @@ function GoalsChart(props) {
         <GoalsFeedback data={goal[0]} />
       )}
       {goalTarget > 0 ? (
-        <h4 style={{ textAlign: "center" }}>
-          You have {goalTarget[0]} tasks to do till you reach your goal.
+        <h4 style={{ textAlign: "center", marginTop: "40px" }}>
+          You have {goalTarget[0]} tasks to do until you reach your goal.
         </h4>
       ) : (
         <p></p>
