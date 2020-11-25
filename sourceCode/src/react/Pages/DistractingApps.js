@@ -86,6 +86,7 @@ function DistractingApps() {
           distracting apps were updated successfully!
         </Alert>
       </Snackbar>
+      <h4>Number of distracting apps: {disArray.length}</h4>
       <Grid container style={{ padding: "30px" }}>
         {disArray.map((el) => (
           <Grid item style={{ textAlign: "center", marginBottom: "10px" }}>
@@ -110,7 +111,6 @@ function DistractingApps() {
           </Grid>
         ))}
       </Grid>
-      <p>{disArray.length}</p>
       <Options>
         <AddItem>
           <h2>Add Item</h2>
