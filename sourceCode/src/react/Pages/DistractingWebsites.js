@@ -4,6 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import { useEffect, useState } from "react";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -29,6 +31,7 @@ export const Options = styled.div`
 function DistractingWebsites() {
   const [disArray, setDisArray] = useState([]);
   let [todo, setTodo] = useState("");
+  const [open, setOpen] = useState(false);
 
   const addItem = () => {
     setDisArray(disArray.concat(todo));
@@ -49,6 +52,15 @@ function DistractingWebsites() {
 
   const save = () => {
     ipcRenderer.send("update-distracting-websites", disArray);
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -69,6 +81,11 @@ function DistractingWebsites() {
       >
         Save changes
       </Button>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Your distracting websites were updated successfully!
+        </Alert>
+      </Snackbar>
       <Grid container style={{ padding: "30px" }}>
         {disArray.map((el) => (
           <Grid item style={{ textAlign: "center", marginBottom: "10px" }}>
