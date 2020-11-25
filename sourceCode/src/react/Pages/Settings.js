@@ -242,19 +242,9 @@ function Settings(props) {
         <TeamsSwitch />
       </Settingsbox>
       <Settingsbox>
-        <h4> Distracting websites</h4>
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={handledistWebsites}
-        >
-          Set distracting websites
-        </Button>
-      </Settingsbox>
-      <Settingsbox>
-        <h4> Distracting apps</h4>
+        <h4> Distracting apps and websites </h4>
         <Button color="primary" variant="contained" onClick={handledistApps}>
-          Set distracting apps
+          Set distracting apps and websites
         </Button>
       </Settingsbox>
       <Settingsbox>
