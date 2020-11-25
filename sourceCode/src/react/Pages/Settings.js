@@ -58,38 +58,45 @@ function Settings(props) {
     setAutoReply(e.target.value);
   };
 
-  const handleShortFocus = (val) => {
-    setShortFocus(val);
-    ipcRenderer.send("updateDefaultDuration", {
-      type: "short",
-      value: parseInt(val),
-    });
-  };
-
   const handledistApps = () => {
     //props.close();
     history.push("/distracting-apps");
   };
 
-  const handledistWebsites = () => {
-    //props.close();
-    history.push("/distracting-websites");
+  const handleShortFocus = (val) => {
+    setShortFocus(val);
+  };
+
+  const handleShortFocusClick = () => {
+    ipcRenderer.send("updateDefaultDuration", {
+      type: "short",
+      value: parseInt(shortFocus),
+    });
+    setOpen(true);
   };
 
   const handleMediumFocus = (val) => {
     setMediumFocus(val);
+  };
+
+  const handleMediumFocusClick = () => {
     ipcRenderer.send("updateDefaultDuration", {
       type: "medium",
-      value: parseInt(val),
+      value: parseInt(mediumFocus),
     });
+    setOpen(true);
   };
 
   const handleLongFocus = (val) => {
     setLongFocus(val);
+  };
+
+  const handleLongFocusClick = () => {
     ipcRenderer.send("updateDefaultDuration", {
       type: "long",
-      value: parseInt(val),
+      value: parseInt(longFocus),
     });
+    setOpen(true);
   };
 
   const handleAutoResponseUpdate = (e) => {
@@ -169,26 +176,50 @@ function Settings(props) {
       ) : null}
       <Settingsbox>
         <h4>Default focus times (in minutes)</h4>
-        <div>
-          <span style={{ "padding-right": "1rem" }}>Short focus</span>
+        <div style={{ marginBottom: "15px" }}>
+          <span style={{ "padding-right": "1rem" }}> Short focus </span>
           <input
             value={shortFocus}
             onChange={(e) => handleShortFocus(e.target.value)}
           />
+          <Button
+            style={{ marginTop: "10px", marginLeft: "40px" }}
+            variant="contained"
+            color="primary"
+            onClick={() => handleShortFocusClick()}
+          >
+            {" Update short focus"}
+          </Button>
         </div>
-        <div>
+        <div style={{ marginBottom: "15px" }}>
           <span style={{ "padding-right": "1rem" }}>Medium focus</span>
           <input
             value={mediumFocus}
             onChange={(e) => handleMediumFocus(e.target.value)}
           />
+          <Button
+            style={{ marginTop: "10px", marginLeft: "40px" }}
+            variant="contained"
+            color="primary"
+            onClick={() => handleMediumFocusClick()}
+          >
+            {" Update medium focus"}
+          </Button>
         </div>
-        <div>
+        <div style={{ marginBottom: "15px" }}>
           <span style={{ "padding-right": "1rem" }}>Long focus</span>
           <input
             value={longFocus}
             onChange={(e) => handleLongFocus(e.target.value)}
           />
+          <Button
+            style={{ marginTop: "10px", marginLeft: "40px" }}
+            variant="contained"
+            color="primary"
+            onClick={() => handleLongFocusClick()}
+          >
+            {" Update long focus"}
+          </Button>
         </div>
       </Settingsbox>
       <Settingsbox>
