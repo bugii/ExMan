@@ -1,1 +1,336 @@
-{"focusSessions":[{"id":"2f8ac2d4-827c-4106-95a1-5d42a4cf838b","startTime":1603739114630,"endTime":1603741514630,"originalEndTime":1603741514630,"services":[{"id":"7877c590-8542-467c-b891-c6cc5ea47976","name":"whatsapp","unreadCount":2,"autoReplied":[],"messages":[{"timestamp":1603739167314,"title":2011401392}],"interactions":[]},{"id":"86d41677-a8b5-4938-9b3a-fd33372d0926","name":"gmail","unreadCount":8383,"autoReplied":[],"messages":[],"interactions":[]}],"brokenFocus":[],"goals":[],"completedGoals":[],"rating":null,"scheduled":false,"chatWorkRelated":false,"activeWindows":[]},{"id":"0cf8cd1f-5d8f-47dc-a003-d2d2ee3710e0","startTime":1603787504560,"endTime":1603789004560,"originalEndTime":1603789004560,"services":[{"id":"7877c590-8542-467c-b891-c6cc5ea47976","name":"whatsapp","unreadCount":0,"autoReplied":[],"messages":[],"interactions":[]},{"id":"86d41677-a8b5-4938-9b3a-fd33372d0926","name":"gmail","unreadCount":8364,"autoReplied":[],"messages":[],"interactions":[]}],"brokenFocus":[],"goals":["read german paper from david","kündigung bain schreiben"],"completedGoals":["kündigung bain schreiben"],"rating":3,"scheduled":false,"chatWorkRelated":true,"activeWindows":[]},{"id":"1f39a309-77ee-4057-bcd1-5153e985725f","startTime":1603811331459,"endTime":1603812855339,"originalEndTime":1603813731459,"services":[{"id":"7877c590-8542-467c-b891-c6cc5ea47976","name":"whatsapp","unreadCount":1,"autoReplied":[],"messages":[],"interactions":[]},{"id":"86d41677-a8b5-4938-9b3a-fd33372d0926","name":"gmail","unreadCount":8366,"autoReplied":[],"messages":[],"interactions":[]}],"brokenFocus":[],"goals":[],"completedGoals":[],"rating":0,"scheduled":false,"chatWorkRelated":false,"activeWindows":[]}],"outOfFocusMessages":{"7877c590-8542-467c-b891-c6cc5ea47976":{"name":"whatsapp","messages":[{"timestamp":1603739037923,"title":2011401392},{"timestamp":1603744474267,"title":64865373},{"timestamp":1603744744173,"title":64865373},{"timestamp":1603745814047,"title":64865373},{"timestamp":1603745895957,"title":64865373},{"timestamp":1603746412943,"title":64865373},{"timestamp":1603746434332,"title":64865373},{"timestamp":1603793414045,"title":769445455},{"timestamp":1603793436341,"title":769445455},{"timestamp":1603796893116,"title":1036024745},{"timestamp":1603796895079,"title":1036024745},{"timestamp":1603796901321,"title":1036024745},{"timestamp":1603797195512,"title":-823155752},{"timestamp":1603797527599,"title":2011401392},{"timestamp":1603798029965,"title":2011401392},{"timestamp":1603798105288,"title":2011401392},{"timestamp":1603798554151,"title":2011401392},{"timestamp":1603798734473,"title":2011401392},{"timestamp":1603815203084,"title":-361682679},{"timestamp":1603815232393,"title":-361682679},{"timestamp":1603815237203,"title":-361682679},{"timestamp":1603815312568,"title":-361682679}]}},"randomSurveyResults":[{"timestamp":1603748644893,"productivity":5},{"timestamp":1603793688914,"productivity":2}],"outOfFocusInteractions":{"7877c590-8542-467c-b891-c6cc5ea47976":{"name":"whatsapp","interactions":[[1603739009097,1603739024340],[1603741527217,1603741534910],[1603741537455,1603748649257],[1603748654523,1603748667249],[1603787332459,1603787336226],[1603787337576,1603787432583],[1603787443568,1603787485120],[1603787489328,1603787490701],[1603789030297,1603789201458],[1603789209526,1603789260228],[1603789274505,1603789282911],[1603803990830,1603811312339],[1603812857860,1603817397751]]},"86d41677-a8b5-4938-9b3a-fd33372d0926":{"name":"gmail","interactions":[[1603739026749,1603739105438],[1603741534906,1603741537459],[1603748649252,1603748654527],[1603787336220,1603787337579],[1603787441699,1603787443572],[1603787485117,1603787486578],[1603789029313,1603789030300],[1603789505564,1603793708042],[1603811312335,1603811325762],[1603817397747,1603817399166]]}},"outOfFocusActiveWindows":[],"appUsage":[[1603738998553,1603748667253],[1603787329109,1603817399170],[1603966445393]],"settings":{"autoReply":"Currently, I am working in focus mode. I will answer you earliest in ${time}.","shortFocusDuration":15,"mediumFocusDuration":25,"longFocusDuration":40}}
+{
+    "focusSessions": [
+        {
+            "id": "2f8ac2d4-827c-4106-95a1-5d42a4cf838b",
+            "startTime": 1603739114630,
+            "endTime": 1603741514630,
+            "originalEndTime": 1603741514630,
+            "services": [
+                {
+                    "id": "7877c590-8542-467c-b891-c6cc5ea47976",
+                    "name": "whatsapp",
+                    "unreadCount": 2,
+                    "autoReplied": [],
+                    "messages": [
+                        {
+                            "timestamp": 1603739167314,
+                            "title": 2011401392
+                        }
+                    ],
+                    "interactions": []
+                },
+                {
+                    "id": "86d41677-a8b5-4938-9b3a-fd33372d0926",
+                    "name": "gmail",
+                    "unreadCount": 8383,
+                    "autoReplied": [],
+                    "messages": [],
+                    "interactions": []
+                }
+            ],
+            "brokenFocus": [],
+            "goals": [],
+            "completedGoals": [],
+            "rating": null,
+            "scheduled": false,
+            "chatWorkRelated": false,
+            "activeWindows": []
+        },
+        {
+            "id": "0cf8cd1f-5d8f-47dc-a003-d2d2ee3710e0",
+            "startTime": 1603787504560,
+            "endTime": 1603789004560,
+            "originalEndTime": 1603789004560,
+            "services": [
+                {
+                    "id": "7877c590-8542-467c-b891-c6cc5ea47976",
+                    "name": "whatsapp",
+                    "unreadCount": 0,
+                    "autoReplied": [],
+                    "messages": [],
+                    "interactions": []
+                },
+                {
+                    "id": "86d41677-a8b5-4938-9b3a-fd33372d0926",
+                    "name": "gmail",
+                    "unreadCount": 8364,
+                    "autoReplied": [],
+                    "messages": [],
+                    "interactions": []
+                }
+            ],
+            "brokenFocus": [],
+            "goals": [
+                "read german paper from david",
+                "kündigung bain schreiben"
+            ],
+            "completedGoals": [
+                "kündigung bain schreiben"
+            ],
+            "rating": 3,
+            "scheduled": false,
+            "chatWorkRelated": true,
+            "activeWindows": []
+        },
+        {
+            "id": "1f39a309-77ee-4057-bcd1-5153e985725f",
+            "startTime": 1603811331459,
+            "endTime": 1603812855339,
+            "originalEndTime": 1603813731459,
+            "services": [
+                {
+                    "id": "7877c590-8542-467c-b891-c6cc5ea47976",
+                    "name": "whatsapp",
+                    "unreadCount": 1,
+                    "autoReplied": [],
+                    "messages": [],
+                    "interactions": []
+                },
+                {
+                    "id": "86d41677-a8b5-4938-9b3a-fd33372d0926",
+                    "name": "gmail",
+                    "unreadCount": 8366,
+                    "autoReplied": [],
+                    "messages": [],
+                    "interactions": []
+                }
+            ],
+            "brokenFocus": [],
+            "goals": [],
+            "completedGoals": [],
+            "rating": 0,
+            "scheduled": false,
+            "chatWorkRelated": false,
+            "activeWindows": []
+        }
+    ],
+    "outOfFocusMessages": {
+        "7877c590-8542-467c-b891-c6cc5ea47976": {
+            "name": "whatsapp",
+            "messages": [
+                {
+                    "timestamp": 1603739037923,
+                    "title": 2011401392
+                },
+                {
+                    "timestamp": 1603744474267,
+                    "title": 64865373
+                },
+                {
+                    "timestamp": 1603744744173,
+                    "title": 64865373
+                },
+                {
+                    "timestamp": 1603745814047,
+                    "title": 64865373
+                },
+                {
+                    "timestamp": 1603745895957,
+                    "title": 64865373
+                },
+                {
+                    "timestamp": 1603746412943,
+                    "title": 64865373
+                },
+                {
+                    "timestamp": 1603746434332,
+                    "title": 64865373
+                },
+                {
+                    "timestamp": 1603793414045,
+                    "title": 769445455
+                },
+                {
+                    "timestamp": 1603793436341,
+                    "title": 769445455
+                },
+                {
+                    "timestamp": 1603796893116,
+                    "title": 1036024745
+                },
+                {
+                    "timestamp": 1603796895079,
+                    "title": 1036024745
+                },
+                {
+                    "timestamp": 1603796901321,
+                    "title": 1036024745
+                },
+                {
+                    "timestamp": 1603797195512,
+                    "title": -823155752
+                },
+                {
+                    "timestamp": 1603797527599,
+                    "title": 2011401392
+                },
+                {
+                    "timestamp": 1603798029965,
+                    "title": 2011401392
+                },
+                {
+                    "timestamp": 1603798105288,
+                    "title": 2011401392
+                },
+                {
+                    "timestamp": 1603798554151,
+                    "title": 2011401392
+                },
+                {
+                    "timestamp": 1603798734473,
+                    "title": 2011401392
+                },
+                {
+                    "timestamp": 1603815203084,
+                    "title": -361682679
+                },
+                {
+                    "timestamp": 1603815232393,
+                    "title": -361682679
+                },
+                {
+                    "timestamp": 1603815237203,
+                    "title": -361682679
+                },
+                {
+                    "timestamp": 1603815312568,
+                    "title": -361682679
+                }
+            ]
+        }
+    },
+    "randomSurveyResults": [
+        {
+            "timestamp": 1603748644893,
+            "productivity": 5
+        },
+        {
+            "timestamp": 1603793688914,
+            "productivity": 2
+        }
+    ],
+    "outOfFocusInteractions": {
+        "7877c590-8542-467c-b891-c6cc5ea47976": {
+            "name": "whatsapp",
+            "interactions": [
+                [
+                    1603739009097,
+                    1603739024340
+                ],
+                [
+                    1603741527217,
+                    1603741534910
+                ],
+                [
+                    1603741537455,
+                    1603748649257
+                ],
+                [
+                    1603748654523,
+                    1603748667249
+                ],
+                [
+                    1603787332459,
+                    1603787336226
+                ],
+                [
+                    1603787337576,
+                    1603787432583
+                ],
+                [
+                    1603787443568,
+                    1603787485120
+                ],
+                [
+                    1603787489328,
+                    1603787490701
+                ],
+                [
+                    1603789030297,
+                    1603789201458
+                ],
+                [
+                    1603789209526,
+                    1603789260228
+                ],
+                [
+                    1603789274505,
+                    1603789282911
+                ],
+                [
+                    1603803990830,
+                    1603811312339
+                ],
+                [
+                    1603812857860,
+                    1603817397751
+                ]
+            ]
+        },
+        "86d41677-a8b5-4938-9b3a-fd33372d0926": {
+            "name": "gmail",
+            "interactions": [
+                [
+                    1603739026749,
+                    1603739105438
+                ],
+                [
+                    1603741534906,
+                    1603741537459
+                ],
+                [
+                    1603748649252,
+                    1603748654527
+                ],
+                [
+                    1603787336220,
+                    1603787337579
+                ],
+                [
+                    1603787441699,
+                    1603787443572
+                ],
+                [
+                    1603787485117,
+                    1603787486578
+                ],
+                [
+                    1603789029313,
+                    1603789030300
+                ],
+                [
+                    1603789505564,
+                    1603793708042
+                ],
+                [
+                    1603811312335,
+                    1603811325762
+                ],
+                [
+                    1603817397747,
+                    1603817399166
+                ]
+            ]
+        }
+    },
+    "outOfFocusActiveWindows": [],
+    "appUsage": [
+        [
+            1603738998553,
+            1603748667253
+        ],
+        [
+            1603787329109,
+            1603817399170
+        ],
+        [
+            1603966445393
+        ]
+    ],
+    "settings": {
+        "autoReply": "Currently, I am working in focus mode. I will answer you earliest in ${time}.",
+        "shortFocusDuration": 15,
+        "mediumFocusDuration": 25,
+        "longFocusDuration": 40
+    }
+}

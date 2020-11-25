@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import styled from "styled-components";
 import Colors from "../Colors";
-import ThumbUpIcon from "@material-ui/icons/ThumbUp";
-import ThumbDownIcon from "@material-ui/icons/ThumbDown";
 import FocusGrade from "./OverviewCharts/FocusGrade";
 
 export const CustomBar = styled.div`

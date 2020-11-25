@@ -5,6 +5,10 @@ const {
   updateTeamsCall,
   setGoalperDay,
   changeAppVersion,
+  getDistractingWebsites,
+  getDistractingApps,
+  updateDistractingWebsites,
+  updateDistractingApps,
 } = require("../db/db");
 
 ipcMain.on("get-settings", (e) => {
@@ -27,4 +31,20 @@ ipcMain.on("updateGoalTarget", (e, goals) => {
 ipcMain.on("application-update-request", (e, password) => {
   console.log("application version change request with pw", password);
   changeAppVersion(password);
+});
+
+ipcMain.on("distracting-websites", (e) => {
+  e.reply("distracting-websites", getDistractingWebsites());
+});
+
+ipcMain.on("update-distracting-websites", (e, websites) => {
+  updateDistractingWebsites(websites);
+});
+
+ipcMain.on("distracting-apps", (e) => {
+  e.reply("distracting-apps", getDistractingApps());
+});
+
+ipcMain.on("update-distracting-apps", (e, apps) => {
+  updateDistractingApps(apps);
 });

@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Colors from "../components/Colors";
 import Button from "@material-ui/core/Button";
@@ -35,6 +36,8 @@ function Settings(props) {
   const [password, setPassword] = useState("");
   const [applicationVersion, setApplicationVersion] = useState(null);
 
+  let history = useHistory();
+
   useEffect(() => {
     ipcRenderer.on("get-settings", (e, settings) => {
       setShortFocus(settings.shortFocusDuration);
@@ -58,6 +61,16 @@ function Settings(props) {
       type: "short",
       value: parseInt(val),
     });
+  };
+
+  const handledistApps = () => {
+    //props.close();
+    history.push("/distracting-apps");
+  };
+
+  const handledistWebsites = () => {
+    //props.close();
+    history.push("/distracting-websites");
   };
 
   const handleMediumFocus = (val) => {
@@ -213,6 +226,22 @@ function Settings(props) {
       <Settingsbox>
         <h4> Enable teams calls during focus sessions</h4>
         <TeamsSwitch />
+      </Settingsbox>
+      <Settingsbox>
+        <h4> Distracting websites</h4>
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={handledistWebsites}
+        >
+          Set distracting websites
+        </Button>
+      </Settingsbox>
+      <Settingsbox>
+        <h4> Distracting apps</h4>
+        <Button color="primary" variant="contained" onClick={handledistApps}>
+          Set distracting apps
+        </Button>
       </Settingsbox>
       <Settingsbox>
         <h4> App Version</h4>

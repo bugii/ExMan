@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { HorizontalBar } from "react-chartjs-2";
 import styled from "styled-components";
-import Colors from "../../Colors";
+//import Colors from "../../Colors";
 import GoalsFeedback from "./GoalsFeedback";
 
 const electron = window.require("electron");
