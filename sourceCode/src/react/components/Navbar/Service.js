@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const { remote } = window.require("electron");
 
@@ -94,26 +96,39 @@ function Service(props) {
 
   return (
     <ServiceDiv>
+      {" "}
       {props.showBubble &&
       !props.isAuthed &&
       (!props.isReady || props.isReady) ? (
         <MessageCountBubble> ! </MessageCountBubble>
       ) : null}
-
       {props.showBubble && props.isAuthed && !props.isReady ? (
         <Loader></Loader>
       ) : null}
-
       {props.unreadCount && props.showBubble ? (
         <MessageCountBubble> {props.unreadCount} </MessageCountBubble>
       ) : null}
-      <div
-        onContextMenu={contextClick}
-        onClick={handleClick}
-        style={{ position: "absolute" }}
-      >
-        <ServiceIcon src={props.icon} />
-      </div>
+      {props.customName !== null ? (
+        <Tooltip title={props.customName} placement="right">
+          <Button
+            onContextMenu={contextClick}
+            onClick={handleClick}
+            style={{ position: "absolute", left: "-8px" }}
+          >
+            <ServiceIcon src={props.icon} />
+          </Button>
+        </Tooltip>
+      ) : (
+        <Tooltip title={props.name} placement="right">
+          <Button
+            onContextMenu={contextClick}
+            onClick={handleClick}
+            style={{ position: "absolute", left: "-8px" }}
+          >
+            <ServiceIcon src={props.icon} />
+          </Button>
+        </Tooltip>
+      )}
     </ServiceDiv>
   );
 }

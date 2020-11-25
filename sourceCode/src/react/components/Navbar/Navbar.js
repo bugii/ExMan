@@ -57,6 +57,7 @@ function Navbar(props) {
                 webContentsId={service.webContentsId}
                 refreshApp={props.refreshApp}
                 showBubble={true}
+                customName={service.customName}
               />
             );
           } else {
@@ -77,6 +78,7 @@ function Navbar(props) {
                 webContentsId={service.webContentsId}
                 refreshApp={props.refreshApp}
                 showBubble={true}
+                customName={service.customName}
               />
             );
           }
