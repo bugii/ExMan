@@ -6,6 +6,8 @@ import Button from "@material-ui/core/Button";
 import ResponseSwitch from "./ResponseSwitch";
 import TeamsSwitch from "./TeamsSwitch";
 import { useEffect } from "react";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;
@@ -35,6 +37,7 @@ function Settings(props) {
   const [goalsTarget, setGoalsTarget] = useState(null);
   const [password, setPassword] = useState("");
   const [applicationVersion, setApplicationVersion] = useState(null);
+  const [open, setOpen] = useState(false);
 
   let history = useHistory();
 
@@ -92,6 +95,7 @@ function Settings(props) {
   const handleAutoResponseUpdate = (e) => {
     // send ipc message to main process to start session there too (db etc)
     ipcRenderer.send("updateAutoResponse", autoReply);
+    setOpen(true);
   };
 
   const handleMinimumFocusGoal = (val) => {
@@ -107,11 +111,21 @@ function Settings(props) {
   const handleMinimumFocusGoalUpdate = () => {
     // send ipc message to main process to change value in db
     ipcRenderer.send("updateFocusDurationGoal", parseInt(durationGoal));
+    setOpen(true);
   };
 
   const handleGoalTargetUpdate = () => {
     // send ipc message to main process to change value in db
     ipcRenderer.send("updateGoalTarget", parseInt(goalsTarget));
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
   };
 
   const changeApplicationVersion = (password) => {
@@ -268,6 +282,11 @@ function Settings(props) {
           >
             change application version
           </Button>
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success">
+              Your update was successful!
+            </Alert>
+          </Snackbar>
         </div>
       </Settingsbox>
     </SettingsDiv>

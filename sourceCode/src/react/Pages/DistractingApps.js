@@ -83,7 +83,7 @@ function DistractingApps() {
       </Button>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
-          Your distracting apps were updated successfully!
+          distracting apps were updated successfully!
         </Alert>
       </Snackbar>
       <Grid container style={{ padding: "30px" }}>
