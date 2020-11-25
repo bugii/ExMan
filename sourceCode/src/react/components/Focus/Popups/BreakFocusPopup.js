@@ -25,7 +25,6 @@ function BreakFocusPopup(props) {
   let history = useHistory();
 
   const minimizeFocus = () => {
-    ipcRenderer.send("breakFocus", false);
     //navigate back home without ending focus session
     history.push("/");
   };
