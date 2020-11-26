@@ -64,6 +64,7 @@ const windowTrackerLoop = require("./utils/windowTrackerLoop");
 const { createExportWindow } = require("./utils/exportHelper");
 
 const isMac = process.platform === "darwin";
+const isWindows = process.platform === "win32";
 
 console.log = log.log;
 
@@ -132,6 +133,20 @@ mainMenu = Menu.buildFromTemplate([
         label: "Export",
         click: () => {
           createExportWindow();
+        },
+      },
+      {
+        label: "Open logs folder",
+        click: () => {
+          const logPath = isMac
+            ? "Library/Logs/exman/"
+            : isWindows
+            ? "AppData/Roaming/exman/logs/"
+            : "/.config/exman/logs/";
+
+          const fullPath = path.join(app.getPath("home"), logPath);
+          shell.showItemInFolder(fullPath);
+          console.log(fullPath);
         },
       },
     ],
