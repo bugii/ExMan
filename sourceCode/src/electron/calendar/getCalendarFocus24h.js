@@ -30,6 +30,7 @@ module.exports = async (type) => {
           start: Date.parse(event.start.dateTime),
           end: Date.parse(event.end.dateTime),
           id: event.id,
+          subject: event.subject,
         }));
         return items;
       } catch (error) {
@@ -57,6 +58,7 @@ module.exports = async (type) => {
           start: Date.parse(event.start.dateTime + "Z"),
           end: Date.parse(event.end.dateTime + "Z"),
           id: event.id,
+          subject: event.subject,
         }));
         return items;
       } catch (error) {

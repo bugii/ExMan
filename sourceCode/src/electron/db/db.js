@@ -145,12 +145,13 @@ function createNewFocusSession(startTime, endTime) {
   }).write();
 }
 
-function createNewFutureFocusSession(startTime, endTime, id) {
+function createNewFutureFocusSession(startTime, endTime, id, subject) {
   db.get("futureFocusSessions")
     .push({
       id,
       startTime,
       endTime,
+      subject,
     })
     .write();
 }
@@ -220,6 +221,7 @@ function moveFutureSessionToCurrent(id) {
     endTime: futureSession.endTime,
     originalEndTime: futureSession.endTime,
     scheduled: true,
+    calendarSubject: futureSession.subject,
     services,
     brokenFocus: [],
     goals: [],

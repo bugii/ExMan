@@ -8,7 +8,7 @@ const getCalendarFocus24h = require("./getCalendarFocus24h");
 const checkFocusEvents = (events) => {
   console.log("focus sessions from cal", events);
   events.forEach((event) => {
-    scheduleFocus(event.start, event.end, event.id);
+    scheduleFocus(event.start, event.end, event.id, event.subject);
   });
 };
 

@@ -44,9 +44,13 @@ module.exports = async () => {
     );
     const hashedGoals = hashGoals(focusSession.goals);
     const hashedCompletedGoals = hashGoals(focusSession.completedGoals);
+    const hashedSubject = focusSession.calendarSubject
+      ? hashCode(focusSession.calendarSubject)
+      : null;
 
     const anonymizedVersion = {
       ...focusSession,
+      calendarSubject: hashedSubject,
       services: [],
       activeWindows: hashedActiveWindows,
       goals: hashedGoals,

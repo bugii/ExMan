@@ -102,34 +102,39 @@ function PastAndScheduledSessions(props) {
                   max={7}
                 />
               </AccordionSummary>
-              <AccordionDetails style={{flexDirection: "column"}}>
+              <AccordionDetails style={{ flexDirection: "column" }}>
                 <GoalsDiv>
                   <GoalsList>
                     {focusSession.completedGoals.length > 0 ? (
-                        focusSession.completedGoals.map((goal) => (
-                            <CompletedListItem>{goal}</CompletedListItem>
-                        ))
+                      focusSession.completedGoals.map((goal) => (
+                        <CompletedListItem>{goal}</CompletedListItem>
+                      ))
                     ) : (
-                        <div style={{ color: "gray" }}>No completed goals</div>
+                      <div style={{ color: "gray" }}>No completed goals</div>
                     )}
                   </GoalsList>
                   <GoalsList>
                     {focusSession.goals.filter(
-                        (goal) => !focusSession.completedGoals.includes(goal)
+                      (goal) => !focusSession.completedGoals.includes(goal)
                     ).length > 0 ? (
-                        focusSession.goals
-                            .filter(
-                                (goal) => !focusSession.completedGoals.includes(goal)
-                            )
-                            .map((goal) => (
-                                <IncompleteListItem>{goal}</IncompleteListItem>
-                            ))
+                      focusSession.goals
+                        .filter(
+                          (goal) => !focusSession.completedGoals.includes(goal)
+                        )
+                        .map((goal) => (
+                          <IncompleteListItem>{goal}</IncompleteListItem>
+                        ))
                     ) : (
-                        <div style={{ color: "gray" }}>No incomplete goals</div>
+                      <div style={{ color: "gray" }}>No incomplete goals</div>
                     )}
                   </GoalsList>
                 </GoalsDiv>
-                {focusSession.comments ? <div style={{textAlign: "left"}}> Comments: {focusSession.comments}</div> : null}
+                {focusSession.comments ? (
+                  <div style={{ textAlign: "left" }}>
+                    {" "}
+                    Comments: {focusSession.comments}
+                  </div>
+                ) : null}
               </AccordionDetails>
             </Accordion>
           ))}
@@ -151,7 +156,8 @@ function PastAndScheduledSessions(props) {
                   focusSession.endTime
                 )}
               </AccordionSummary>
-              <AccordionDetails style={{ justifyContent: "center" }}>
+              <AccordionDetails style={{ justifyContent: "space-between" }}>
+                <div>Subject: {focusSession.subject}</div>
                 <Button
                   variant="contained"
                   onClick={() => cancelFutureSession(focusSession.id)}

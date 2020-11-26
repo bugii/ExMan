@@ -54,13 +54,12 @@ function FocusGoalsPopup(props) {
   const handleSubmit = () => {
     ipcRenderer.send("focus-goals-request", {
       goals: todoList,
-      completedGoals: completedList
+      completedGoals: completedList,
     });
     console.log("focus-goals-request: ", todoList);
     console.log("completed goals: ", completedList);
     props.close();
   };
-
 
   const handleToggle = (value) => () => {
     const currentIndex = completedList.indexOf(value);
@@ -87,7 +86,7 @@ function FocusGoalsPopup(props) {
       open={props.open}
       maxWidth={"lg"}
       onClose={handleSubmit}
-      style={{zIndex: 1600}}
+      style={{ zIndex: 1600 }}
     >
       <DialogTitle id="simple-dialog-title">Focus Goals</DialogTitle>
       <PreFocusDiv>
@@ -106,7 +105,15 @@ function FocusGoalsPopup(props) {
           }}
         >
           <div style={{ width: 300 }}>
+            {props.calendarSubject ? (
+              <p>
+                The subject of this focus session is{" "}
+                <b>"{props.calendarSubject}"</b>
+                according to your calendar
+              </p>
+            ) : null}
             <p>What do you want to focus on during this focus session?</p>
+
             <OutlinedInput
               id="todo"
               size="small"

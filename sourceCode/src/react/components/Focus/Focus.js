@@ -92,6 +92,11 @@ function Focus(props) {
         goals={
           props.currentFocusSession.goals ? props.currentFocusSession.goals : []
         }
+        calendarSubject={
+          props.currentFocusSession.calendarSubject
+            ? props.currentFocusSession.calendarSubject
+            : null
+        }
         completedGoals={
           props.currentFocusSession.completedGoals
             ? props.currentFocusSession.completedGoals
@@ -130,7 +135,9 @@ function Focus(props) {
           </IncreaseTimeButton>
         ) : null}
       </IncreaseDiv>
-      <FocusText>We are taking care of your messages for you.</FocusText>
+      {props.currentFocusSession.appVersion === "exman" ? (
+        <FocusText>We are taking care of your notifications for you.</FocusText>
+      ) : null}
       <FocusMenuButtons>
         <Tooltip title="End focus session" arrow placement="top">
           <HighlightOffIcon

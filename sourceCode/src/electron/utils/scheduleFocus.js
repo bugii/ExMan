@@ -12,7 +12,7 @@ const {
 } = require("../db/memoryDb");
 const { ipcMain } = require("electron");
 
-module.exports = (start, end, id) => {
+module.exports = (start, end, id, subject) => {
   // check if already scheduled
   if (getFutureFocusRef(id)) {
     console.log(
@@ -24,7 +24,7 @@ module.exports = (start, end, id) => {
   // check if future focus session is in db
   // If no -> store
   if (!getSingleFutureFocusSession(id)) {
-    createNewFutureFocusSession(start, end, id);
+    createNewFutureFocusSession(start, end, id, subject);
   }
 
   console.log("scheduling new focus session");
