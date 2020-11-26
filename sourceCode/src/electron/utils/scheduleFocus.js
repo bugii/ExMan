@@ -4,21 +4,30 @@ const {
   getCurrentFocusSession,
   getSingleFutureFocusSession,
   moveFutureSessionToCurrent,
+  getAllFocusSessions,
 } = require("../db/db");
-const {
-  storeFutureFocusRef,
-  getFutureFocusRef,
-  getMainWindow,
-} = require("../db/memoryDb");
+const { storeFutureFocusRef, getMainWindow } = require("../db/memoryDb");
 const { ipcMain } = require("electron");
 
 module.exports = (start, end, id, subject) => {
-  // check if already scheduled
-  if (getFutureFocusRef(id)) {
+  // check if this focus session id had already used, e.g. check if this id is either used in the currentFocus session or in any past focus sessions
+  // this avoids scheduleing a focus session from calendar again (even though it already was schedulled in a previous session)
+  const currentFocusSession = getCurrentFocusSession();
+  if (currentFocusSession && currentFocusSession.id === id) {
     console.log(
-      "dont schedule again, same focus session has already been scheduled"
+      "don't schedule again, same focus session has already been scheduled (currentFocusSession - db)"
     );
     return;
+  }
+  const pastFocusSessions = getAllFocusSessions();
+  for (let index = 0; index < pastFocusSessions.length; index++) {
+    const sesh = pastFocusSessions[index];
+    if (sesh.id === id) {
+      console.log(
+        "don't schedule again, same focus session has already been scheduled (pastFocusSessions - db)"
+      );
+      return;
+    }
   }
 
   // check if future focus session is in db
