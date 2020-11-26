@@ -72,7 +72,7 @@ function DistractingApps() {
 
   return (
     <DistApp>
-      <h1> Distracting Apps</h1>
+      <h1> Distracting Apps and Websites</h1>
       <Button
         style={{ marginTop: "5px", borderRadius: "5px" }}
         variant="contained"
@@ -114,13 +114,26 @@ function DistractingApps() {
       <Options>
         <AddItem>
           <h2>Add Item</h2>
+          <p
+            style={{
+              width: "60%",
+              marginBottom: "5vh",
+              margin: "auto",
+              textAlign: "left",
+            }}
+          >
+            If you want to add a website, make sure that you just add the
+            domainname as an app. For example if you want to add youtube.com
+            just add youtube.
+          </p>
           <input
             id="item"
             type="text"
             value={todo}
             onChange={handleChange}
-            style={{ margin: "15px 5px 5px 5px" }}
+            style={{ margin: "15px 5px 5px 5px", width: "60%", height: "5vh" }}
           />
+          <br></br>
           <Button
             style={{
               marginRight: "10px",
