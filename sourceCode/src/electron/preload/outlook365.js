@@ -24,10 +24,27 @@ class newNotification extends window.Notification {
 window.Notification = newNotification;
 
 window.getUnreadChats = () => {
-  let count = 0;
-  return count;
+  // taken from ferdi
+
+  let unreadMail = 0;
+
+  const folders = document.querySelector('div[title="Folders"]');
+  if (!folders) {
+    return;
+  }
+
+  unreadMail = [...folders.parentNode.parentNode.children].reduce(
+    (count, child) => {
+      const unread = child.querySelector(".screenReaderOnly");
+      return unread && unread.textContent === "unread"
+        ? count + parseInt(unread.previousSibling.textContent, 10)
+        : count;
+    },
+    0
+  );
+  return unreadMail;
 };
 
 window.isAuth = () => {
-  return true;
+  return document.getElementById("app") ? true : false;
 };

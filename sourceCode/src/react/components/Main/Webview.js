@@ -27,6 +27,13 @@ function Webview(props) {
         console.log("crashed", props.id);
         el.reload();
       });
+      el.addEventListener("did-fail-load", () => {
+        // gmail always fires this for some reason...
+        if (props.name !== "gmail" && props.name !== "outlook") {
+          console.log("failed loading", props.id, props.name);
+          el.reload();
+        }
+      });
     }
   };
 

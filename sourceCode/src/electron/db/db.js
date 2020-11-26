@@ -610,10 +610,12 @@ function checkForInteractionCloseByServiceId(id) {
     const service = lastPastFocusSession.services.find(
       (service) => service.id === id
     );
-    const lastInteraction =
-      service.interactions[service.interactions.length - 1];
-    if (lastInteraction && lastInteraction.length === 1) {
-      lastInteraction.push(new Date().getTime());
+    if (service) {
+      const lastInteraction =
+        service.interactions[service.interactions.length - 1];
+      if (lastInteraction && lastInteraction.length === 1) {
+        lastInteraction.push(new Date().getTime());
+      }
     }
   }
 
