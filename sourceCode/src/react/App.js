@@ -29,6 +29,7 @@ function App() {
   let history = useHistory();
   let location = useLocation();
 
+  const [loading, setLoading] = useState(true);
   const [services, setServices] = useState([]);
   const [activeService, setActiveService] = useState(null);
   const [isOnService, setIsOnService] = useState(false);
@@ -68,6 +69,7 @@ function App() {
       (event, { services, currentFocusSession }) => {
         updateServices(services);
         setCurrentFocusSession(currentFocusSession);
+        setLoading(false);
       }
     );
 
@@ -146,7 +148,7 @@ function App() {
     setIsOnService(location.pathname.includes("services"));
   }, [location]);
 
-  return (
+  return !loading ? (
     <div className="app">
       <div className="navigation">
         <Navbar
@@ -260,7 +262,7 @@ function App() {
         </Route>
       </div>
     </div>
-  );
+  ) : null;
 }
 
 export default App;

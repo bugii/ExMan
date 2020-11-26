@@ -89,19 +89,9 @@ function Focus(props) {
     <FocusDiv>
       <FocusGoalsPopup
         open={showFocusGoalsPopup}
-        goals={
-          props.currentFocusSession.goals ? props.currentFocusSession.goals : []
-        }
-        calendarSubject={
-          props.currentFocusSession.calendarSubject
-            ? props.currentFocusSession.calendarSubject
-            : null
-        }
-        completedGoals={
-          props.currentFocusSession.completedGoals
-            ? props.currentFocusSession.completedGoals
-            : []
-        }
+        goals={props.currentFocusSession.goals}
+        calendarSubject={props.currentFocusSession.calendarSubject}
+        completedGoals={props.currentFocusSession.completedGoals}
         close={() => setShowFocusGoalsPopup(false)}
       />
       <BreakFocusPopup

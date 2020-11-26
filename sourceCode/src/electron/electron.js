@@ -139,7 +139,7 @@ mainMenu = Menu.buildFromTemplate([
         label: "Open logs folder",
         click: () => {
           const logPath = isMac
-            ? "Library/Logs/exman/"
+            ? "Library/Logs/exman/."
             : isWindows
             ? "AppData/Roaming/exman/logs/"
             : "/.config/exman/logs/";
