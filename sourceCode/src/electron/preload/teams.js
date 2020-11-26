@@ -2,6 +2,12 @@ const { desktopCapturer, ipcRenderer } = require("electron");
 
 console.log("in preload");
 
+window.electronSafeIpc = {
+  send: () => null,
+  on: () => null,
+};
+window.desktop = undefined;
+
 ipcRenderer.on("id", (e, id) => {
   console.log("id", id);
   window.serviceId = id;
