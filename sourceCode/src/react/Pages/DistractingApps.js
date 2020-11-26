@@ -31,36 +31,30 @@ export const Options = styled.div`
 function DistractingApps() {
   const [disArray, setDisArray] = useState([]);
   let [todo, setTodo] = useState("");
-  const [open, setOpen] = useState(false);
 
   const addItem = () => {
     setDisArray(disArray.concat(todo));
+    ipcRenderer.send("update-distracting-apps", disArray.concat(todo));
     console.log("Add item: ", todo);
     setTodo("");
+  };
+
+  const onEnterPress = (event) => {
+    if (event.key === "Enter") {
+      addItem();
+    }
   };
 
   const deleteItem = (el) => {
     var index = disArray.indexOf(el);
     if (index > -1) {
       disArray.splice(index, 1);
+      ipcRenderer.send("update-distracting-apps", disArray);
     }
   };
 
   const handleChange = (e) => {
     setTodo(e.target.value);
-  };
-
-  const save = () => {
-    ipcRenderer.send("update-distracting-apps", disArray);
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
   };
 
   useEffect(() => {
@@ -73,19 +67,7 @@ function DistractingApps() {
   return (
     <DistApp>
       <h1> Distracting Apps and Websites</h1>
-      <Button
-        style={{ marginTop: "5px", borderRadius: "5px" }}
-        variant="contained"
-        color="primary"
-        onClick={() => save()}
-      >
-        Save changes
-      </Button>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success">
-          distracting apps were updated successfully!
-        </Alert>
-      </Snackbar>
+
       <h4>Number of distracting apps: {disArray.length}</h4>
       <Grid container style={{ padding: "30px" }}>
         {disArray.map((el) => (
@@ -131,6 +113,7 @@ function DistractingApps() {
             type="text"
             value={todo}
             onChange={handleChange}
+            onKeyPress={onEnterPress}
             style={{ margin: "15px 5px 5px 5px", width: "60%", height: "5vh" }}
           />
           <br></br>
