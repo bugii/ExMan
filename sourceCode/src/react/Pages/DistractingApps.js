@@ -4,8 +4,6 @@ import Grid from "@material-ui/core/Grid";
 import { useEffect, useState } from "react";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
-import Alert from "@material-ui/lab/Alert";
 
 const electron = window.require("electron");
 const ipcRenderer = electron.ipcRenderer;

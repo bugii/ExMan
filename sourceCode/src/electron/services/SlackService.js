@@ -9,7 +9,9 @@ const axios = require("axios");
 const Service = require("../services/Service");
 const fillAutoresponseTemplate = require("../utils/fillAutoresponseTemplate");
 
-module.exports = class SlackService extends Service {
+module.exports = class SlackService extends (
+  Service
+) {
   constructor(id, autoResponse, checkIfAllAuthed) {
     console.log("creating slack service");
     super(id, "slack", autoResponse, checkIfAllAuthed);
@@ -134,7 +136,7 @@ module.exports = class SlackService extends Service {
             if (m.user !== userID) {
               const username = await this.getUsername(m.user);
 
-              console.log("message: ", m.text);
+              //console.log("message: ", m.text);
               if (this.isInFocusSession()) {
                 // In focus session
                 // save message in database under currentFocusSession (required because notification is not sent in dnd, thus also not stored)
@@ -200,7 +202,7 @@ module.exports = class SlackService extends Service {
 
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
+        //console.log(JSON.stringify(response.data));
       })
       .catch(function (error) {
         console.log(error);

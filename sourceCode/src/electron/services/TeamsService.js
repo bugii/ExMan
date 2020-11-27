@@ -57,12 +57,6 @@ module.exports = class TeamsService extends (
 
     this.authLoopRef = setInterval(async () => {
       try {
-        //if (this.username === null) {
-        //  this.username = await webContents
-        //    .fromId(this.webContentsId)
-        //    .executeJavaScript("window.getUsername()");
-        //  console.log("teams username", this.username);
-        //}
         const tokens = await this.getToken();
         const regionID = await this.getRegionName();
         const teamsResponse = {
@@ -78,7 +72,7 @@ module.exports = class TeamsService extends (
 
           const teamsObject = JSON.parse(response.data["userDetails"]);
           this.username = teamsObject["name"];
-          console.log("teams username", this.username);
+          //console.log("teams username", this.username);
         }
 
         this.setAuthed(true);
@@ -197,7 +191,7 @@ module.exports = class TeamsService extends (
           //console.log(channel);
 
           if (username !== "" && username !== this.username) {
-            console.log("message:", content);
+            //console.log("message:", content);
             if (this.isInFocusSession()) {
               // Currently in focus session
 
