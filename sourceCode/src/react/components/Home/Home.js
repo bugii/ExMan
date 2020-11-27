@@ -62,6 +62,19 @@ function Home(props) {
 
   return (
     <HomeDiv>
+      {props.currentFocusSession !== null ? (
+        <div
+          style={{
+            backgroundColor: Colors.turquoise,
+            width: "100%",
+            textAlign: "center",
+            zIndex: "180000",
+          }}
+        >
+          <p style={{ color: "white" }}>Focus</p>
+        </div>
+      ) : null}
+
       <h1 style={{ color: Colors.turquoise }}> EXPECTATION MANAGEMENT</h1>
       <ParagraphText>
         Welcome to your expectation management app. When you need to focus, we

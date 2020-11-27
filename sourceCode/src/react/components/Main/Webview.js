@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Colors from "../Colors";
 
 // With the remote module I am able to get the __dirname from the electron.js file (which is the same as public -> can be used to get preload scripts)
 const electron = window.require("electron");
@@ -39,6 +40,19 @@ function Webview(props) {
 
   return (
     <div>
+      {props.currentFocusSession !== null ? (
+        <div
+          style={{
+            backgroundColor: Colors.turquoise,
+            width: "100%",
+            textAlign: "center",
+            zIndex: "1800",
+            position: "fixed",
+          }}
+        >
+          <p style={{ color: "white" }}>Focus</p>
+        </div>
+      ) : null}
       <webview
         style={{ zIndex: z, backgroundColor: "#FCF7F8" }}
         ref={webviewRef}

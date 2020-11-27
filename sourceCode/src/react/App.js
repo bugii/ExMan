@@ -175,6 +175,7 @@ function App() {
                   useragent={offeredServices[service.name].useragent}
                   url={offeredServices[service.name].url}
                   isOther={false}
+                  currentFocusSession={currentFocusSession}
                 />
               );
             } else {
@@ -186,6 +187,7 @@ function App() {
                   name={service.name}
                   url={service.url}
                   isOther={true}
+                  currentFocusSession={currentFocusSession}
                 />
               );
             }
@@ -202,7 +204,10 @@ function App() {
 
       <div className="main-content">
         <Route path="/" exact>
-          <Home nrOfServices={services.length} />
+          <Home
+            nrOfServices={services.length}
+            currentFocusSession={currentFocusSession}
+          />
         </Route>
 
         <Route path="/focus">
