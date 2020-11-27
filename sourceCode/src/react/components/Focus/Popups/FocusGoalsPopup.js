@@ -105,6 +105,12 @@ function FocusGoalsPopup(props) {
           }}
         >
           <div style={{ width: 300 }}>
+            {props.focusLength > 0 ? (
+              <h4>Your focus length is {props.focusLength / 60000} minutes.</h4>
+            ) : (
+              <h4>You are in a open focus session.</h4>
+            )}
+
             {props.calendarSubject ? (
               <p>
                 The subject of this focus session is{" "}

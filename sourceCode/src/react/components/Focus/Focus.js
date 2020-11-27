@@ -92,6 +92,10 @@ function Focus(props) {
         goals={props.currentFocusSession.goals}
         calendarSubject={props.currentFocusSession.calendarSubject}
         completedGoals={props.currentFocusSession.completedGoals}
+        focusLength={
+          props.currentFocusSession.endTime -
+          props.currentFocusSession.startTime
+        }
         close={() => setShowFocusGoalsPopup(false)}
       />
       <BreakFocusPopup
