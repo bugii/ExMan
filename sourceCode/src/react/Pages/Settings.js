@@ -153,8 +153,8 @@ function Settings(props) {
               value={autoReply}
               onChange={handleChange}
               style={{ width: "500px", height: "30px" }}
-            ></input>
-            <br></br>
+            />
+            <br/>
             <Button
               style={{ marginTop: "10px" }}
               variant="contained"
@@ -168,7 +168,7 @@ function Settings(props) {
           <Settingsbox>
             <h4>Auto-responding platforms</h4>
             <p>
-              Choose which communication platform should do an auto response
+              Choose which communication platform should do an auto response:
             </p>
             <ResponseSwitch services={props.services} />
           </Settingsbox>
@@ -223,11 +223,11 @@ function Settings(props) {
         </div>
       </Settingsbox>
       <Settingsbox>
-        <h4> Focus Goal duration</h4>
-        <p>How long do you want to focus per day at minimum</p>
+        <h4> Target Daily Focus Duration</h4>
+        <p>How long do you want to focus per day at minimum?</p>
         <div>
           <span style={{ "padding-right": "1rem" }}>
-            current focus duration goal (in minutes)
+            current focus duration target (in minutes)
           </span>
           <input
             value={durationGoal}
@@ -240,17 +240,17 @@ function Settings(props) {
               color="primary"
               onClick={() => handleMinimumFocusGoalUpdate()}
             >
-              {" change minimal focus duration goal"}
+              {" change target daily focus duration"}
             </Button>
           </div>
         </div>
       </Settingsbox>
       <Settingsbox>
-        <h4> Goals per day</h4>
+        <h4>Target Daily Goals Count</h4>
         <p>How many goals do you want to accomplish per day at minimum?</p>
         <div>
           <span style={{ "padding-right": "1rem" }}>
-            current goal target per day
+              target number of goals per day
           </span>
           <input
             value={goalsTarget}
@@ -263,7 +263,7 @@ function Settings(props) {
               color="primary"
               onClick={() => handleGoalTargetUpdate()}
             >
-              {" change goal target"}
+              {" change target goal count"}
             </Button>
           </div>
         </div>

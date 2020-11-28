@@ -25,9 +25,8 @@ export default function SwitchesSize(props) {
   //console.log("teams call: ", teamsCall);
 
   return (
-    <SettingContainer>
-      <SettingValues>false</SettingValues>
-      <FormGroup style={{ margin: "20px" }}>
+    <div>
+        {teamsCall ? "on" : "off"}
         <FormControlLabel
           control={
             <Switch
@@ -37,9 +36,8 @@ export default function SwitchesSize(props) {
             />
           }
           label={"Teams Call availability"}
-        ></FormControlLabel>
-      </FormGroup>
-      <SettingValues>true</SettingValues>
-    </SettingContainer>
+          style={{marginLeft: 10}}
+        />
+    </div>
   );
 }

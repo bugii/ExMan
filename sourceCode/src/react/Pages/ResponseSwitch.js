@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import Switch from "@material-ui/core/Switch";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -25,42 +25,29 @@ export default function SwitchesSize(props) {
   };
 
   const serviceCheckers = props.services.map((service) => {
-    if (service.name === "teams") {
-      //console.log(service.autoResponse);
-      return (
-        <FormControlLabel
-          control={
-            <Switch
-              color="primary"
-              checked={service.autoResponse}
-              onChange={() => toggleChecked(service.id)}
-            />
-          }
-          label={service.customName}
-        ></FormControlLabel>
-      );
-    } else if (service.name === "slack") {
-      //console.log(service.autoResponse);
-      return (
-        <FormControlLabel
-          control={
-            <Switch
-              color="primary"
-              checked={service.autoResponse}
-              onChange={() => toggleChecked(service.id)}
-            />
-          }
-          label={service.customName}
-        ></FormControlLabel>
-      );
-    }
+      if (service.name === "teams" || service.name === "slack") {
+          return (
+              <div>
+                  {service.autoResponse ? "on" : "off"}
+                  <FormControlLabel
+                      control={
+                          <Switch
+                              color="primary"
+                              checked={service.autoResponse}
+                              onChange={() => toggleChecked(service.id)}
+                          />
+                      }
+                      label={service.customName ? (service.name + " - " + service.customName) : service.name}
+                      style={{marginLeft: 10}}
+                  />
+              </div>
+          );
+      }
   });
 
   return (
     <SettingContainer>
-      <SettingValues>false</SettingValues>
       <FormGroup style={{ margin: "20px" }}>{serviceCheckers}</FormGroup>
-      <SettingValues>true</SettingValues>
     </SettingContainer>
   );
 }
