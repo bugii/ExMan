@@ -163,9 +163,11 @@ function getCurrentFocusSession() {
 function endCurrentFocusSession() {
   // Move from currentFocusSession to pastFocusSessions collection
   const currentFocusSession = getCurrentFocusSession();
-  db.get("pastFocusSessions").push(currentFocusSession).write();
-  // Set current focus session to null again
-  db.set("currentFocusSession", null).write();
+  if (currentFocusSession != null) {
+    db.get("pastFocusSessions").push(currentFocusSession).write();
+    // Set current focus session to null again
+    db.set("currentFocusSession", null).write();
+  }
 }
 
 function deleteFutureFocusSession(id) {
