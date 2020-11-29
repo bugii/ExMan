@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {useHistory} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import TodayIcon from "@material-ui/icons/Today";
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus";
 import Colors from "../Colors";
 import Button from "@material-ui/core/Button";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Tooltip from "@material-ui/core/Tooltip";
 
-const {ipcRenderer} = window.require("electron");
+const { ipcRenderer } = window.require("electron");
 
 export const MenuBoxContainer = styled.div`
   display: flex;
@@ -38,98 +38,105 @@ const MenuIcon = styled.div`
 `;
 
 function MenuBoxes(props) {
-    let history = useHistory();
+  let history = useHistory();
 
-    const [calendarRegistered, setCalendarRegistered] = useState("");
+  const [calendarRegistered, setCalendarRegistered] = useState("");
+  const [calendarEmail, setCalendarEmail] = useState("");
 
-    const openDashboard = () => {
-        history.push("/dashboard");
-    };
+  const openDashboard = () => {
+    history.push("/dashboard");
+  };
 
-    const handleOutlookCalClick = () => {
-        ipcRenderer.send("outlook-cal-register-start");
-    };
+  const handleOutlookCalClick = () => {
+    ipcRenderer.send("outlook-cal-register-start");
+  };
 
-    const handleGoogleCalClick = () => {
-        ipcRenderer.send("google-cal-register-start");
-    };
+  const handleGoogleCalClick = () => {
+    ipcRenderer.send("google-cal-register-start");
+  };
 
-    const handleRemoveCalendarClick = () => {
-        ipcRenderer.once("tokens", (e, tokens) => {
-            if (tokens.google) {
-                setCalendarRegistered("google");
-                ipcRenderer.send("get-all-future-focus-sessions");
-            } else if (tokens.microsoft) {
-                setCalendarRegistered("microsoft");
-                ipcRenderer.send("get-all-future-focus-sessions");
-            } else {
-                setCalendarRegistered(null);
-            }
-        });
-        ipcRenderer.send("remove-calendar");
-    };
+  const handleRemoveCalendarClick = () => {
+    ipcRenderer.once("tokens", (e, tokens) => {
+      if (tokens.google) {
+        setCalendarRegistered("google");
+        setCalendarEmail(tokens.google.email);
+        ipcRenderer.send("get-all-future-focus-sessions");
+      } else if (tokens.microsoft) {
+        setCalendarRegistered("microsoft");
+        setCalendarEmail(tokens.microsoft.email);
+        ipcRenderer.send("get-all-future-focus-sessions");
+      } else {
+        setCalendarRegistered(null);
+        setCalendarEmail(null);
+      }
+    });
+    ipcRenderer.send("remove-calendar");
+  };
 
-    useEffect(() => {
-        ipcRenderer.once("calendar-successfully-added", (e, type) => {
-            setCalendarRegistered(type);
-        });
+  useEffect(() => {
+    ipcRenderer.once("calendar-successfully-added", (e, { type, email }) => {
+      setCalendarRegistered(type);
+      setCalendarEmail(email);
+    });
 
-        ipcRenderer.once("tokens", (e, tokens) => {
-            if (tokens.google) {
-                setCalendarRegistered("google");
-                ipcRenderer.send("get-all-future-focus-sessions");
-            } else if (tokens.microsoft) {
-                setCalendarRegistered("microsoft");
-                ipcRenderer.send("get-all-future-focus-sessions");
-            }
-        });
-        ipcRenderer.send("tokens");
-    }, []);
+    ipcRenderer.once("tokens", (e, tokens) => {
+      if (tokens.google) {
+        setCalendarRegistered("google");
+        setCalendarEmail(tokens.google.email);
+        ipcRenderer.send("get-all-future-focus-sessions");
+      } else if (tokens.microsoft) {
+        setCalendarRegistered("microsoft");
+        setCalendarEmail(tokens.microsoft.email);
+        ipcRenderer.send("get-all-future-focus-sessions");
+      }
+    });
+    ipcRenderer.send("tokens");
+  }, []);
 
-    return (
-        <MenuBoxContainer>
-            <MenuBoxDiv onClick={props.handleFocusNow}>
-                <MenuIcon>
-                    <FilterCenterFocusIcon style={{fontSize: 150}}/>
-                </MenuIcon>
-                focus now
-            </MenuBoxDiv>
-            <MenuBoxDiv>
-                <MenuIcon>
-                    <TodayIcon style={{fontSize: 150}}/>
-                </MenuIcon>
-                {calendarRegistered ? (
-                    <div style={{textAlign: "center"}}>
-                        {calendarRegistered} calendar connected
-                        <Tooltip title="schedule events with the word 'focus' in the subject">
-                            <InfoOutlinedIcon style={{marginLeft: 5}}/>
-                        </Tooltip>
-                        <Button onClick={handleRemoveCalendarClick} style={{position: "absolute", bottom: 0, left: 38}}>
-                            Remove/Change Calendar
-                        </Button>
-                    </div>
-                ) : (
-                    <div style={{textAlign: "center"}}>
-                      connect calendar <br/>
-                      <div style={{position: "absolute", bottom: 6, left: 65}}>
-                        <Button onClick={handleOutlookCalClick}>
-                          outlook
-                        </Button>
-                        <Button onClick={handleGoogleCalClick}>
-                          google
-                        </Button>
-                      </div>
-                    </div>
-                )}
-            </MenuBoxDiv>
-            <MenuBoxDiv onClick={openDashboard}>
-                <MenuIcon>
-                    <EqualizerIcon style={{fontSize: 150}}/>
-                </MenuIcon>
-                dashboard
-            </MenuBoxDiv>
-        </MenuBoxContainer>
-    );
+  return (
+    <MenuBoxContainer>
+      <MenuBoxDiv onClick={props.handleFocusNow}>
+        <MenuIcon>
+          <FilterCenterFocusIcon style={{ fontSize: 150 }} />
+        </MenuIcon>
+        focus now
+      </MenuBoxDiv>
+      <MenuBoxDiv>
+        <MenuIcon>
+          <TodayIcon style={{ fontSize: 150 }} />
+        </MenuIcon>
+        {calendarRegistered ? (
+          <div style={{ textAlign: "center" }}>
+            {calendarRegistered} calendar connected (
+            {calendarEmail ? calendarEmail : null})
+            <Tooltip title="schedule events with the word 'focus' in the subject">
+              <InfoOutlinedIcon style={{ marginLeft: 5 }} />
+            </Tooltip>
+            <Button
+              onClick={handleRemoveCalendarClick}
+              style={{ position: "absolute", bottom: 0, left: 38 }}
+            >
+              Remove/Change Calendar
+            </Button>
+          </div>
+        ) : (
+          <div style={{ textAlign: "center" }}>
+            connect calendar <br />
+            <div style={{ position: "absolute", bottom: 6, left: 65 }}>
+              <Button onClick={handleOutlookCalClick}>outlook</Button>
+              <Button onClick={handleGoogleCalClick}>google</Button>
+            </div>
+          </div>
+        )}
+      </MenuBoxDiv>
+      <MenuBoxDiv onClick={openDashboard}>
+        <MenuIcon>
+          <EqualizerIcon style={{ fontSize: 150 }} />
+        </MenuIcon>
+        dashboard
+      </MenuBoxDiv>
+    </MenuBoxContainer>
+  );
 }
 
 export default MenuBoxes;

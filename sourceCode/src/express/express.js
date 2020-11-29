@@ -6,12 +6,21 @@ const crypto = require("crypto");
 const base64url = require("base64url");
 
 const { storeTokens } = require("../electron/db/db");
-const { getOutlookAuthWindow } = require("../electron/auth/outlookOAuth");
-const { getGoogleAuthWindow } = require("../electron/auth/googleOAuth");
+const {
+  getOutlookAuthWindow,
+  refreshToken: refreshTokenOutlook,
+} = require("../electron/auth/outlookOAuth");
+const {
+  getGoogleAuthWindow,
+  refreshToken: refreshTokenGoogle,
+} = require("../electron/auth/googleOAuth");
 
 const app = express();
 const { storePORT, getPORT } = require("../electron/db/memoryDb");
 const { calendarSuccessfullyAdded } = require("../electron/ipc/calendar");
+const {
+  getAndStoreCalendarEmail,
+} = require("../electron/calendar/calendarNames");
 app.use(express.json());
 
 app.get("/oauth/google", async (req, res) => {
@@ -43,8 +52,13 @@ app.get("/oauth/google", async (req, res) => {
       refresh_token: res.data.refresh_token,
       expires_in: res.data.expires_in,
     });
-    calendarSuccessfullyAdded("google");
     getGoogleAuthWindow().destroy();
+    // schedule next token refreshing 5 minutes before expiry
+    setTimeout(() => {
+      refreshTokenGoogle();
+    }, (res.data.expires_in - 5 * 60) * 1000);
+    const email = await getAndStoreCalendarEmail();
+    calendarSuccessfullyAdded("google", email);
   } catch (error) {
     console.log(error);
   }
@@ -78,8 +92,13 @@ app.get("/oauth/microsoft", async (req, res) => {
       refresh_token: res.data.refresh_token,
       expires_in: res.data.expires_in,
     });
-    calendarSuccessfullyAdded("outlook");
     getOutlookAuthWindow().destroy();
+    // schedule next token refreshing 5 minutes before expiry
+    setTimeout(() => {
+      refreshTokenOutlook();
+    }, (res.data.expires_in - 5 * 60) * 1000);
+    const email = await getAndStoreCalendarEmail();
+    calendarSuccessfullyAdded("outlook", email);
   } catch (error) {
     console.log(error);
   }

@@ -21,7 +21,7 @@ ipcMain.on("remove-calendar", (e) => {
 });
 
 module.exports = {
-  calendarSuccessfullyAdded: (type) => {
-    getMainWindow().send("calendar-successfully-added", type);
+  calendarSuccessfullyAdded: (type, email) => {
+    getMainWindow().send("calendar-successfully-added", { type, email });
   },
 };

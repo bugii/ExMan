@@ -624,6 +624,30 @@ function checkForInteractionCloseByServiceId(id) {
   db.write();
 }
 
+function storeCalendarEmail(type, email) {
+  switch (type) {
+    case "outlook":
+      db.get("tokens")
+        .get("microsoft")
+        .assign({
+          email,
+        })
+        .write();
+      break;
+
+    case "google":
+      db.get("tokens")
+        .get("google")
+        .assign({
+          email,
+        })
+        .write();
+
+    default:
+      break;
+  }
+}
+
 module.exports = {
   init,
   getDb,
@@ -685,4 +709,5 @@ module.exports = {
   getDistractingWebsites,
   updateDistractingWebsites,
   updateDistractingApps,
+  storeCalendarEmail,
 };
