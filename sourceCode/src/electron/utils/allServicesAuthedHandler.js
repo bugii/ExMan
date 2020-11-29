@@ -49,7 +49,8 @@ module.exports = async () => {
       scheduleFocus(
         focusSession.startTime,
         focusSession.endTime,
-        focusSession.id
+        focusSession.id,
+        focusSession.subject
       );
     } else {
       console.log("future session is completely in the past, deleting..");

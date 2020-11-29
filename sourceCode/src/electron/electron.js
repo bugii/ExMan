@@ -85,9 +85,12 @@ console.log = log.log;
 
 console.log("starting app");
 // Automatically start app on login
-app.setLoginItemSettings({
-  openAtLogin: true,
-});
+if (!isDev) {
+  app.setLoginItemSettings({
+    openAtLogin: true,
+  });
+}
+
 // Initialize db
 db_init();
 storeAppStart();

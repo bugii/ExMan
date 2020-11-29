@@ -6,7 +6,11 @@ const {
   moveFutureSessionToCurrent,
   getAllFocusSessions,
 } = require("../db/db");
-const { storeFutureFocusRef, getMainWindow } = require("../db/memoryDb");
+const {
+  storeFutureFocusRef,
+  getMainWindow,
+  getFutureFocusRef,
+} = require("../db/memoryDb");
 const { ipcMain } = require("electron");
 
 module.exports = (start, end, id, subject) => {
@@ -15,7 +19,8 @@ module.exports = (start, end, id, subject) => {
   const currentFocusSession = getCurrentFocusSession();
   if (currentFocusSession && currentFocusSession.id === id) {
     console.log(
-      "don't schedule again, same focus session has already been scheduled (currentFocusSession - db)"
+      "don't schedule again, same focus session has already been scheduled (currentFocusSession - db)",
+      subject
     );
     return;
   }
@@ -24,39 +29,47 @@ module.exports = (start, end, id, subject) => {
     const sesh = pastFocusSessions[index];
     if (sesh.id === id) {
       console.log(
-        "don't schedule again, same focus session has already been scheduled (pastFocusSessions - db)"
+        "don't schedule again, same focus session has already been scheduled (pastFocusSessions - db)",
+        subject
       );
       return;
     }
   }
 
   // check if future focus session is in db
-  // If no -> store
+  // if not yet in db -> store
   if (!getSingleFutureFocusSession(id)) {
     createNewFutureFocusSession(start, end, id, subject);
   }
 
-  console.log("scheduling new focus session");
+  // schedule a future focus session at most once
+  if (!getFutureFocusRef(id)) {
+    console.log("scheduling focus session", subject);
 
-  const ref = setTimeout(() => {
-    // if there is no ongoing focus session: start this one
-    if (!getCurrentFocusSession()) {
-      // Delete the entry in the futureFocusSession db key and move it to the currentFocusSession key in the db
-      // deleteFutureFocusSession(id);
-      moveFutureSessionToCurrent(id);
+    const ref = setTimeout(() => {
+      // if there is no ongoing focus session: start this one
+      if (!getCurrentFocusSession()) {
+        // Delete the entry in the futureFocusSession db key and move it to the currentFocusSession key in the db
+        moveFutureSessionToCurrent(id);
 
-      // start focus session
-      focusStart(start, end, id);
+        // start focus session
+        focusStart(start, end, id);
 
-      // notify via notification that the scheduled session has started and restore window in case it was minimized for them to enter goals
-      getMainWindow().send("notification-scheduled-start");
-      getMainWindow().restore();
-    } else {
-      console.log(
-        "ignoring scheduled focus session because there is an ongoing one (most likely an open one)"
-      );
-    }
-  }, start - new Date().getTime());
+        // notify via notification that the scheduled session has started and restore window in case it was minimized for them to enter goals
+        getMainWindow().send("notification-scheduled-start");
+        getMainWindow().restore();
+      } else {
+        console.log(
+          "ignoring scheduled focus session because there is an ongoing one (most likely an open one)"
+        );
+      }
+    }, start - new Date().getTime());
 
-  storeFutureFocusRef(id, ref);
+    storeFutureFocusRef(id, ref);
+  } else {
+    console.log(
+      "not scheduling future focus session again, already scheduled",
+      subject
+    );
+  }
 };
