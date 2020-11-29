@@ -74,6 +74,10 @@ function AnalyseChart(props) {
       else if (service_array[i] === "teams") color_array.push(Colors.teams);
       else if (service_array[i] === "telegram")
         color_array.push(Colors.telegram);
+      else if (service_array[i] === "gmail") color_array.push(Colors.gmail);
+      else if (service_array[i] === "outlook") color_array.push(Colors.outlook);
+      else if (service_array[i] === "outlook365")
+        color_array.push(Colors.outlook);
       else color_array.push(randomColor);
     }
     return color_array;

@@ -76,8 +76,16 @@ function DonutChart(props) {
           }
           colorTempArray.push(randomColor);
         }
-      } else if (focusSession.services[serviceIndex].name === "whatsapp") {
+      } else if (focusSession.services[serviceIndex].name === "teams") {
         colorTempArray.push(Colors.teams);
+      } else if (focusSession.services[serviceIndex].name === "telegram") {
+        colorTempArray.push(Colors.telegram);
+      } else if (focusSession.services[serviceIndex].name === "gmail") {
+        colorTempArray.push(Colors.gmail);
+      } else if (focusSession.services[serviceIndex].name === "outlook") {
+        colorTempArray.push(Colors.outlook);
+      } else if (focusSession.services[serviceIndex].name === "outlook365") {
+        colorTempArray.push(Colors.outlook);
       } else {
         let randomColor = Math.floor(Math.random() * 16777215).toString(16);
         colorTempArray.push(randomColor);

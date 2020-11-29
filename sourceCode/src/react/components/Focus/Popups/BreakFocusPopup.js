@@ -6,8 +6,8 @@ import { useHistory } from "react-router-dom";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 
-const electron = window.require("electron");
-const ipcRenderer = electron.ipcRenderer;
+//const electron = window.require("electron");
+//const ipcRenderer = electron.ipcRenderer;
 
 export const BreakFocusWarning = styled.div`
   background-color: ${Colors.navy};
