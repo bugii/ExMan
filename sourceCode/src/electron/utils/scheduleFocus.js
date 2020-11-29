@@ -18,20 +18,20 @@ module.exports = (start, end, id, subject) => {
   // this avoids scheduleing a focus session from calendar again (even though it already was schedulled in a previous session)
   const currentFocusSession = getCurrentFocusSession();
   if (currentFocusSession && currentFocusSession.id === id) {
-    console.log(
-      "don't schedule again, same focus session has already been scheduled (currentFocusSession - db)",
-      subject
-    );
+    // console.log(
+    //   "don't schedule again, same focus session has already been scheduled (currentFocusSession - db)",
+    //   id
+    // );
     return;
   }
   const pastFocusSessions = getAllFocusSessions();
   for (let index = 0; index < pastFocusSessions.length; index++) {
     const sesh = pastFocusSessions[index];
     if (sesh.id === id) {
-      console.log(
-        "don't schedule again, same focus session has already been scheduled (pastFocusSessions - db)",
-        subject
-      );
+      // console.log(
+      //   "don't schedule again, same focus session has already been scheduled (pastFocusSessions - db)",
+      //   id
+      // );
       return;
     }
   }
@@ -44,7 +44,7 @@ module.exports = (start, end, id, subject) => {
 
   // schedule a future focus session at most once
   if (!getFutureFocusRef(id)) {
-    console.log("scheduling focus session", subject);
+    console.log("scheduling focus session", id);
 
     const ref = setTimeout(() => {
       // if there is no ongoing focus session: start this one
@@ -66,10 +66,11 @@ module.exports = (start, end, id, subject) => {
     }, start - new Date().getTime());
 
     storeFutureFocusRef(id, ref);
-  } else {
-    console.log(
-      "not scheduling future focus session again, already scheduled",
-      subject
-    );
   }
+  // else {
+  //   console.log(
+  //     "not scheduling future focus session again, already scheduled",
+  //     id
+  //   );
+  // }
 };
