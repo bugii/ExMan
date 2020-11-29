@@ -3,6 +3,7 @@ const axios = require("axios");
 const { getTokens, storeTokens } = require("../db/db");
 const qs = require("querystring");
 const { getPORT } = require("../db/memoryDb");
+const { getAndStoreCalendarEmail } = require("../calendar/calendarNames");
 
 let authWindow;
 
@@ -63,7 +64,7 @@ const refreshToken = async () => {
         refresh_token: res.data.refresh_token,
         expires_in: res.data.expires_in,
       });
-
+      await getAndStoreCalendarEmail();
       console.log("renewed microsoft token");
 
       // schedule next token refreshing 5 minutes before expiry
