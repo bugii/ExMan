@@ -66,6 +66,21 @@ const { createExportWindow } = require("./utils/exportHelper");
 const isMac = process.platform === "darwin";
 const isWindows = process.platform === "win32";
 
+
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (getMainWindow()) {
+      if (getMainWindow().isMinimized()) getMainWindow().restore()
+      getMainWindow().focus()
+    }
+  })
+
+
 console.log = log.log;
 
 console.log("starting app");
