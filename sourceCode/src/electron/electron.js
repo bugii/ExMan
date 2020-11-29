@@ -75,6 +75,7 @@ if (!gotTheLock) {
     // Someone tried to run a second instance, we should focus our window.
     if (getMainWindow()) {
       if (getMainWindow().isMinimized()) getMainWindow().restore();
+      getMainWindow().show();
       getMainWindow().focus();
     }
   });
