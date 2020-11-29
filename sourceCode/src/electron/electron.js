@@ -133,12 +133,15 @@ mainMenu = Menu.buildFromTemplate([
           });
         },
       },
-      { type: "separator" },
-      { role: "services" },
-      { type: "separator" },
-      { role: "hide" },
-      { role: "hideothers" },
-      { role: "unhide" },
+
+      ...(isMac
+        ? [
+            { type: "separator" },
+            { role: "hide" },
+            { role: "hideothers" },
+            { role: "unhide" },
+          ]
+        : []),
       { type: "separator" },
       { role: "quit" },
     ],
@@ -146,7 +149,7 @@ mainMenu = Menu.buildFromTemplate([
   {
     label: "File",
     submenu: [
-      isMac ? { role: "close" } : { role: "quit" },
+      ...(isMac ? [{ role: "close" }] : []),
       {
         label: "Export",
         click: () => {
@@ -156,6 +159,7 @@ mainMenu = Menu.buildFromTemplate([
       {
         label: "Open logs folder",
         click: () => {
+          a;
           const logPath = isMac
             ? "Library/Logs/exman/"
             : isWindows
@@ -177,6 +181,19 @@ mainMenu = Menu.buildFromTemplate([
   {
     label: "Dev",
     submenu: [{ role: "reload" }, { role: "forceReload" }],
+  },
+  {
+    label: "Help",
+    submenu: [
+      {
+        label: "How-To Guide",
+        click: () => {
+          shell.openExternal(
+            "https://docs.google.com/document/d/12lj2ryBD7IoxzkfaNuJYv1oBVX_CfPxNuDg8B5_ffck/edit?usp=sharing"
+          );
+        },
+      },
+    ],
   },
 ]);
 

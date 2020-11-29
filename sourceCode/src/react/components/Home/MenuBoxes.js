@@ -103,7 +103,7 @@ function MenuBoxes(props) {
       </MenuBoxDiv>
       <MenuBoxDiv>
         <MenuIcon>
-          <TodayIcon style={{ fontSize: 150 }} />
+          <TodayIcon style={{ fontSize: 150, marginTop: 32}} />
         </MenuIcon>
         {calendarRegistered ? (
           <div style={{ textAlign: "center" }}>
