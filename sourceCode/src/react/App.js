@@ -16,7 +16,6 @@ import ErrorAlreadyInFocus from "./components/Error/ErrorAlreadyInFocus";
 import ErrorFocusOverlap from "./components/Error/ErrorFocusOverlap";
 import ErrorWrongFocusDuration from "./components/Error/ErrorWrongFocusDuration";
 import AddOtherService from "./Pages/AddOtherService";
-import DistractingWebsites from "./Pages/DistractingWebsites";
 import DistractingApps from "./Pages/DistractingApps";
 
 const electron = window.require("electron");
@@ -256,10 +255,6 @@ function App() {
 
         <Route path="/wrong-duration">
           <ErrorWrongFocusDuration />
-        </Route>
-
-        <Route path="/distracting-websites">
-          <DistractingWebsites />
         </Route>
 
         <Route path="/distracting-apps">

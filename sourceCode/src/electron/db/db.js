@@ -514,10 +514,6 @@ function updateDistractingApps(apps) {
   db.get("settings").assign({ distractingApps: apps }).write();
 }
 
-function updateDistractingWebsites(websites) {
-  db.get("settings").assign({ distractingWebsites: websites }).write();
-}
-
 function updateWorkspaceName(id, customName) {
   db.get("services").find({ id }).assign({ customName: customName }).write();
 }
@@ -699,7 +695,6 @@ module.exports = {
   closeAnyOpenInteractionArray,
   checkForInteractionCloseByServiceId,
   getDistractingApps,
-  updateDistractingWebsites,
   updateDistractingApps,
   storeCalendarEmail,
 };
