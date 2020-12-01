@@ -11,16 +11,18 @@ const {
   getMainWindow,
 } = require("../db/memoryDb");
 
-const distractingApps = getDistractingApps();
-
 let lastReminded;
 
 module.exports = () => {
   const windowTrackerIntervall = setInterval(async () => {
+    const distractingApps = getDistractingApps();
     const activeWindow = await activeWin();
     const currentTime = new Date().getTime();
     if (activeWindow) {
-      const isDistraction = checkForDistractingApps(activeWindow.title);
+      const isDistraction = checkForDistractingApps(
+        distractingApps,
+        activeWindow.title
+      );
 
       if (getFocus()) {
         if (isDistraction && getSettings().appVersion === "exman") {
@@ -43,18 +45,20 @@ module.exports = () => {
           isDistraction,
         });
       }
+    } else {
+      console.log("no active window found");
     }
   }, 10000);
   storeIntervallRef(windowTrackerIntervall);
 };
 
-const checkForDistractingApps = (title, url) => {
+const checkForDistractingApps = (distractingApps, title) => {
   //console.log("title", title, "url", url);
   const lowerCaseTitle = title.toLowerCase();
 
   // no url, handle distracting applications/websites via title property
   for (const distractingApp of distractingApps) {
-    if (lowerCaseTitle.includes(distractingApp)) {
+    if (lowerCaseTitle.includes(distractingApp.toLowerCase())) {
       return true;
     }
   }
