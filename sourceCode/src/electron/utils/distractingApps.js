@@ -52,7 +52,6 @@ const distractingApps = [
   "theguardian",
   "npr.org",
   "wsj",
-  "time",
   "news.google",
   "cnet",
   "cnbc",

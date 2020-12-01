@@ -4,7 +4,6 @@ const { v4: uuidv4 } = require("uuid");
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
 const distractingApps = require("../utils/distractingApps");
-const distractingWebsites = require("../utils/distractingWebsites");
 
 const adapter = new FileSync(path.join(app.getPath("userData"), "db.json"));
 const db = low(adapter);
@@ -44,7 +43,6 @@ function init() {
       minimumGoalsPerDay: 5,
       appVersion: Math.random() < 0.5 ? "pomodoro" : "exman",
       distractingApps: distractingApps,
-      distractingWebsites: distractingWebsites,
     }).write();
   } else {
     // settings exist, but some fields are missing. Required for backwards compatibiltiy
@@ -61,11 +59,6 @@ function init() {
       } else {
         db.get("settings").assign({ appVersion: "exman" }).write();
       }
-    }
-    if (!db.get("settings").get("distractingWebsites").value()) {
-      db.get("settings")
-        .assign({ distractingWebsites: distractingWebsites })
-        .write();
     }
     if (!db.get("settings").get("distractingApps").value()) {
       db.get("settings").assign({ distractingApps: distractingApps }).write();
@@ -509,10 +502,6 @@ function getTeamsCall() {
   return db.get("settings").get("teamsCallFocusAbility").value();
 }
 
-function getDistractingWebsites() {
-  return db.get("settings").get("distractingWebsites").value();
-}
-
 function getDistractingApps() {
   return db.get("settings").get("distractingApps").value();
 }
@@ -706,7 +695,6 @@ module.exports = {
   closeAnyOpenInteractionArray,
   checkForInteractionCloseByServiceId,
   getDistractingApps,
-  getDistractingWebsites,
   updateDistractingWebsites,
   updateDistractingApps,
   storeCalendarEmail,

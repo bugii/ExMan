@@ -3,7 +3,6 @@ const {
   storeActiveWindowInArchive,
   storeActiveWindowInCurrentFocus,
   getSettings,
-  getDistractingWebsites,
   getDistractingApps,
 } = require("../db/db");
 const {
@@ -13,7 +12,6 @@ const {
 } = require("../db/memoryDb");
 
 const distractingApps = getDistractingApps();
-const distractingWebsites = getDistractingWebsites();
 
 let lastReminded;
 
@@ -22,15 +20,12 @@ module.exports = () => {
     const activeWindow = await activeWin();
     const currentTime = new Date().getTime();
     if (activeWindow) {
-      const isDistraction = checkForDistractingApps(
-        activeWindow.title,
-        activeWindow.url
-      );
+      const isDistraction = checkForDistractingApps(activeWindow.title);
 
       if (getFocus()) {
         if (isDistraction && getSettings().appVersion === "exman") {
           // Discourage the user from continuing on this website by showing him a notification
-          if (!lastReminded || lastReminded + 10 * 60000 < currentTime) {
+          if (!lastReminded || lastReminded + 1 * 60000 < currentTime) {
             getMainWindow().send("distraction-notification");
             lastReminded = currentTime;
           }
@@ -57,21 +52,11 @@ const checkForDistractingApps = (title, url) => {
   //console.log("title", title, "url", url);
   const lowerCaseTitle = title.toLowerCase();
 
-  if (url) {
-    // Is browser, check url
-    for (const distractingWebsite of distractingWebsites) {
-      if (url.includes(distractingWebsite)) {
-        return true;
-      }
+  // no url, handle distracting applications/websites via title property
+  for (const distractingApp of distractingApps) {
+    if (lowerCaseTitle.includes(distractingApp)) {
+      return true;
     }
-    return false;
-  } else {
-    // no url, handle distracting applications/websites via title property
-    for (const distractingApp of distractingApps) {
-      if (lowerCaseTitle.includes(distractingApp)) {
-        return true;
-      }
-    }
-    return false;
   }
+  return false;
 };
