@@ -29,10 +29,11 @@ function RatingChart(props) {
 
   useEffect(() => {
     const focusSession = props.data;
-    const nrFocusSessions = focusSession.length;
+    let nrFocusSessions = 0;
     for (let i = 0; i < focusSession.length; i++) {
       if (focusSession[i].rating !== null) {
         ratingTemp += parseInt(focusSession[i].rating);
+        nrFocusSessions += 1;
       }
     }
 
