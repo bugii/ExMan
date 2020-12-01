@@ -31,6 +31,10 @@ function init() {
     db.set("outOfFocusMessages", {}).write();
   }
 
+  if (!db.has("currentFocusSession").value()) {
+    db.set("currentFocusSession", null).write();
+  }
+
   // set default auto-response message, if not present
   if (!db.has("settings").value()) {
     db.set("settings", {
