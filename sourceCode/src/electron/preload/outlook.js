@@ -31,6 +31,12 @@ window.getUnreadChats = () => {
         .innerHTML
     );
   } catch (e) {}
+  try {
+    count = parseInt(
+      document.querySelector("div[title*='Posteingang']  > span > span")
+        .firstChild.innerHTML
+    );
+  } catch (e) {}
   return count;
 };
 
