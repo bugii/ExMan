@@ -298,6 +298,11 @@ app.whenReady().then(async () => {
     }
   });
 
+  getMainWindow().webContents.on("render-process-gone", (e) => {
+    console.log("main window crashed, reloading");
+    getMainWindow().reload();
+  });
+
   // ask for permissions (mic, camera and screen capturing) on a mac
   if (isMac) {
     const ref = setTimeout(async () => {
