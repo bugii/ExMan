@@ -114,7 +114,7 @@ function DistractingApps() {
             onKeyPress={onEnterPress}
             style={{ margin: "15px 5px 5px 5px", width: "60%", height: "5vh" }}
           />
-          <br></br>
+          <br />
           <Button
             style={{
               marginRight: "10px",
