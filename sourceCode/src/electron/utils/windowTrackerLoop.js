@@ -16,37 +16,42 @@ let lastReminded;
 module.exports = () => {
   const windowTrackerIntervall = setInterval(async () => {
     const distractingApps = getDistractingApps();
-    const activeWindow = await activeWin();
-    const currentTime = new Date().getTime();
-    if (activeWindow) {
-      const isDistraction = checkForDistractingApps(
-        distractingApps,
-        activeWindow.title
-      );
 
-      if (getFocus()) {
-        if (isDistraction && getSettings().appVersion === "exman") {
-          // Discourage the user from continuing on this website by showing him a notification
-          if (!lastReminded || lastReminded + 1 * 60000 < currentTime) {
-            getMainWindow().send("distraction-notification");
-            lastReminded = currentTime;
+    try {
+      const activeWindow = await activeWin();
+      const currentTime = new Date().getTime();
+      if (activeWindow) {
+        const isDistraction = checkForDistractingApps(
+          distractingApps,
+          activeWindow.title
+        );
+
+        if (getFocus()) {
+          if (isDistraction && getSettings().appVersion === "exman") {
+            // Discourage the user from continuing on this website by showing him a notification
+            if (!lastReminded || lastReminded + 1 * 60000 < currentTime) {
+              getMainWindow().send("distraction-notification");
+              lastReminded = currentTime;
+            }
           }
-        }
 
-        storeActiveWindowInCurrentFocus({
-          name: activeWindow.owner.name,
-          title: activeWindow.title,
-          isDistraction,
-        });
+          storeActiveWindowInCurrentFocus({
+            name: activeWindow.owner.name,
+            title: activeWindow.title,
+            isDistraction,
+          });
+        } else {
+          storeActiveWindowInArchive({
+            name: activeWindow.owner.name,
+            title: activeWindow.title,
+            isDistraction,
+          });
+        }
       } else {
-        storeActiveWindowInArchive({
-          name: activeWindow.owner.name,
-          title: activeWindow.title,
-          isDistraction,
-        });
+        console.log("no active window found");
       }
-    } else {
-      console.log("no active window found");
+    } catch (error) {
+      console.log(error);
     }
   }, 10000);
   storeIntervallRef(windowTrackerIntervall);
