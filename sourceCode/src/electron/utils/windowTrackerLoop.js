@@ -53,7 +53,7 @@ module.exports = () => {
     } catch (error) {
       console.log(error);
     }
-  }, 10000);
+  }, 2000);
   storeIntervallRef(windowTrackerIntervall);
 };
 
