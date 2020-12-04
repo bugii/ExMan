@@ -91,6 +91,7 @@ function App() {
     });
 
     ipcRenderer.on("focus-end-successful", (e) => {
+      ipcRenderer.send("update-tray");
       history.push("/summary");
       setCurrentFocusSession(null);
     });
