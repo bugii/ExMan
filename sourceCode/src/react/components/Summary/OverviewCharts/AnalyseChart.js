@@ -159,7 +159,7 @@ function AnalyseChart(props) {
           legend: { display: true },
           title: {
             display: true,
-            text: "usage of applications during focus time",
+            text: "usage of applications during focus time in percentage",
           },
           maintainAspectRatio: false,
           responsive: true,
