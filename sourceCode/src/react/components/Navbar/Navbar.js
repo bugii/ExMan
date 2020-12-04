@@ -38,7 +38,12 @@ function Navbar(props) {
       <div style={{ display: "flex", flexDirection: "column" }}>
         <HomeIcon
           onClick={() => history.push("/")}
-          style={{ color: Colors.snow, fontSize: 50, margin: "0.5rem 1rem" }}
+          style={{
+            color: Colors.snow,
+            fontSize: 50,
+            margin: "0.5rem 1rem",
+            cursor: "pointer",
+          }}
         />
         {props.services.map((service) => {
           if (!service.isOther) {
@@ -92,6 +97,7 @@ function Navbar(props) {
             color: Colors.snow,
             fontSize: 50,
             margin: "0.5rem 1rem",
+            cursor: "pointer",
           }}
         />
         <NewFocusSession
@@ -106,6 +112,7 @@ function Navbar(props) {
               color: Colors.snow,
               fontSize: 50,
               margin: "0.5rem 1rem",
+              cursor: "pointer",
             }}
           />
         ) : null}
@@ -116,6 +123,7 @@ function Navbar(props) {
             color: Colors.snow,
             fontSize: 50,
             margin: "0.5rem 1rem",
+            cursor: "pointer",
           }}
         />
 
@@ -125,6 +133,7 @@ function Navbar(props) {
             color: Colors.snow,
             fontSize: 50,
             margin: "0.5rem 1rem",
+            cursor: "pointer",
           }}
         />
       </div>

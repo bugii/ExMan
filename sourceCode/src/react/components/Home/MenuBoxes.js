@@ -95,7 +95,7 @@ function MenuBoxes(props) {
 
   return (
     <MenuBoxContainer>
-      <MenuBoxDiv onClick={props.handleFocusNow}>
+      <MenuBoxDiv onClick={props.handleFocusNow} style={{ cursor: "pointer" }}>
         <MenuIcon>
           <FilterCenterFocusIcon style={{ fontSize: 150 }} />
         </MenuIcon>
@@ -103,7 +103,7 @@ function MenuBoxes(props) {
       </MenuBoxDiv>
       <MenuBoxDiv>
         <MenuIcon>
-          <TodayIcon style={{ fontSize: 150, marginTop: 32}} />
+          <TodayIcon style={{ fontSize: 150, marginTop: 32 }} />
         </MenuIcon>
         {calendarRegistered ? (
           <div style={{ textAlign: "center" }}>
@@ -129,7 +129,7 @@ function MenuBoxes(props) {
           </div>
         )}
       </MenuBoxDiv>
-      <MenuBoxDiv onClick={openDashboard}>
+      <MenuBoxDiv onClick={openDashboard} style={{ cursor: "pointer" }}>
         <MenuIcon>
           <EqualizerIcon style={{ fontSize: 150 }} />
         </MenuIcon>
