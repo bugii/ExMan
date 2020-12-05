@@ -57,7 +57,7 @@ function DistractingApps() {
 
   useEffect(() => {
     ipcRenderer.on("distracting-apps", (e, array) => {
-      setDisArray(array);
+      setDisArray(array.sort());
     });
     ipcRenderer.send("distracting-apps");
   }, []);

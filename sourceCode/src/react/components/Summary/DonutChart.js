@@ -135,7 +135,7 @@ function DonutChart(props) {
           legend: { display: true },
           title: {
             display: false,
-            text: "Time spent in focus or in each service",
+            text: "Time spent in focus or in each service in percentage",
           },
           maintainAspectRatio: true,
           responsive: true,
