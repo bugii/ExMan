@@ -4,5 +4,9 @@ autoUpdater.logger.transports.file.level = "info";
 
 module.exports = async () => {
   // check for updates (Github Releases)
-  autoUpdater.checkForUpdatesAndNotify();
+  try {
+    await autoUpdater.checkForUpdatesAndNotify();
+  } catch (error) {
+    console.log(error);
+  }
 };
