@@ -31,6 +31,7 @@ const log = require("electron-log");
 const {
   hasScreenCapturePermission,
   hasPromptedForPermission,
+  openSystemPreferences,
 } = require("mac-screen-capture-permissions");
 
 const path = require("path");
@@ -299,6 +300,7 @@ app.whenReady().then(async () => {
 
   getMainWindow().webContents.on("render-process-gone", (e) => {
     console.log("main window crashed, reloading");
+    console.log(e);
     getMainWindow().reload();
   });
 
@@ -309,6 +311,8 @@ app.whenReady().then(async () => {
       await systemPreferences.askForMediaAccess("camera");
       if (!hasPromptedForPermission()) {
         hasScreenCapturePermission();
+      } else if (!hasScreenCapturePermission()) {
+        openSystemPreferences();
       }
     }, 5000);
     storeTimeoutRef(ref);

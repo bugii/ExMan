@@ -1,6 +1,6 @@
 {
   "name": "exman",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "author": "ExMan Group",
   "description": "Expectation Management in digital Communication",
   "main": "sourceCode/src/electron/electron.js",
@@ -16,7 +16,8 @@
     "electron-build": "electron-builder",
     "release": "npm run react-build && electron-builder -ml --publish=onTagOrDraft",
     "build": "npm run react-build && npm run electron-build",
-    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\""
+    "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.1",
@@ -50,11 +51,10 @@
   "devDependencies": {
     "components": "^0.1.0",
     "concurrently": "^5.3.0",
-    "electron": "^9.3.5",
+    "electron": "^11.0.4",
     "electron-builder": "^22.9.1",
-    "electron-rebuild": "^2.3.4",
     "hooks": "^0.3.2",
-    "react-app-rewired": "^2.1.6",
+    "react-app-rewired": "^2.1.7",
     "react-charts": "^2.0.0-beta.7",
     "wait-on": "^5.2.0"
   },
