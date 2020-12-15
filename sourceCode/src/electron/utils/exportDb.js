@@ -55,6 +55,7 @@ module.exports = async () => {
       activeWindows: hashedActiveWindows,
       goals: hashedGoals,
       completedGoals: hashedCompletedGoals,
+      comments: null,
     };
 
     focusSession.services.forEach((service) => {
