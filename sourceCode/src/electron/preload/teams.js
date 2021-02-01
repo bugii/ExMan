@@ -14,11 +14,12 @@ ipcRenderer.on("id", (e, id) => {
 });
 
 function getTokens() {
-  const presenceToken = localStorage.getItem(
-    "adal.access.token.keyhttps://presence.teams.microsoft.com/"
-  );
   const id = localStorage.getItem("ts.latestOid");
-
+  const presenceToken = JSON.parse(
+    localStorage.getItem(
+      `ts.${id}.cache.token.https://presence.teams.microsoft.com/`
+    )
+  )["token"];
   const skypeToken = JSON.parse(
     localStorage.getItem(`ts.${id}.auth.skype.token`)
   )["skypeToken"];
