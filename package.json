@@ -44,7 +44,7 @@
     "react-chartjs-2": "^2.11.1",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.4",
+    "react-scripts": "^5.0.1",
     "styled-components": "^5.2.1",
     "uuid": "^8.3.1"
   },
